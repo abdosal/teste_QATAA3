@@ -2,83 +2,474 @@
 
 {% block title %}{{ evenement.titre }} - Qataa3.ma{% endblock %}
 
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Hero Event Section */
+    .event-hero {
+        position: relative;
+        height: 500px;
+        border-radius: 24px;
+        overflow: hidden;
+        margin-bottom: 50px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .event-hero-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .event-hero-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
+        padding: 40px;
+        color: white;
+    }
+
+    .event-hero-category {
+        display: inline-block;
+        padding: 8px 20px;
+        background: rgba(102, 126, 234, 0.95);
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-bottom: 15px;
+    }
+
+    .event-hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 15px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .event-hero-meta {
+        display: flex;
+        gap: 30px;
+        flex-wrap: wrap;
+    }
+
+    .event-hero-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1rem;
+    }
+
+    .event-hero-meta-item i {
+        font-size: 1.2rem;
+        color: #667eea;
+    }
+
+    /* Main Content */
+    .event-details-container {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 40px;
+        margin-bottom: 50px;
+    }
+
+    /* Description Card */
+    .description-card {
+        background: white;
+        border-radius: 20px;
+        padding: 40px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    }
+
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .section-title i {
+        color: #667eea;
+    }
+
+    .event-description {
+        color: #64748b;
+        line-height: 1.8;
+        font-size: 1rem;
+    }
+
+    /* Info Cards */
+    .info-card {
+        background: white;
+        border-radius: 16px;
+        padding: 25px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .info-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.12);
+    }
+
+    .info-card-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #667eea15, #764ba215);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 15px;
+    }
+
+    .info-card-icon i {
+        font-size: 1.5rem;
+        color: #667eea;
+    }
+
+    .info-card-label {
+        font-size: 0.9rem;
+        color: #94a3b8;
+        margin-bottom: 5px;
+    }
+
+    .info-card-value {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    /* Tickets Sidebar */
+    .tickets-sidebar {
+        position: sticky;
+        top: 100px;
+    }
+
+    .tickets-card {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .tickets-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        text-align: center;
+    }
+
+    .tickets-header h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0;
+    }
+
+    .tickets-body {
+        padding: 25px;
+    }
+
+    /* Ticket Card */
+    .ticket-item {
+        background: #f8fafc;
+        border: 2px solid #e2e8f0;
+        border-radius: 16px;
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: all 0.3s ease;
+    }
+
+    .ticket-item:hover {
+        border-color: #667eea;
+        background: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+    }
+
+    .ticket-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .ticket-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #1e293b;
+    }
+
+    .ticket-remaining {
+        background: #667eea;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .ticket-price {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #667eea;
+        margin-bottom: 15px;
+    }
+
+    .ticket-price-free {
+        color: #10b981;
+    }
+
+    .ticket-quantity-selector {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .quantity-input {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #e2e8f0;
+        border-radius: 10px;
+        font-size: 1rem;
+        font-weight: 600;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+
+    .quantity-input:focus {
+        outline: none;
+        border-color: #667eea;
+    }
+
+    .btn-add-to-cart {
+        width: 100%;
+        padding: 14px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-add-to-cart:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .btn-add-to-cart i {
+        font-size: 1.1rem;
+    }
+
+    /* Empty State */
+    .empty-tickets {
+        text-align: center;
+        padding: 40px 20px;
+    }
+
+    .empty-tickets i {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 20px;
+    }
+
+    .empty-tickets p {
+        color: #94a3b8;
+        font-size: 1.1rem;
+    }
+
+    /* Status Badge */
+    .status-badge {
+        display: inline-block;
+        padding: 8px 20px;
+        border-radius: 50px;
+        font-weight: 700;
+        font-size: 0.9rem;
+        margin-left: 10px;
+    }
+
+    .status-actif {
+        background: #10b98115;
+        color: #10b981;
+    }
+
+    .status-termine {
+        background: #ef444415;
+        color: #ef4444;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .event-details-container {
+            grid-template-columns: 1fr;
+        }
+
+        .tickets-sidebar {
+            position: relative;
+            top: 0;
+        }
+
+        .event-hero {
+            height: 350px;
+        }
+
+        .event-hero-title {
+            font-size: 1.8rem;
+        }
+    }
+</style>
+{% endblock %}
+
 {% block body %}
 <div class="container py-5">
-    <div class="row">
-        <div class="col-md-8">
-            <!-- Image de l'événement -->
-            {% if evenement.image %}
-                <img src="{{ asset('images/events/' ~ evenement.image) }}" class="img-fluid rounded shadow-sm mb-4" alt="{{ evenement.titre }}">
-            {% else %}
-                <div class="bg-gradient text-white d-flex align-items-center justify-content-center rounded shadow-sm mb-4" style="height: 400px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                    <i class="fas fa-calendar-alt fa-5x"></i>
+    <!-- Event Hero -->
+    <div class="event-hero">
+        {% if evenement.image %}
+            <img src="{{ asset('images/events/' ~ evenement.image) }}" class="event-hero-image" alt="{{ evenement.titre }}">
+        {% else %}
+            <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=1200" class="event-hero-image" alt="{{ evenement.titre }}">
+        {% endif %}
+        
+        <div class="event-hero-overlay">
+            <div>
+                <span class="event-hero-category">{{ evenement.categorie }}</span>
+                <span class="status-badge status-{{ evenement.statut }}">{{ evenement.statut|upper }}</span>
+            </div>
+            <h1 class="event-hero-title">{{ evenement.titre }}</h1>
+            <div class="event-hero-meta">
+                <div class="event-hero-meta-item">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>{{ evenement.dateEvenement|date('d/m/Y à H:i') }}</span>
                 </div>
-            {% endif %}
+                <div class="event-hero-meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ evenement.lieu }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
 
-            <h1 class="mb-3">{{ evenement.titre }}</h1>
-            
-            <div class="mb-4">
-                <span class="badge bg-primary fs-6">{{ evenement.categorie }}</span>
-                <span class="badge bg-success fs-6">{{ evenement.statut|upper }}</span>
+    <!-- Main Content -->
+    <div class="event-details-container">
+        <!-- Left Column - Description & Info -->
+        <div>
+            <!-- Description -->
+            <div class="description-card">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    À propos de l'événement
+                </h2>
+                <p class="event-description">{{ evenement.description }}</p>
             </div>
 
-            <div class="mb-4">
-                <h5><i class="fas fa-info-circle text-primary"></i> Description</h5>
-                <p class="text-muted">{{ evenement.description }}</p>
-            </div>
-
-            <div class="card mb-4">
-                <div class="card-body">
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <h6><i class="fas fa-calendar text-primary"></i> Date et Heure</h6>
-                            <p class="mb-0">{{ evenement.dateEvenement|date('d/m/Y à H:i') }}</p>
+            <!-- Info Cards Grid -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-calendar-alt"></i>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <h6><i class="fas fa-map-marker-alt text-primary"></i> Lieu</h6>
-                            <p class="mb-0">{{ evenement.lieu }}</p>
+                        <div class="info-card-label">Date et heure</div>
+                        <div class="info-card-value">{{ evenement.dateEvenement|date('d/m/Y à H:i') }}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-map-marker-alt"></i>
                         </div>
+                        <div class="info-card-label">Lieu</div>
+                        <div class="info-card-value">{{ evenement.lieu }}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-tag"></i>
+                        </div>
+                        <div class="info-card-label">Catégorie</div>
+                        <div class="info-card-value">{{ evenement.categorie }}</div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="info-card">
+                        <div class="info-card-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="info-card-label">Statut</div>
+                        <div class="info-card-value">{{ evenement.statut|capitalize }}</div>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Sidebar - Types de billets -->
-        <div class="col-md-4">
-            <div class="card shadow-sm sticky-top" style="top: 20px;">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-ticket-alt"></i> Billets disponibles</h5>
+        <!-- Right Column - Tickets -->
+        <div class="tickets-sidebar">
+            <div class="tickets-card">
+                <div class="tickets-header">
+                    <h3><i class="fas fa-ticket-alt me-2"></i> Billets disponibles</h3>
                 </div>
-                <div class="card-body">
+                <div class="tickets-body">
                     {% if evenement.typeBillets is empty %}
-                        <p class="text-muted text-center">Aucun billet disponible</p>
+                        <div class="empty-tickets">
+                            <i class="fas fa-ticket-alt"></i>
+                            <p>Aucun billet disponible pour le moment</p>
+                        </div>
                     {% else %}
+                        {% set hasAvailableTickets = false %}
                         {% for billet in evenement.typeBillets %}
                             {% if billet.statut == 'actif' and billet.quantiteRestante > 0 %}
-                                <div class="border rounded p-3 mb-3">
-                                    <div class="d-flex justify-content-between align-items-center mb-2">
-                                        <h6 class="mb-0">{{ billet.nomType }}</h6>
-                                        <span class="badge bg-primary">{{ billet.quantiteRestante }} restants</span>
+                                {% set hasAvailableTickets = true %}
+                                <div class="ticket-item">
+                                    <div class="ticket-header">
+                                        <div class="ticket-name">{{ billet.nomType }}</div>
+                                        <div class="ticket-remaining">{{ billet.quantiteRestante }} restants</div>
                                     </div>
-                                    <p class="h4 text-primary mb-3">
+                                    
+                                    <div class="ticket-price {{ billet.prix == 0 ? 'ticket-price-free' : '' }}">
                                         {% if billet.prix == 0 %}
                                             Gratuit
                                         {% else %}
-                                            {{ billet.prix }} MAD
+                                            {{ billet.prix }} DH
                                         {% endif %}
-                                    </p>
+                                    </div>
+                                    
                                     <form action="{{ path('app_cart_add', {id: billet.id}) }}" method="post">
-    <div class="input-group mb-2">
-        <input type="number" name="quantite" value="1" min="1" max="{{ billet.quantiteRestante }}" class="form-control">
-        <button type="submit" class="btn btn-primary">
-            <i class="fas fa-shopping-cart"></i> Ajouter
-        </button>
-    </div>
-</form>
-
+                                        <div class="ticket-quantity-selector">
+                                            <input type="number" 
+                                                   name="quantite" 
+                                                   value="1" 
+                                                   min="1" 
+                                                   max="{{ billet.quantiteRestante }}" 
+                                                   class="quantity-input">
+                                        </div>
+                                        <button type="submit" class="btn-add-to-cart">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            Ajouter au panier
+                                        </button>
+                                    </form>
                                 </div>
                             {% endif %}
                         {% endfor %}
+                        
+                        {% if not hasAvailableTickets %}
+                            <div class="empty-tickets">
+                                <i class="fas fa-ticket-alt"></i>
+                                <p>Tous les billets sont épuisés</p>
+                            </div>
+                        {% endif %}
                     {% endif %}
                 </div>
             </div>

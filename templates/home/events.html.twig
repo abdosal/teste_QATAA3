@@ -2,55 +2,372 @@
 
 {% block title %}Événements - Qataa3.ma{% endblock %}
 
-{% block body %}
-<div class="container py-5">
-    <h1 class="mb-4">
-        <i class="fas fa-calendar-alt"></i> Tous les Événements
-    </h1>
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Header Section */
+    .events-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 60px 0 40px;
+        margin-bottom: 50px;
+        color: white;
+    }
 
-    <!-- Filtres par catégorie -->
-    <div class="mb-4">
-        <a href="{{ path('app_events') }}" class="btn btn-sm {{ current_categorie is null ? 'btn-primary' : 'btn-outline-primary' }}">
-            Tous
-        </a>
-        {% for categorie in categories %}
-            <a href="{{ path('app_events', {categorie: categorie}) }}" class="btn btn-sm {{ current_categorie == categorie ? 'btn-primary' : 'btn-outline-primary' }}">
-                {{ categorie }}
+    .events-header h1 {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .events-header p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+    }
+
+    /* Filtres Modernes */
+    .filters-section {
+        background: white;
+        padding: 1.5rem;
+        border-radius: 16px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        margin-bottom: 40px;
+    }
+
+    .filters-title {
+        font-size: 1rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .filter-btn {
+        padding: 0.6rem 1.5rem;
+        border: 2px solid #e2e8f0;
+        border-radius: 50px;
+        background: white;
+        color: #64748b;
+        font-weight: 600;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+        cursor: pointer;
+        text-decoration: none;
+        display: inline-block;
+        margin: 0.3rem;
+    }
+
+    .filter-btn:hover {
+        border-color: #667eea;
+        color: #667eea;
+        background: #667eea10;
+        transform: translateY(-2px);
+    }
+
+    .filter-btn.active {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-color: transparent;
+        color: white;
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    }
+
+    .filter-btn i {
+        margin-right: 6px;
+    }
+
+    /* Event Cards Modernes */
+    .events-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 30px;
+        margin-bottom: 50px;
+    }
+
+    .event-card-modern {
+        background: white;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-card-modern:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+    }
+
+    .event-image {
+        position: relative;
+        height: 240px;
+        overflow: hidden;
+    }
+
+    .event-image img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: transform 0.5s ease;
+    }
+
+    .event-card-modern:hover .event-image img {
+        transform: scale(1.1);
+    }
+
+    .event-category-badge {
+        position: absolute;
+        top: 15px;
+        right: 15px;
+        padding: 8px 16px;
+        border-radius: 50px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    .badge-concert {
+        background: rgba(102, 126, 234, 0.95);
+        color: white;
+    }
+
+    .badge-festival {
+        background: rgba(16, 185, 129, 0.95);
+        color: white;
+    }
+
+    .badge-conference {
+        background: rgba(59, 130, 246, 0.95);
+        color: white;
+    }
+
+    .badge-spectacle {
+        background: rgba(245, 158, 11, 0.95);
+        color: white;
+    }
+
+    .badge-formation {
+        background: rgba(239, 68, 68, 0.95);
+        color: white;
+    }
+
+    .event-content {
+        padding: 25px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 15px;
+        line-height: 1.4;
+    }
+
+    .event-meta {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        margin-bottom: 20px;
+        flex: 1;
+    }
+
+    .event-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #64748b;
+        font-size: 0.95rem;
+    }
+
+    .event-meta-item i {
+        width: 20px;
+        color: #667eea;
+        font-size: 1rem;
+    }
+
+    .event-footer {
+        padding: 0 25px 25px;
+    }
+
+    .btn-view-event {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-view-event:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+        color: white;
+    }
+
+    /* Empty State */
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+    }
+
+    .empty-state-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #667eea15, #764ba215);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 30px;
+    }
+
+    .empty-state-icon i {
+        font-size: 3rem;
+        color: #667eea;
+    }
+
+    .empty-state h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 15px;
+    }
+
+    .empty-state p {
+        color: #64748b;
+        font-size: 1.1rem;
+        margin-bottom: 30px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+        .events-header h1 {
+            font-size: 2rem;
+        }
+
+        .events-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .filter-btn {
+            width: 100%;
+            margin: 0.3rem 0;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<!-- Header Section -->
+<section class="events-header">
+    <div class="container">
+        <h1><i class="fas fa-calendar-check"></i> Découvrez nos événements</h1>
+        <p>Trouvez l'événement parfait parmi notre sélection</p>
+    </div>
+</section>
+
+<!-- Filters Section -->
+<div class="container">
+    <div class="filters-section">
+        <div class="filters-title">
+            <i class="fas fa-filter"></i>
+            Filtrer par catégorie
+        </div>
+        <div class="filters-buttons">
+            <a href="{{ path('app_events') }}" class="filter-btn {{ current_categorie is null ? 'active' : '' }}">
+                <i class="fas fa-th-large"></i> Tous les événements
             </a>
-        {% endfor %}
+            {% for categorie in categories %}
+                <a href="{{ path('app_events', {categorie: categorie}) }}" class="filter-btn {{ current_categorie == categorie ? 'active' : '' }}">
+                    {% if categorie == 'Concert' %}
+                        <i class="fas fa-music"></i>
+                    {% elseif categorie == 'Festival' %}
+                        <i class="fas fa-flag"></i>
+                    {% elseif categorie == 'Conférence' %}
+                        <i class="fas fa-microphone"></i>
+                    {% elseif categorie == 'Spectacle' %}
+                        <i class="fas fa-theater-masks"></i>
+                    {% elseif categorie == 'Formation' %}
+                        <i class="fas fa-graduation-cap"></i>
+                    {% endif %}
+                    {{ categorie }}
+                </a>
+            {% endfor %}
+        </div>
     </div>
 
+    <!-- Events Grid -->
     {% if evenements is empty %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Aucun événement trouvé pour cette catégorie.
+        <div class="empty-state">
+            <div class="empty-state-icon">
+                <i class="fas fa-calendar-times"></i>
+            </div>
+            <h3>Aucun événement trouvé</h3>
+            <p>Aucun événement ne correspond à vos critères de recherche.</p>
+            <a href="{{ path('app_events') }}" class="btn-view-event" style="max-width: 300px; margin: 0 auto;">
+                <i class="fas fa-redo"></i> Voir tous les événements
+            </a>
         </div>
     {% else %}
-        <div class="row g-4">
+        <div class="events-grid">
             {% for evenement in evenements %}
-                <div class="col-md-4">
-                    <div class="card event-card shadow-sm h-100">
+                <div class="event-card-modern">
+                    <div class="event-image">
                         {% if evenement.image %}
-                            <img src="{{ asset('images/events/' ~ evenement.image) }}" class="card-img-top" alt="{{ evenement.titre }}" style="height: 200px; object-fit: cover;">
+                            <img src="{{ asset('images/events/' ~ evenement.image) }}" alt="{{ evenement.titre }}">
                         {% else %}
-                            <div class="bg-gradient text-white d-flex align-items-center justify-content-center" style="height: 200px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                <i class="fas fa-calendar-alt fa-4x"></i>
-                            </div>
+                            <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400&h=250&fit=crop" alt="{{ evenement.titre }}">
                         {% endif %}
-                        <div class="card-body">
-                            <h5 class="card-title">{{ evenement.titre }}</h5>
-                            <p class="card-text text-muted">
-                                <i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}
-                            </p>
-                            <p class="card-text">
-                                <i class="fas fa-clock"></i> {{ evenement.dateEvenement|date('d/m/Y H:i') }}
-                            </p>
-                            <span class="badge bg-primary">{{ evenement.categorie }}</span>
+                        
+                        <span class="event-category-badge 
+                            {% if evenement.categorie == 'Concert' %}badge-concert
+                            {% elseif evenement.categorie == 'Festival' %}badge-festival
+                            {% elseif evenement.categorie == 'Conférence' %}badge-conference
+                            {% elseif evenement.categorie == 'Spectacle' %}badge-spectacle
+                            {% elseif evenement.categorie == 'Formation' %}badge-formation
+                            {% endif %}">
+                            {{ evenement.categorie }}
+                        </span>
+                    </div>
+                    
+                    <div class="event-content">
+                        <h3 class="event-title">{{ evenement.titre }}</h3>
+                        
+                        <div class="event-meta">
+                            <div class="event-meta-item">
+                                <i class="fas fa-calendar-alt"></i>
+                                <span>{{ evenement.dateEvenement|date('d/m/Y') }} à {{ evenement.dateEvenement|date('H:i') }}</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span>{{ evenement.lieu }}</span>
+                            </div>
+                            <div class="event-meta-item">
+                                <i class="fas fa-tag"></i>
+                                <span>{{ evenement.categorie }}</span>
+                            </div>
                         </div>
-                        <div class="card-footer bg-white">
-                            <a href="{{ path('app_event_detail', {id: evenement.id}) }}" class="btn btn-primary w-100">
-                                <i class="fas fa-ticket-alt"></i> Voir les détails
-                            </a>
-                        </div>
+                    </div>
+                    
+                    <div class="event-footer">
+                        <a href="{{ path('app_event_detail', {id: evenement.id}) }}" class="btn-view-event">
+                            <i class="fas fa-ticket-alt"></i>
+                            Voir les détails
+                        </a>
                     </div>
                 </div>
             {% endfor %}

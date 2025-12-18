@@ -9,99 +9,640 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     
     {% block stylesheets %}
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #f8fafc;
         }
-        .navbar-brand {
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: #0d6efd !important;
+
+        /* ============ NAVBAR ULTRA-MODERNE ============ */
+        .navbar-modern {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
         }
-        .hero-section {
+
+        .navbar-modern.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Logo Moderne */
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .brand-logo:hover {
+            transform: scale(1.02);
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            padding: 60px 0;
+            font-size: 1.2rem;
         }
-        .event-card {
-            transition: transform 0.3s;
+
+        .brand-text {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #1e293b;
+            letter-spacing: -0.5px;
         }
-        .event-card:hover {
-            transform: translateY(-5px);
+
+        .brand-domain {
+            color: #667eea;
         }
-        footer {
-            background-color: #212529;
+
+        /* Navigation Links Moderne */
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-link-modern {
+            position: relative;
+            padding: 0.6rem 1.2rem;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .nav-link-modern i {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+
+        .nav-link-modern:hover {
+            background: #f1f5f9;
+            color: #667eea;
+        }
+
+        .nav-link-modern.active {
+            background: linear-gradient(135deg, #667eea15, #764ba215);
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        /* Dropdown Moderne */
+        .dropdown-modern {
+            position: relative;
+        }
+
+        .dropdown-toggle-modern {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle-modern::after {
+            content: '\f078';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            font-size: 0.7rem;
+            margin-left: 6px;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown-modern:hover .dropdown-toggle-modern::after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu-modern {
+            position: absolute;
+            top: calc(100% + 10px);
+            left: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            min-width: 220px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .dropdown-modern:hover .dropdown-menu-modern {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item-modern {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0.7rem 1rem;
+            color: #475569;
+            text-decoration: none;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item-modern i {
+            width: 20px;
+            font-size: 1rem;
+        }
+
+        .dropdown-item-modern:hover {
+            background: #f8fafc;
+            color: #667eea;
+            transform: translateX(4px);
+        }
+
+        /* Actions Navbar (Droite) */
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Panier Badge Moderne */
+        .cart-btn {
+            position: relative;
+            padding: 0.6rem 1rem;
+            background: #f8fafc;
+            border: none;
+            border-radius: 10px;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cart-btn:hover {
+            background: #667eea;
             color: white;
-            padding: 30px 0;
-            margin-top: 50px;
+            transform: translateY(-2px);
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 3px 7px;
+            border-radius: 20px;
+            min-width: 20px;
+            text-align: center;
+            box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
+        }
+
+        /* User Menu Moderne */
+        .user-menu {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0.5rem 1rem;
+            background: #f8fafc;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover {
+            background: #f1f5f9;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .user-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 0.95rem;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+            padding: 0.5rem;
+            min-width: 240px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .user-menu:hover .user-dropdown {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .user-info {
+            padding: 1rem;
+            border-bottom: 1px solid #f1f5f9;
+            margin-bottom: 0.5rem;
+        }
+
+        .user-info-name {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 1rem;
+            margin-bottom: 4px;
+        }
+
+        .user-info-email {
+            font-size: 0.85rem;
+            color: #94a3b8;
+        }
+
+        /* Boutons Auth Modernes */
+        .btn-modern-outline {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            color: #64748b;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-modern-outline:hover {
+            border-color: #667eea;
+            color: #667eea;
+            background: #667eea10;
+        }
+
+        .btn-modern-primary {
+            padding: 0.6rem 1.5rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .btn-modern-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            color: white;
+        }
+
+        /* Mobile Menu Toggle */
+        .mobile-menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: #64748b;
+            cursor: pointer;
+        }
+
+        /* Responsive */
+        @media (max-width: 991px) {
+            .nav-links,
+            .nav-actions {
+                display: none;
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .mobile-menu-active .nav-links {
+                display: flex;
+                flex-direction: column;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                right: 0;
+                background: white;
+                padding: 1rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+                border-radius: 0 0 16px 16px;
+            }
+
+            .mobile-menu-active .nav-actions {
+                display: flex;
+                flex-direction: column;
+                width: 100%;
+                margin-top: 1rem;
+            }
+        }
+
+        /* ============ FOOTER MODERNE ============ */
+       .footer-custom {
+    background: linear-gradient(135deg, #5f70c0ff 0%, #764ba2 100%);
+    color: rgba(255, 255, 255, 0.95);
+    padding: 60px 0 20px;
+    margin-top: 80px;
+}
+
+        .footer-brand {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 1rem;
+        }
+
+        .footer-description {
+            font-size: 0.95rem;
+            line-height: 1.7;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 1.5rem;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 0.8rem;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+
+        .footer-links a:hover {
+            color: #60a5fa;
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-links a {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .social-links a:hover {
+            background: #60a5fa;
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+            padding-top: 25px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 0.9rem;
+        }
+
+        .app-download-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .app-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .app-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .app-btn i {
+            font-size: 1.5rem;
+        }
+
+        .app-btn-text {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        .app-btn-label {
+            font-size: 0.7rem;
+            opacity: 0.8;
+        }
+
+        .app-btn-store {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .footer-custom {
+                text-align: center;
+            }
+
+            .social-links {
+                justify-content: center;
+            }
+
+            .app-download-buttons {
+                justify-content: center;
+            }
         }
     </style>
     {% endblock %}
 </head>
 <body>
-    <!-- Navigation -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+    <!-- Navbar Ultra-Moderne -->
+    <nav class="navbar-modern">
         <div class="container">
-            <a class="navbar-brand" href="{{ path('app_home') }}">
-                <i class="fas fa-ticket-alt"></i> Qataa3.ma
-            </a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarNav">
-                <ul class="navbar-nav ms-auto">
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_home') }}">Accueil</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_events') }}">Événements</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ path('app_contact') }}">Contact</a>
-                    </li>
-                    
-                    <!-- PANIER - AJOUTÉ ICI -->
-                    <li class="nav-item">
-                        <a class="nav-link position-relative" href="{{ path('app_cart') }}">
-                            <i class="fas fa-shopping-cart"></i> Panier
-                            {% if app.session.get('cart')|default([])|length > 0 %}
-                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ app.session.get('cart')|default([])|reduce((carry, quantity) => carry + quantity, 0) }}
-                                </span>
-                            {% endif %}
+            <div class="d-flex justify-content-between align-items-center w-100">
+                <!-- Logo -->
+                <a href="{{ path('app_home') }}" class="brand-logo">
+                    <div class="brand-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <span class="brand-text">Qataa3<span class="brand-domain">.ma</span></span>
+                </a>
+
+                <!-- Navigation Links -->
+                <ul class="nav-links d-none d-lg-flex">
+                    <li>
+                        <a href="{{ path('app_home') }}" class="nav-link-modern {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}">
+                            <i class="fas fa-home"></i> Accueil
                         </a>
                     </li>
-                    
-                    {% if app.user %}
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user-circle"></i> {{ app.user.prenom }}
+                    <li>
+                        <a href="{{ path('app_events') }}" class="nav-link-modern {{ app.request.get('_route') == 'app_events' ? 'active' : '' }}">
+                            <i class="fas fa-calendar-check"></i> Événements
+                        </a>
+                    </li>
+                    <li class="dropdown-modern">
+                        <a href="#" class="nav-link-modern dropdown-toggle-modern">
+                            <i class="fas fa-grid-2"></i> Catégories
+                        </a>
+                        <div class="dropdown-menu-modern">
+                            <a href="{{ path('app_events', {categorie: 'Concert'}) }}" class="dropdown-item-modern">
+                                <i class="fas fa-music" style="color: #667eea;"></i> Concerts
                             </a>
-                            <ul class="dropdown-menu">
-                                {% if is_granted('ROLE_OWNER') %}
-                                    <li><a class="dropdown-item" href="{{ path('app_owner_dashboard') }}">Dashboard Owner</a></li>
-                                {% elseif is_granted('ROLE_RESPONSABLE') %}
-                                    <li><a class="dropdown-item" href="{{ path('app_responsable_dashboard') }}">Dashboard Responsable</a></li>
-                                {% else %}
-                                    <li><a class="dropdown-item" href="{{ path('app_client_dashboard') }}">Mon Espace</a></li>
-                                    <li><a class="dropdown-item" href="{{ path('app_client_tickets') }}">Mes Tickets</a></li>
-                                    <li><a class="dropdown-item" href="{{ path('app_client_recus') }}">Mes Reçus</a></li>
-                                {% endif %}
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" href="{{ path('app_logout') }}">Déconnexion</a></li>
-                            </ul>
-                        </li>
-                    {% else %}
-                        <li class="nav-item">
-                            <a class="nav-link" href="{{ path('app_login') }}">Connexion</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn btn-primary btn-sm ms-2" href="{{ path('app_register') }}">Inscription</a>
-                        </li>
-                    {% endif %}
+                            <a href="{{ path('app_events', {categorie: 'Festival'}) }}" class="dropdown-item-modern">
+                                <i class="fas fa-flag" style="color: #10b981;"></i> Festivals
+                            </a>
+                            <a href="{{ path('app_events', {categorie: 'Conférence'}) }}" class="dropdown-item-modern">
+                                <i class="fas fa-microphone" style="color: #3b82f6;"></i> Conférences
+                            </a>
+                            <a href="{{ path('app_events', {categorie: 'Spectacle'}) }}" class="dropdown-item-modern">
+                                <i class="fas fa-theater-masks" style="color: #f59e0b;"></i> Spectacles
+                            </a>
+                            <a href="{{ path('app_events', {categorie: 'Formation'}) }}" class="dropdown-item-modern">
+                                <i class="fas fa-graduation-cap" style="color: #ef4444;"></i> Formations
+                            </a>
+                        </div>
+                    </li>
+                    <li>
+                        <a href="{{ path('app_contact') }}" class="nav-link-modern {{ app.request.get('_route') == 'app_contact' ? 'active' : '' }}">
+                            <i class="fas fa-envelope"></i> Contact
+                        </a>
+                    </li>
                 </ul>
+
+                <!-- Actions -->
+                <div class="nav-actions d-none d-lg-flex">
+                    {% if app.user %}
+                        <!-- Panier -->
+                        <a href="#" class="cart-btn">
+                            <i class="fas fa-shopping-cart"></i>
+                            {% set cartCount = app.session.get('cart')|default([])|reduce((carry, quantity) => carry + quantity, 0) %}
+                            {% if cartCount > 0 %}
+                                <span class="cart-badge">{{ cartCount }}</span>
+                            {% endif %}
+                        </a>
+
+                        <!-- User Menu -->
+                        <div class="user-menu">
+                            <div class="user-avatar">{{ app.user.prenom|slice(0, 1)|upper }}</div>
+                            <span class="user-name d-none d-xl-inline">{{ app.user.prenom }}</span>
+                            <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: #94a3b8;"></i>
+                            
+                            <div class="user-dropdown">
+    <div class="user-info">
+        <div class="user-info-name">{{ app.user.prenom }} {{ app.user.nom }}</div>
+        <div class="user-info-email">{{ app.user.email }}</div>
+    </div>
+    {% if is_granted('ROLE_OWNER') %}
+        <a href="{{ path('app_owner_dashboard') }}" class="dropdown-item-modern"><i class="fas fa-chart-line"></i> Dashboard Owner</a>
+    {% elseif is_granted('ROLE_RESPONSABLE') %}
+        <a href="{{ path('app_responsable_dashboard') }}" class="dropdown-item-modern"><i class="fas fa-tasks"></i> Dashboard Responsable</a>
+        <a href="{{ path('app_responsable_evenements') }}" class="dropdown-item-modern"><i class="fas fa-calendar"></i> Mes Événements</a>
+        <a href="{{ path('app_responsable_clients') }}" class="dropdown-item-modern"><i class="fas fa-users"></i> Clients</a>
+    {% else %}
+        <a href="#" class="dropdown-item-modern"><i class="fas fa-user"></i> Mon Profil</a>
+        <a href="#" class="dropdown-item-modern"><i class="fas fa-ticket-alt"></i> Mes Tickets</a>
+        <a href="#" class="dropdown-item-modern"><i class="fas fa-receipt"></i> Mes Reçus</a>
+        <a href="#" class="dropdown-item-modern"><i class="fas fa-heart"></i> Favoris</a>
+    {% endif %}
+    <div style="height: 1px; background: #f1f5f9; margin: 0.5rem 0;"></div>
+    <a href="{{ path('app_logout') }}" class="dropdown-item-modern" style="color: #ef4444;">
+        <i class="fas fa-sign-out-alt"></i> Déconnexion
+    </a>
+</div>
+
+                        </div>
+                    {% else %}
+                        <a href="{{ path('app_login') }}" class="btn-modern-outline">
+                            <i class="fas fa-sign-in-alt"></i> Connexion
+                        </a>
+                        <a href="{{ path('app_register') }}" class="btn-modern-primary">
+                            <i class="fas fa-user-plus"></i> Inscription
+                        </a>
+                    {% endif %}
+                </div>
+
+                <!-- Mobile Menu Toggle -->
+                <button class="mobile-menu-toggle d-lg-none">
+                    <i class="fas fa-bars"></i>
+                </button>
             </div>
         </div>
     </nav>
@@ -123,33 +664,72 @@
         {% block body %}{% endblock %}
     </main>
 
-    <!-- Footer -->
-    <footer>
+    <!-- Footer Moderne -->
+    <footer class="footer-custom">
         <div class="container">
             <div class="row">
-                <div class="col-md-4">
-                    <h5><i class="fas fa-ticket-alt"></i> Qataa3.ma</h5>
-                    <p>Votre plateforme de billetterie événementielle au Maroc.</p>
-                </div>
-                <div class="col-md-4">
-                    <h5>Liens Rapides</h5>
-                    <ul class="list-unstyled">
-                        <li><a href="{{ path('app_events') }}" class="text-white text-decoration-none">Événements</a></li>
-                        <li><a href="{{ path('app_contact') }}" class="text-white text-decoration-none">Contact</a></li>
-                    </ul>
-                </div>
-                <div class="col-md-4">
-                    <h5>Suivez-nous</h5>
-                    <div>
-                        <a href="#" class="text-white me-3"><i class="fab fa-facebook fa-2x"></i></a>
-                        <a href="#" class="text-white me-3"><i class="fab fa-instagram fa-2x"></i></a>
-                        <a href="#" class="text-white"><i class="fab fa-twitter fa-2x"></i></a>
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h2 class="footer-brand">Qataa3.ma</h2>
+                    <p class="footer-description">
+                        Qataa3.ma ! la plateforme numéro 1 de la billetterie digitalisée au Maroc. 
+                        Elle met à la disposition des amoureux de la culture les meilleurs événements !
+                    </p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h4 class="footer-title">Explorer</h4>
+                    <ul class="footer-links">
+                        <li><a href="{{ path('app_events') }}">Billetterie</a></li>
+                        <li><a href="#">Cinéma</a></li>
+                        <li><a href="#">Voyage</a></li>
+                        <li><a href="#">Sport</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-2 col-md-6 mb-4">
+                    <h4 class="footer-title">Qataa3.ma</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Qui sommes-nous ?</a></li>
+                        <li><a href="{{ path('app_contact') }}">Contactez-nous</a></li>
+                        <li><a href="#">F.A.Q</a></li>
+                        <li><a href="#">Blog</a></li>
+                    </ul>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <h4 class="footer-title">Téléchargez l'application</h4>
+                    <div class="app-download-buttons">
+                        <a href="#" class="app-btn">
+                            <i class="fab fa-apple"></i>
+                            <div class="app-btn-text">
+                                <span class="app-btn-label">Qataa3 on</span>
+                                <span class="app-btn-store">App Store</span>
+                            </div>
+                        </a>
+                        <a href="#" class="app-btn">
+                            <i class="fab fa-google-play"></i>
+                            <div class="app-btn-text">
+                                <span class="app-btn-label">Qataa3 on</span>
+                                <span class="app-btn-store">Google Play</span>
+                            </div>
+                        </a>
+                    </div>
+                    <ul class="footer-links mt-4">
+                        <li><a href="#">Mentions légales</a></li>
+                        <li><a href="#">Conditions générales</a></li>
+                        <li><a href="#">Politique de confidentialité</a></li>
+                    </ul>
+                </div>
             </div>
-            <hr class="bg-light">
-            <div class="text-center">
-                <p>&copy; 2024 Qataa3.ma - Tous droits réservés</p>
+
+            <div class="footer-bottom">
+                © Copyright 2024 - {{ 'now'|date('Y') }} Qataa3.ma - Tous droits réservés.
             </div>
         </div>
     </footer>

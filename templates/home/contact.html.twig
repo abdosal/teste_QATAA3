@@ -2,58 +2,436 @@
 
 {% block title %}Contact - Qataa3.ma{% endblock %}
 
-{% block body %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <h1 class="mb-4 text-center">
-                <i class="fas fa-envelope"></i> Contactez-nous
-            </h1>
+{% block stylesheets %}
+{{ parent() }}
+<style>
+    /* Contact Hero */
+    .contact-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 80px 0 60px;
+        margin-bottom: 60px;
+        color: white;
+        text-align: center;
+    }
 
-            <div class="card shadow">
-                <div class="card-body p-5">
-                    <form>
-                        <div class="mb-3">
-                            <label for="name" class="form-label">Nom complet</label>
-                            <input type="text" class="form-control" id="name" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <input type="email" class="form-control" id="email" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="subject" class="form-label">Sujet</label>
-                            <input type="text" class="form-control" id="subject" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="message" class="form-label">Message</label>
-                            <textarea class="form-control" id="message" rows="5" required></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-primary w-100">
-                            <i class="fas fa-paper-plane"></i> Envoyer le message
-                        </button>
-                    </form>
+    .contact-hero h1 {
+        font-size: 2.8rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+    }
+
+    .contact-hero p {
+        font-size: 1.2rem;
+        opacity: 0.95;
+        max-width: 600px;
+        margin: 0 auto;
+    }
+
+    /* Contact Container */
+    .contact-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 60px;
+    }
+
+    /* Contact Form Card */
+    .contact-form-card {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    }
+
+    .form-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .form-title i {
+        color: #667eea;
+    }
+
+    /* Form Inputs Modernes */
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-label-modern {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 10px;
+        display: block;
+        font-size: 0.95rem;
+    }
+
+    .form-input-modern {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8fafc;
+    }
+
+    .form-input-modern:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .form-textarea-modern {
+        width: 100%;
+        padding: 14px 18px;
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+        background: #f8fafc;
+        resize: vertical;
+        min-height: 150px;
+    }
+
+    .form-textarea-modern:focus {
+        outline: none;
+        border-color: #667eea;
+        background: white;
+        box-shadow: 0 0 0 4px rgba(102, 126, 234, 0.1);
+    }
+
+    .btn-submit-modern {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 12px;
+        color: white;
+        font-weight: 700;
+        font-size: 1.1rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .btn-submit-modern:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+
+    /* Contact Info Cards */
+    .contact-info-section {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .contact-info-card {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: flex-start;
+        gap: 20px;
+    }
+
+    .contact-info-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .contact-icon {
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, #667eea15, #764ba215);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .contact-icon i {
+        font-size: 1.8rem;
+        color: #667eea;
+    }
+
+    .contact-info-content {
+        flex: 1;
+    }
+
+    .contact-info-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 8px;
+    }
+
+    .contact-info-text {
+        color: #64748b;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Social Links Card */
+    .social-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 20px;
+        padding: 30px;
+        color: white;
+        text-align: center;
+    }
+
+    .social-card h3 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .social-links-modern {
+        display: flex;
+        justify-content: center;
+        gap: 15px;
+    }
+
+    .social-link-modern {
+        width: 50px;
+        height: 50px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.3rem;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .social-link-modern:hover {
+        background: white;
+        color: #667eea;
+        transform: translateY(-5px);
+    }
+
+    /* Map Section */
+    .map-section {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+        margin-top: 40px;
+        text-align: center;
+    }
+
+    .map-section h3 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 30px;
+    }
+
+    .map-placeholder {
+        width: 100%;
+        height: 400px;
+        background: linear-gradient(135deg, #667eea10, #764ba210);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #94a3b8;
+        font-size: 1.2rem;
+    }
+
+    /* Responsive */
+    @media (max-width: 991px) {
+        .contact-container {
+            grid-template-columns: 1fr;
+        }
+
+        .contact-hero h1 {
+            font-size: 2rem;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<!-- Contact Hero -->
+<section class="contact-hero">
+    <div class="container">
+        <h1><i class="fas fa-envelope me-3"></i>Contactez-nous</h1>
+        <p>Une question ? Un problème ? Notre équipe est là pour vous aider !</p>
+    </div>
+</section>
+
+<!-- Contact Content -->
+<div class="container">
+    <div class="contact-container">
+        <!-- Left - Form -->
+        <div>
+            <div class="contact-form-card">
+                <h2 class="form-title">
+                    <i class="fas fa-comment-dots"></i>
+                    Envoyez-nous un message
+                </h2>
+                
+                <form method="post">
+                    <div class="form-group">
+                        <label class="form-label-modern" for="name">
+                            <i class="fas fa-user me-2"></i>Nom complet
+                        </label>
+                        <input type="text" 
+                               class="form-input-modern" 
+                               id="name" 
+                               name="name"
+                               placeholder="Votre nom complet"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-modern" for="email">
+                            <i class="fas fa-envelope me-2"></i>Email
+                        </label>
+                        <input type="email" 
+                               class="form-input-modern" 
+                               id="email" 
+                               name="email"
+                               placeholder="votre.email@exemple.com"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-modern" for="phone">
+                            <i class="fas fa-phone me-2"></i>Téléphone (optionnel)
+                        </label>
+                        <input type="tel" 
+                               class="form-input-modern" 
+                               id="phone" 
+                               name="phone"
+                               placeholder="+212 6 XX XX XX XX">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-modern" for="subject">
+                            <i class="fas fa-tag me-2"></i>Sujet
+                        </label>
+                        <input type="text" 
+                               class="form-input-modern" 
+                               id="subject" 
+                               name="subject"
+                               placeholder="De quoi souhaitez-vous parler ?"
+                               required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label-modern" for="message">
+                            <i class="fas fa-comment me-2"></i>Message
+                        </label>
+                        <textarea class="form-textarea-modern" 
+                                  id="message" 
+                                  name="message"
+                                  placeholder="Décrivez votre demande en détail..."
+                                  required></textarea>
+                    </div>
+
+                    <button type="submit" class="btn-submit-modern">
+                        <i class="fas fa-paper-plane"></i>
+                        Envoyer le message
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Right - Contact Info -->
+        <div class="contact-info-section">
+            <div class="contact-info-card">
+                <div class="contact-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <div class="contact-info-content">
+                    <h3 class="contact-info-title">Notre Adresse</h3>
+                    <p class="contact-info-text">
+                        Boulevard Mohammed V<br>
+                        Casablanca 20000<br>
+                        Maroc
+                    </p>
                 </div>
             </div>
 
-            <div class="row mt-5 g-4">
-                <div class="col-md-4 text-center">
-                    <i class="fas fa-map-marker-alt fa-3x text-primary mb-3"></i>
-                    <h5>Adresse</h5>
-                    <p class="text-muted">Casablanca, Maroc</p>
+            <div class="contact-info-card">
+                <div class="contact-icon">
+                    <i class="fas fa-phone"></i>
                 </div>
-                <div class="col-md-4 text-center">
-                    <i class="fas fa-phone fa-3x text-primary mb-3"></i>
-                    <h5>Téléphone</h5>
-                    <p class="text-muted">+212 6 12 34 56 78</p>
+                <div class="contact-info-content">
+                    <h3 class="contact-info-title">Téléphone</h3>
+                    <p class="contact-info-text">
+                        +212 5 22 12 34 56<br>
+                        +212 6 12 34 56 78<br>
+                        <small>Lun - Ven : 9h - 18h</small>
+                    </p>
                 </div>
-                <div class="col-md-4 text-center">
-                    <i class="fas fa-envelope fa-3x text-primary mb-3"></i>
-                    <h5>Email</h5>
-                    <p class="text-muted">contact@qataa3.ma</p>
+            </div>
+
+            <div class="contact-info-card">
+                <div class="contact-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <div class="contact-info-content">
+                    <h3 class="contact-info-title">Email</h3>
+                    <p class="contact-info-text">
+                        contact@qataa3.ma<br>
+                        support@qataa3.ma<br>
+                        <small>Réponse sous 24h</small>
+                    </p>
+                </div>
+            </div>
+
+            <div class="social-card">
+                <h3>Suivez-nous</h3>
+                <div class="social-links-modern">
+                    <a href="#" class="social-link-modern" title="Facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-link-modern" title="Instagram">
+                        <i class="fab fa-instagram"></i>
+                    </a>
+                    <a href="#" class="social-link-modern" title="Twitter">
+                        <i class="fab fa-twitter"></i>
+                    </a>
+                    <a href="#" class="social-link-modern" title="LinkedIn">
+                        <i class="fab fa-linkedin-in"></i>
+                    </a>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Map Section -->
+<div class="map-section">
+    <h3><i class="fas fa-map-marked-alt me-2"></i>Trouvez-nous</h3>
+    <div style="border-radius: 16px; overflow: hidden; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+        <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m17!1m12!1m3!1d3324.508393773837!2d-7.666347000000001!3d33.566147!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m2!1m1!2zMzPCsDMzJzU4LjEiTiA3wrAzOSc1OC45Ilc!5e0!3m2!1sen!2sma!4v1765799042421!5m2!1sen!2sma" 
+            width="100%" 
+            height="400" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+    </div>
+</div>
 </div>
 {% endblock %}
