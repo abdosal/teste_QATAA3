@@ -13,7 +13,7 @@ class LigneCommandeRepository extends ServiceEntityRepository
         parent::__construct($registry, LigneCommande::class);
     }
 
-    // Statistiques ventes par événement
+    // Statistiques ventes par événement (pour le dashboard)
     public function getVentesByEvent(): array
     {
         return $this->createQueryBuilder('lc')
@@ -64,4 +64,39 @@ class LigneCommandeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+
+    /**
+     * ✅ Stats pour la page rapports (par événement)
+     * Retourne un tableau :
+     * [
+     *   ['event_id' => 1, 'event_title' => 'Conférence X', 'billets_vendus' => 10, 'revenus' => 1500],
+     *   ...
+     * ]
+     */
+    public function getStatsByEvent(): array
+    {
+        return $this->createQueryBuilder('lc')
+            ->select('e.id AS event_id, e.titre AS event_title')
+            ->addSelect('SUM(lc.quantite) AS billets_vendus')
+            ->addSelect('SUM(lc.sousTotal) AS revenus')
+            ->join('lc.typeBillet', 'tb')
+            ->join('tb.evenement', 'e')
+            ->groupBy('e.id')
+            ->orderBy('revenus', 'DESC')
+            ->getQuery()
+            ->getArrayResult();
+    }
+    public function countTicketsByEvent(int $eventId): int
+{
+    return (int) $this->createQueryBuilder('lc')
+        ->select('COALESCE(SUM(lc.quantite), 0)')
+        ->join('lc.typeBillet', 'tb')
+        ->join('tb.evenement', 'e')
+        ->where('e.id = :eventId')
+        ->setParameter('eventId', $eventId)
+        ->getQuery()
+        ->getSingleScalarResult();
+}
+
+
 }

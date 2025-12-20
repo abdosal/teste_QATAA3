@@ -3,144 +3,597 @@
 {% block title %}{{ evenement.titre }} - Responsable{% endblock %}
 
 {% block body %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="fas fa-calendar-alt"></i> {{ evenement.titre }}</h1>
-        <div>
-            <a href="{{ path('app_responsable_evenement_edit', {id: evenement.id}) }}" class="btn btn-warning">
+<style>
+    body { background: linear-gradient(to bottom, #f8fafc 0%, #ffffff 100%); }
+
+    :root {
+        --brand-primary: #6366f1;
+        --brand-hover: #4f46e5;
+        --accent-purple: #8b5cf6;
+        --accent-pink: #ec4899;
+        --accent-emerald: #10b981;
+    }
+
+    /* Breadcrumb */
+    .page-breadcrumb {
+        background: white;
+        padding: 20px 32px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 0;
+    }
+    .breadcrumb {
+        margin: 0;
+        font-size: 0.85rem;
+        background: transparent;
+        padding: 0;
+    }
+    .breadcrumb-item a {
+        color: #64748b;
+        text-decoration: none;
+        transition: color 0.2s;
+    }
+    .breadcrumb-item a:hover { color: var(--brand-primary); }
+    .breadcrumb-item.active {
+        color: #0f172a;
+        font-weight: 600;
+    }
+
+    /* Hero Header */
+    .event-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 48px 32px 80px;
+        position: relative;
+        overflow: hidden;
+    }
+    .event-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 400px;
+        height: 400px;
+        background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+        border-radius: 50%;
+        transform: translate(30%, -30%);
+    }
+    .hero-content {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+    }
+    .hero-title {
+        font-size: 2.5rem;
+        font-weight: 800;
+        margin: 0 0 16px 0;
+        letter-spacing: -0.02em;
+        line-height: 1.2;
+    }
+    .hero-meta {
+        display: flex;
+        gap: 32px;
+        flex-wrap: wrap;
+        font-size: 1rem;
+        opacity: 0.95;
+    }
+    .hero-meta-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    .hero-meta-item i {
+        font-size: 1.2rem;
+    }
+    .hero-actions {
+        position: absolute;
+        top: 48px;
+        right: 32px;
+        display: flex;
+        gap: 12px;
+    }
+    .btn-hero {
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.2s;
+    }
+    .btn-hero-primary {
+        background: white;
+        color: var(--brand-primary);
+    }
+    .btn-hero-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(255,255,255,0.3);
+        color: var(--brand-primary);
+    }
+    .btn-hero-secondary {
+        background: rgba(255,255,255,0.15);
+        color: white;
+        border: 1.5px solid rgba(255,255,255,0.3);
+    }
+    .btn-hero-secondary:hover {
+        background: rgba(255,255,255,0.25);
+        color: white;
+    }
+
+    /* Stats Cards (floating above hero) */
+    .stats-floating {
+        margin-top: -60px;
+        margin-bottom: 32px;
+        position: relative;
+        z-index: 2;
+    }
+    .stat-card {
+        background: white;
+        border-radius: 18px;
+        padding: 28px 24px;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+        border: 1px solid #e2e8f0;
+        text-align: center;
+        transition: all 0.3s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 20px 40px rgba(15, 23, 42, 0.12);
+    }
+    .stat-icon {
+        width: 56px;
+        height: 56px;
+        border-radius: 14px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 16px;
+    }
+    .stat-icon-primary { background: #eff6ff; color: #2563eb; }
+    .stat-icon-warning { background: #fef3c7; color: #d97706; }
+    .stat-icon-success { background: #d1fae5; color: #059669; }
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 6px;
+        line-height: 1;
+    }
+    .stat-label {
+        font-size: 0.85rem;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 600;
+    }
+    .stat-sublabel {
+        font-size: 0.75rem;
+        color: #94a3b8;
+        margin-top: 4px;
+    }
+
+    /* Main Content */
+    .content-section {
+        background: white;
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.04);
+        overflow: hidden;
+        margin-bottom: 24px;
+    }
+    .section-header {
+        padding: 24px 28px;
+        background: linear-gradient(to bottom, #fafbfc, white);
+        border-bottom: 1px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        background: linear-gradient(135deg, var(--brand-primary), var(--accent-purple));
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 1.1rem;
+    }
+    .section-title {
+        font-size: 1.2rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+    .section-body {
+        padding: 28px;
+    }
+
+    /* Info Grid */
+    .info-grid {
+        display: grid;
+        gap: 20px;
+    }
+    .info-row {
+        display: grid;
+        grid-template-columns: 200px 1fr;
+        gap: 16px;
+        padding: 16px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .info-row:last-child {
+        border-bottom: none;
+    }
+    .info-label {
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #64748b;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .info-value {
+        font-size: 0.95rem;
+        color: #0f172a;
+        font-weight: 500;
+    }
+    .badge-category {
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        background: #dbeafe;
+        color: #1e40af;
+        display: inline-block;
+    }
+    .badge-status {
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .badge-status.active {
+        background: #d1fae5;
+        color: #065f46;
+    }
+    .badge-status.inactive {
+        background: #f1f5f9;
+        color: #64748b;
+    }
+
+    /* Tickets Table */
+    .tickets-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .tickets-table thead th {
+        background: #f8fafc;
+        color: #64748b;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        font-weight: 700;
+        padding: 14px 16px;
+        text-align: left;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    .tickets-table tbody td {
+        padding: 16px;
+        color: #334155;
+        font-size: 0.9rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .tickets-table tbody tr:hover {
+        background: #fafbfc;
+    }
+    .ticket-name {
+        font-weight: 700;
+        color: #0f172a;
+        font-size: 1rem;
+    }
+    .price-display {
+        font-weight: 700;
+        color: var(--brand-primary);
+        font-size: 1rem;
+    }
+    .progress-mini {
+        width: 80px;
+        height: 6px;
+        background: #f1f5f9;
+        border-radius: 9999px;
+        overflow: hidden;
+        display: inline-block;
+        vertical-align: middle;
+        margin-left: 8px;
+    }
+    .progress-mini-fill {
+        height: 100%;
+        background: var(--accent-emerald);
+        border-radius: 9999px;
+        transition: width 0.5s ease;
+    }
+
+    .empty-tickets {
+        text-align: center;
+        padding: 60px 20px;
+        color: #64748b;
+    }
+    .empty-tickets i {
+        font-size: 3rem;
+        color: #cbd5e1;
+        margin-bottom: 16px;
+    }
+    .empty-tickets h5 {
+        font-weight: 600;
+        color: #475569;
+        margin-bottom: 8px;
+    }
+
+    .btn-manage {
+        background: linear-gradient(135deg, var(--brand-primary), var(--accent-purple));
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        transition: all 0.3s;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+        margin-top: 20px;
+    }
+    .btn-manage:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(99, 102, 241, 0.4);
+        color: white;
+    }
+</style>
+
+<div class="page-breadcrumb">
+    <div class="container-fluid px-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_responsable_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_responsable_evenements') }}">Événements</a></li>
+                <li class="breadcrumb-item active">{{ evenement.titre }}</li>
+            </ol>
+        </nav>
+    </div>
+</div>
+
+<div class="event-hero">
+    <div class="container-fluid px-4">
+        <div class="hero-content">
+            <h1 class="hero-title">{{ evenement.titre }}</h1>
+            <div class="hero-meta">
+                <div class="hero-meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <span>{{ evenement.dateEvenement|date('d/m/Y à H:i') }}</span>
+                </div>
+                <div class="hero-meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span>{{ evenement.lieu }}</span>
+                </div>
+                <div class="hero-meta-item">
+                    <i class="fas fa-tag"></i>
+                    <span>{{ evenement.categorie }}</span>
+                </div>
+            </div>
+        </div>
+        <div class="hero-actions">
+            <a href="{{ path('app_responsable_evenement_edit', {id: evenement.id}) }}" class="btn-hero btn-hero-primary">
                 <i class="fas fa-edit"></i> Modifier
             </a>
-            <a href="{{ path('app_responsable_evenements') }}" class="btn btn-secondary">
+            <a href="{{ path('app_responsable_evenements') }}" class="btn-hero btn-hero-secondary">
                 <i class="fas fa-arrow-left"></i> Retour
             </a>
         </div>
     </div>
+</div>
 
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow mb-4">
-                <div class="card-body">
-                    <h5 class="card-title">Informations de l'événement</h5>
-                    
-                    <table class="table">
-                        <tr>
-                            <th width="30%">Titre:</th>
-                            <td>{{ evenement.titre }}</td>
-                        </tr>
-                        <tr>
-                            <th>Description:</th>
-                            <td>{{ evenement.description }}</td>
-                        </tr>
-                        <tr>
-                            <th>Date et Heure:</th>
-                            <td>{{ evenement.dateEvenement|date('d/m/Y H:i') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Lieu:</th>
-                            <td>{{ evenement.lieu }}</td>
-                        </tr>
-                        <tr>
-                            <th>Catégorie:</th>
-                            <td><span class="badge bg-info">{{ evenement.categorie }}</span></td>
-                        </tr>
-                        <tr>
-                            <th>Statut:</th>
-                            <td>
-                                <span class="badge bg-{{ evenement.statut == 'actif' ? 'success' : 'secondary' }}">
+<div class="container-fluid px-4 pb-5">
+    
+    <!-- Floating Stats -->
+    <div class="row g-3 stats-floating">
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-primary">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div class="stat-value">
+                    {% set total_vendus = 0 %}
+                    {% for billet in evenement.typeBillets %}
+                        {% set total_vendus = total_vendus + (billet.quantiteTotale - billet.quantiteRestante) %}
+                    {% endfor %}
+                    {{ total_vendus }}
+                </div>
+                <div class="stat-label">Billets Vendus</div>
+                <div class="stat-sublabel">Au total</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-warning">
+                    <i class="fas fa-box"></i>
+                </div>
+                <div class="stat-value">
+                    {% set total_restants = 0 %}
+                    {% for billet in evenement.typeBillets %}
+                        {% set total_restants = total_restants + billet.quantiteRestante %}
+                    {% endfor %}
+                    {{ total_restants }}
+                </div>
+                <div class="stat-label">Billets Restants</div>
+                <div class="stat-sublabel">Disponibles</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="stat-card">
+                <div class="stat-icon stat-icon-success">
+                    <i class="fas fa-coins"></i>
+                </div>
+                <div class="stat-value">
+                    {% set revenus = 0 %}
+                    {% for billet in evenement.typeBillets %}
+                        {% set revenus = revenus + ((billet.quantiteTotale - billet.quantiteRestante) * billet.prix) %}
+                    {% endfor %}
+                    {{ revenus|number_format(0, ',', ' ') }} <small style="font-size: 1rem; font-weight: 600;">MAD</small>
+                </div>
+                <div class="stat-label">Revenus Générés</div>
+                <div class="stat-sublabel">Mode Démo</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Informations -->
+        <div class="col-lg-7">
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h2 class="section-title">Informations de l'événement</h2>
+                </div>
+                <div class="section-body">
+                    <div class="info-grid">
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-heading"></i> Titre
+                            </div>
+                            <div class="info-value">{{ evenement.titre }}</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-align-left"></i> Description
+                            </div>
+                            <div class="info-value">{{ evenement.description }}</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-alt"></i> Date et Heure
+                            </div>
+                            <div class="info-value">{{ evenement.dateEvenement|date('d/m/Y à H:i') }}</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-map-marker-alt"></i> Lieu
+                            </div>
+                            <div class="info-value">{{ evenement.lieu }}</div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-tag"></i> Catégorie
+                            </div>
+                            <div class="info-value">
+                                <span class="badge-category">{{ evenement.categorie }}</span>
+                            </div>
+                        </div>
+                        <div class="info-row">
+                            <div class="info-label">
+                                <i class="fas fa-toggle-on"></i> Statut
+                            </div>
+                            <div class="info-value">
+                                <span class="badge-status {{ evenement.statut == 'actif' ? 'active' : 'inactive' }}">
+                                    <i class="fas fa-circle" style="font-size: 0.5rem;"></i>
                                     {{ evenement.statut|upper }}
                                 </span>
-                            </td>
-                        </tr>
-                    </table>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
+        </div>
 
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0"><i class="fas fa-ticket-alt"></i> Types de Billets</h5>
+        <!-- Types de Billets -->
+        <div class="col-lg-12">
+            <div class="content-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <h2 class="section-title">Types de Billets</h2>
                 </div>
-                <div class="card-body">
+                <div class="section-body">
                     {% if evenement.typeBillets is empty %}
-                        <p class="text-muted">Aucun type de billet créé pour cet événement.</p>
+                        <div class="empty-tickets">
+                            <i class="fas fa-ticket-alt"></i>
+                            <h5>Aucun type de billet créé</h5>
+                            <p class="text-muted">Commencez par créer des types de billets pour cet événement</p>
+                        </div>
                     {% else %}
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Type</th>
-                                    <th>Prix</th>
-                                    <th>Quantité Totale</th>
-                                    <th>Restants</th>
-                                    <th>Vendus</th>
-                                    <th>Statut</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for billet in evenement.typeBillets %}
+                        <div class="table-responsive">
+                            <table class="tickets-table">
+                                <thead>
                                     <tr>
-                                        <td><strong>{{ billet.nomType }}</strong></td>
-                                        <td>{{ billet.prix }} MAD</td>
-                                        <td>{{ billet.quantiteTotale }}</td>
-                                        <td>{{ billet.quantiteRestante }}</td>
-                                        <td>{{ billet.quantiteTotale - billet.quantiteRestante }}</td>
-                                        <td>
-                                            <span class="badge bg-{{ billet.statut == 'actif' ? 'success' : 'secondary' }}">
-                                                {{ billet.statut }}
-                                            </span>
-                                        </td>
+                                        <th>Type de Billet</th>
+                                        <th>Prix</th>
+                                        <th>Capacité</th>
+                                        <th>Restants</th>
+                                        <th>Vendus</th>
+                                        <th>Progression</th>
+                                        <th>Statut</th>
                                     </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                </thead>
+                                <tbody>
+                                    {% for billet in evenement.typeBillets %}
+                                        {% set vendus = billet.quantiteTotale - billet.quantiteRestante %}
+                                        {% set pourcentage = billet.quantiteTotale > 0 ? ((vendus / billet.quantiteTotale) * 100)|round : 0 %}
+                                        <tr>
+                                            <td><span class="ticket-name">{{ billet.nomType }}</span></td>
+                                            <td><span class="price-display">{{ billet.prix }} MAD</span></td>
+                                            <td>{{ billet.quantiteTotale }}</td>
+                                            <td><strong>{{ billet.quantiteRestante }}</strong></td>
+                                            <td><strong style="color: var(--accent-emerald);">{{ vendus }}</strong></td>
+                                            <td>
+                                                {{ pourcentage }}%
+                                                <div class="progress-mini">
+                                                    <div class="progress-mini-fill" style="width: {{ pourcentage }}%"></div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <span class="badge-status {{ billet.statut == 'disponible' ? 'active' : 'inactive' }}">
+                                                    <i class="fas fa-circle" style="font-size: 0.4rem;"></i>
+                                                    {{ billet.statut == 'disponible' ? 'Actif' : 'Inactif' }}
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
                     {% endif %}
                     
-                    <a href="{{ path('app_responsable_billets', {id: evenement.id}) }}" class="btn btn-primary">
+                    <a href="{{ path('app_responsable_billets', {id: evenement.id}) }}" class="btn-manage">
                         <i class="fas fa-cog"></i> Gérer les billets
                     </a>
                 </div>
             </div>
         </div>
-
-        <div class="col-md-4">
-            <div class="card shadow mb-3">
-                <div class="card-body text-center">
-                    <h6 class="text-muted">Billets Vendus</h6>
-                    <h2 class="text-primary">
-                        {% set total_vendus = 0 %}
-                        {% for billet in evenement.typeBillets %}
-                            {% set total_vendus = total_vendus + (billet.quantiteTotale - billet.quantiteRestante) %}
-                        {% endfor %}
-                        {{ total_vendus }}
-                    </h2>
-                </div>
-            </div>
-
-            <div class="card shadow mb-3">
-                <div class="card-body text-center">
-                    <h6 class="text-muted">Billets Restants</h6>
-                    <h2 class="text-warning">
-                        {% set total_restants = 0 %}
-                        {% for billet in evenement.typeBillets %}
-                            {% set total_restants = total_restants + billet.quantiteRestante %}
-                        {% endfor %}
-                        {{ total_restants }}
-                    </h2>
-                </div>
-            </div>
-
-            <div class="card shadow">
-                <div class="card-body text-center">
-                    <h6 class="text-muted">Revenus Générés</h6>
-                    <h2 class="text-success">
-                        {% set revenus = 0 %}
-                        {% for billet in evenement.typeBillets %}
-                            {% set revenus = revenus + ((billet.quantiteTotale - billet.quantiteRestante) * billet.prix) %}
-                        {% endfor %}
-                        {{ revenus|number_format(2, '.', ',') }} MAD
-                    </h2>
-                    <small class="text-muted">(Mode Démo)</small>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
+
+<script>
+// Animation progressive des stats au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    const statCards = document.querySelectorAll('.stat-card');
+    statCards.forEach((card, index) => {
+        card.style.opacity = '0';
+        card.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            card.style.transition = 'all 0.5s ease';
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 150);
+    });
+});
+</script>
 {% endblock %}

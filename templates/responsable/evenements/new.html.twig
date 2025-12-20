@@ -3,57 +3,624 @@
 {% block title %}Nouvel Événement - Responsable{% endblock %}
 
 {% block body %}
-<div class="container py-4">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h4 class="mb-0"><i class="fas fa-plus"></i> Créer un Nouvel Événement</h4>
-                </div>
-                <div class="card-body">
-                    {{ form_start(form) }}
-                        <div class="mb-3">
-                            {{ form_row(form.titre) }}
-                        </div>
+<style>
+    body { background: #f8fafc; }
 
-                        <div class="mb-3">
-                            {{ form_row(form.description) }}
-                        </div>
+    .page-breadcrumb {
+        background: white;
+        padding: 20px 32px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 32px;
+    }
+    .breadcrumb {
+        margin: 0;
+        font-size: 0.85rem;
+        background: transparent;
+        padding: 0;
+    }
+    .breadcrumb-item a {
+        color: #64748b;
+        text-decoration: none;
+    }
+    .breadcrumb-item.active {
+        color: #0f172a;
+        font-weight: 600;
+    }
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form_row(form.dateEvenement) }}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{ form_row(form.categorie) }}
-                            </div>
-                        </div>
+    .form-container {
+        max-width: 900px;
+        margin: 0 auto;
+        padding-bottom: 60px;
+    }
 
-                        <div class="mb-3">
-                            {{ form_row(form.lieu) }}
-                        </div>
+    .page-title-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 32px;
+        border-radius: 18px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+    }
+    .title-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+    .title-info h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+    }
+    .title-info p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
 
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form_row(form.statut) }}
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                {{ form_row(form.imageFile) }}
-                            </div>
-                        </div>
+    .form-card {
+        background: white;
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
+    }
 
-                        <div class="d-flex justify-content-between">
-                            <a href="{{ path('app_responsable_evenements') }}" class="btn btn-secondary">
-                                <i class="fas fa-arrow-left"></i> Retour
-                            </a>
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-save"></i> Créer l'événement
-                            </button>
-                        </div>
-                    {{ form_end(form) }}
-                </div>
-            </div>
-        </div>
+    .form-section {
+        padding: 32px;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .form-section:last-of-type {
+        border-bottom: none;
+    }
+
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        background: #eff6ff;
+        color: #3b82f6;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
+
+    .form-label {
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .label-required {
+        color: #ef4444;
+        font-size: 0.75rem;
+    }
+
+    .form-control, .form-select, textarea.form-control {
+        border-radius: 12px;
+        border: 1.5px solid #cbd5e1;
+        padding: 13px 16px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: #ffffff;
+    }
+    .form-control:focus, .form-select:focus, textarea.form-control:focus {
+        border-color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        outline: none;
+        background: #ffffff;
+    }
+    textarea.form-control {
+        min-height: 120px;
+        resize: vertical;
+    }
+
+    .field-hint {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-top: 6px;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .field-hint i {
+        margin-top: 2px;
+        color: #94a3b8;
+    }
+
+    .form-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    /* Image Upload Zone */
+    .image-upload-zone {
+        background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+        border: 2px dashed #cbd5e1;
+        border-radius: 14px;
+        padding: 32px;
+        text-align: center;
+        transition: all 0.3s;
+        cursor: pointer;
+        position: relative;
+    }
+    .image-upload-zone:hover {
+        border-color: #6366f1;
+        background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    }
+    .upload-icon {
+        width: 64px;
+        height: 64px;
+        background: white;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        color: #6366f1;
+        margin-bottom: 16px;
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.15);
+    }
+    .upload-text {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #334155;
+        margin-bottom: 8px;
+    }
+    .upload-hint {
+        font-size: 0.85rem;
+        color: #64748b;
+    }
+    .image-preview {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        margin-top: 16px;
+        display: none;
+    }
+
+    /* Status Radio Options */
+    .status-radio-group {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+    }
+    .status-radio-option {
+        flex: 1;
+        position: relative;
+    }
+    .status-radio-option input[type="radio"] {
+        position: absolute;
+        opacity: 0;
+    }
+    .status-radio-label {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        padding: 12px 16px;
+        border: 1.5px solid #cbd5e1;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #fafbfc;
+        font-size: 0.9rem;
+        font-weight: 600;
+        color: #475569;
+    }
+    .status-radio-option input[type="radio"]:checked + .status-radio-label {
+        border-color: #6366f1;
+        background: #eff6ff;
+        color: #4f46e5;
+    }
+    .status-radio-label:hover {
+        border-color: #94a3b8;
+    }
+
+    .form-actions {
+        padding: 24px 32px;
+        background: #f8fafc;
+        display: flex;
+        gap: 12px;
+        justify-content: space-between;
+    }
+    .btn-cancel {
+        padding: 12px 24px;
+        border: 1.5px solid #cbd5e1;
+        background: white;
+        color: #475569;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #1e293b;
+    }
+    .btn-submit {
+        padding: 12px 32px;
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-submit:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
+
+    /* Progress Steps (optionnel) */
+    .form-progress {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 32px;
+        position: relative;
+    }
+    .form-progress::before {
+        content: '';
+        position: absolute;
+        top: 20px;
+        left: 0;
+        right: 0;
+        height: 2px;
+        background: #e2e8f0;
+        z-index: 0;
+    }
+    .progress-step {
+        flex: 1;
+        text-align: center;
+        position: relative;
+        z-index: 1;
+    }
+    .step-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: white;
+        border: 2px solid #e2e8f0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 700;
+        color: #94a3b8;
+        margin-bottom: 8px;
+    }
+    .progress-step.active .step-circle {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        border-color: #6366f1;
+        color: white;
+    }
+    .step-label {
+        font-size: 0.8rem;
+        color: #64748b;
+        font-weight: 600;
+    }
+</style>
+
+<div class="page-breadcrumb">
+    <div class="container-fluid px-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_responsable_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_responsable_evenements') }}">Événements</a></li>
+                <li class="breadcrumb-item active">Créer un événement</li>
+            </ol>
+        </nav>
     </div>
 </div>
+
+<div class="container-fluid px-4">
+    <div class="form-container">
+        
+        <div class="page-title-section">
+            <div class="title-icon">
+                <i class="fas fa-plus-circle"></i>
+            </div>
+            <div class="title-info">
+                <h1>Créer un Nouvel Événement</h1>
+                <p>Remplissez les informations pour publier votre événement</p>
+            </div>
+        </div>
+
+        <!-- Progress Steps (optionnel mais joli) -->
+        <div class="form-progress">
+            <div class="progress-step active">
+                <div class="step-circle">1</div>
+                <div class="step-label">Informations</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle">2</div>
+                <div class="step-label">Détails</div>
+            </div>
+            <div class="progress-step">
+                <div class="step-circle">3</div>
+                <div class="step-label">Finalisation</div>
+            </div>
+        </div>
+
+        {{ form_start(form, {'attr': {'id': 'eventCreateForm'}}) }}
+        <div class="form-card">
+            
+            <!-- Section 1: Informations principales -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-info-circle"></i>
+                    </div>
+                    <h3 class="section-title">Informations principales</h3>
+                </div>
+
+                <div class="mb-4">
+                    {{ form_label(form.titre, 'Titre de l\'événement', {
+                        'label_attr': {'class': 'form-label'}
+                    }) }}
+                    <span class="label-required">*</span>
+                    {{ form_widget(form.titre, {
+                        'attr': {'class': 'form-control', 'placeholder': 'Ex: Concert de Jazz 2025'}
+                    }) }}
+                    {{ form_errors(form.titre) }}
+                    <div class="field-hint">
+                        <i class="fas fa-lightbulb"></i>
+                        <span>Choisissez un titre accrocheur et explicite</span>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    {{ form_label(form.description, 'Description', {
+                        'label_attr': {'class': 'form-label'}
+                    }) }}
+                    <span class="label-required">*</span>
+                    {{ form_widget(form.description, {
+                        'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Décrivez votre événement en détail : programme, artistes, ambiance...',
+                            'rows': '5'
+                        }
+                    }) }}
+                    {{ form_errors(form.description) }}
+                    <div class="field-hint">
+                        <i class="fas fa-pen"></i>
+                        <span>Une description complète aide les participants à mieux comprendre votre événement</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Date, Lieu et Catégorie -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <h3 class="section-title">Date, Lieu et Catégorie</h3>
+                </div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-md-6">
+                        {{ form_label(form.dateEvenement, 'Date et heure', {
+                            'label_attr': {'class': 'form-label'}
+                        }) }}
+                        <span class="label-required">*</span>
+                        {{ form_widget(form.dateEvenement, {
+                            'attr': {'class': 'form-control'}
+                        }) }}
+                        {{ form_errors(form.dateEvenement) }}
+                        <div class="field-hint">
+                            <i class="fas fa-clock"></i>
+                            <span>Sélectionnez la date et l'heure de début</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form_label(form.categorie, 'Catégorie', {
+                            'label_attr': {'class': 'form-label'}
+                        }) }}
+                        <span class="label-required">*</span>
+                        {{ form_widget(form.categorie, {
+                            'attr': {'class': 'form-select'}
+                        }) }}
+                        {{ form_errors(form.categorie) }}
+                        <div class="field-hint">
+                            <i class="fas fa-tag"></i>
+                            <span>Aide les utilisateurs à trouver votre événement</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mb-0">
+                    {{ form_label(form.lieu, 'Lieu de l\'événement', {
+                        'label_attr': {'class': 'form-label'}
+                    }) }}
+                    <span class="label-required">*</span>
+                    {{ form_widget(form.lieu, {
+                        'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Ex: Théâtre Mohammed V, Avenue Hassan II, Rabat'
+                        }
+                    }) }}
+                    {{ form_errors(form.lieu) }}
+                    <div class="field-hint">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Indiquez l'adresse complète pour faciliter l'accès</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Image et Statut -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-image"></i>
+                    </div>
+                    <h3 class="section-title">Image et Statut</h3>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        {{ form_label(form.imageFile, 'Image de l\'événement', {
+                            'label_attr': {'class': 'form-label'}
+                        }) }}
+                        
+                        <label for="{{ form.imageFile.vars.id }}" class="image-upload-zone">
+                            <div class="upload-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="upload-text">Cliquez pour choisir une image</div>
+                            <div class="upload-hint">JPG, PNG ou GIF (max 2MB)</div>
+                            <img id="imagePreview" class="image-preview" alt="Preview">
+                        </label>
+                        
+                        {{ form_widget(form.imageFile, {
+                            'attr': {
+                                'class': 'form-control d-none',
+                                'accept': 'image/*'
+                            }
+                        }) }}
+                        {{ form_errors(form.imageFile) }}
+                        <div class="field-hint mt-2">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Une belle image attire plus de participants</span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form_label(form.statut, 'Statut de l\'événement', {
+                            'label_attr': {'class': 'form-label'}
+                        }) }}
+                        <span class="label-required">*</span>
+                        
+                        <div class="status-radio-group">
+                            {% for choice in form.statut %}
+                                <div class="status-radio-option">
+                                    {{ form_widget(choice) }}
+                                    <label class="status-radio-label" for="{{ choice.vars.id }}">
+                                        {% if choice.vars.value == 'actif' %}
+                                            <i class="fas fa-check-circle"></i> Actif
+                                        {% else %}
+                                            <i class="fas fa-times-circle"></i> Inactif
+                                        {% endif %}
+                                    </label>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        {{ form_errors(form.statut) }}
+                        
+                        <div class="field-hint mt-3">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Un événement actif est visible et disponible à la vente</span>
+                        </div>
+
+                        <div class="alert alert-info mt-4" style="border-radius: 12px; font-size: 0.85rem;">
+                            <i class="fas fa-info-circle"></i>
+                            <strong>Prochaine étape :</strong> Après création, vous pourrez configurer les types de billets et les tarifs.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <a href="{{ path('app_responsable_evenements') }}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Créer l'événement
+                </button>
+            </div>
+
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+</div>
+
+<script>
+// Preview de l'image
+document.getElementById('{{ form.imageFile.vars.id }}')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('imagePreview');
+    const uploadZone = document.querySelector('.image-upload-zone');
+    
+    if (file && file.type.startsWith('image/')) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            preview.src = event.target.result;
+            preview.style.display = 'block';
+            uploadZone.querySelector('.upload-text').textContent = file.name;
+            uploadZone.querySelector('.upload-hint').textContent = 'Image sélectionnée - Cliquez pour changer';
+            uploadZone.style.borderColor = '#6366f1';
+            uploadZone.style.background = 'linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%)';
+        };
+        reader.readAsDataURL(file);
+    }
+});
+
+// Animation des steps au scroll (optionnel)
+const sections = document.querySelectorAll('.form-section');
+const steps = document.querySelectorAll('.progress-step');
+
+function updateSteps() {
+    sections.forEach((section, index) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top < window.innerHeight / 2 && rect.bottom > 0) {
+            steps[index]?.classList.add('active');
+        }
+    });
+}
+
+window.addEventListener('scroll', updateSteps);
+updateSteps();
+
+// Animation au chargement
+document.addEventListener('DOMContentLoaded', function() {
+    const formSections = document.querySelectorAll('.form-section');
+    formSections.forEach((section, index) => {
+        section.style.opacity = '0';
+        section.style.transform = 'translateY(20px)';
+        setTimeout(() => {
+            section.style.transition = 'all 0.5s ease';
+            section.style.opacity = '1';
+            section.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+});
+</script>
 {% endblock %}

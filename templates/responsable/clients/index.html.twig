@@ -3,73 +3,316 @@
 {% block title %}Gestion Clients - Responsable{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <h1 class="mb-4"><i class="fas fa-users"></i> Gestion des Clients</h1>
+<style>
+    .clients-header {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        padding: 48px 32px;
+        margin-bottom: 32px;
+        color: white;
+        border-radius: 0 0 24px 24px;
+    }
+    .clients-header h1 {
+        font-size: 2rem;
+        font-weight: 800;
+        margin: 0 0 8px 0;
+        letter-spacing: -.02em;
+    }
+    .clients-header p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 1rem;
+    }
+    
+    .stats-row {
+        margin-top: -40px;
+        margin-bottom: 32px;
+    }
+    .stat-box {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        text-align: center;
+        border: 1px solid #e5e7eb;
+    }
+    .stat-box .stat-number {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    .stat-box .stat-label {
+        font-size: 0.85rem;
+        color: #6b7280;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+    }
+    
+    .search-filter-bar {
+        background: white;
+        border-radius: 16px;
+        padding: 20px 24px;
+        margin-bottom: 24px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e5e7eb;
+    }
+    .search-box {
+        position: relative;
+    }
+    .search-box input {
+        border-radius: 12px;
+        padding: 12px 16px 12px 44px;
+        border: 1px solid #d1d5db;
+        width: 100%;
+        font-size: 0.95rem;
+    }
+    .search-box i {
+        position: absolute;
+        left: 16px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #9ca3af;
+    }
+    
+    .client-card {
+        background: white;
+        border-radius: 16px;
+        padding: 24px;
+        margin-bottom: 16px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+        border: 1px solid #e5e7eb;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+    }
+    .client-card:hover {
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
+        transform: translateY(-2px);
+    }
+    
+    .client-avatar {
+        width: 64px;
+        height: 64px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: white;
+        flex-shrink: 0;
+    }
+    
+    .client-info {
+        flex: 1;
+        min-width: 0;
+    }
+    .client-name {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    .client-email {
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+    .client-meta {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+        color: #9ca3af;
+    }
+    .client-meta span {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    
+    .client-badges {
+        display: flex;
+        gap: 8px;
+        flex-direction: column;
+        align-items: flex-end;
+    }
+    .badge-modern {
+        padding: 6px 14px;
+        border-radius: 9999px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
+    }
+    
+    .client-actions {
+        flex-shrink: 0;
+    }
+    
+    .empty-state {
+        text-align: center;
+        padding: 80px 20px;
+        background: white;
+        border-radius: 16px;
+        border: 2px dashed #d1d5db;
+    }
+    .empty-state i {
+        font-size: 4rem;
+        color: #d1d5db;
+        margin-bottom: 16px;
+    }
+    .empty-state h3 {
+        color: #6b7280;
+        font-weight: 600;
+    }
+</style>
 
-    {% if clients is empty %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Aucun client enregistré.
+<div class="clients-header">
+    <div class="container-fluid px-4">
+        <h1><i class="fas fa-users-cog"></i> Gestion des Clients</h1>
+        <p>Administrez et supervisez les comptes utilisateurs de la plateforme</p>
+    </div>
+</div>
+
+<div class="container-fluid px-4 pb-5">
+    
+    <!-- Stats KPI -->
+    <div class="row g-3 stats-row">
+        <div class="col-md-3">
+            <div class="stat-box">
+                <div class="stat-number text-primary">{{ clients|length }}</div>
+                <div class="stat-label">Total Clients</div>
+            </div>
         </div>
-    {% else %}
-        <div class="card shadow">
-            <div class="card-body">
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle">
-                        <thead class="table-light">
-                            <tr>
-                                <th>ID</th>
-                                <th>Nom Complet</th>
-                                <th>Email</th>
-                                <th>Téléphone</th>
-                                <th>Rôle</th>
-                                <th>Statut</th>
-                                <th>Date Inscription</th>
-                                <th>Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {% for client in clients %}
-                                <tr>
-                                    <td>{{ client.id }}</td>
-                                    <td><strong>{{ client.prenom }} {{ client.nom }}</strong></td>
-                                    <td>{{ client.email }}</td>
-                                    <td>{{ client.telephone ?? 'N/A' }}</td>
-                                    <td>
-                                        {% if 'ROLE_OWNER' in client.roles %}
-                                            <span class="badge bg-warning">Owner</span>
-                                        {% elseif 'ROLE_RESPONSABLE' in client.roles %}
-                                            <span class="badge bg-info">Responsable</span>
-                                        {% else %}
-                                            <span class="badge bg-secondary">Client</span>
-                                        {% endif %}
-                                    </td>
-                                    <td>
-                                        <span class="badge bg-{{ client.statutCompte == 'actif' ? 'success' : 'danger' }}">
-                                            {{ client.statutCompte|upper }}
-                                        </span>
-                                    </td>
-                                    <td>{{ client.dateInscription|date('d/m/Y') }}</td>
-                                    <td>
-                                        {% if client.statutCompte == 'actif' and 'ROLE_CLIENT' in client.roles %}
-                                            <form action="{{ path('app_responsable_client_suspend', {id: client.id}) }}" method="post" style="display: inline;">
-                                                <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ client.id) }}">
-                                                <button type="submit" class="btn btn-sm btn-warning" onclick="return confirm('Suspendre ce client ?')">
-                                                    <i class="fas fa-ban"></i> Suspendre
-                                                </button>
-                                            </form>
-                                        {% elseif client.statutCompte == 'suspendu' %}
-                                            <span class="text-muted">Suspendu</span>
-                                        {% else %}
-                                            <span class="text-muted">-</span>
-                                        {% endif %}
-                                    </td>
-                                </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
+        <div class="col-md-3">
+            <div class="stat-box">
+                <div class="stat-number text-success">
+                    {% set actifs = clients|filter(c => c.statutCompte == 'actif')|length %}
+                    {{ actifs }}
+                </div>
+                <div class="stat-label">Comptes Actifs</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box">
+                <div class="stat-number text-warning">
+                    {% set suspendus = clients|filter(c => c.statutCompte == 'suspendu')|length %}
+                    {{ suspendus }}
+                </div>
+                <div class="stat-label">Suspendus</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stat-box">
+                <div class="stat-number text-info">
+                    {% set simpleClients = clients|filter(c => 'ROLE_CLIENT' in c.roles)|length %}
+                    {{ simpleClients }}
+                </div>
+                <div class="stat-label">Clients Simples</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search & Filter -->
+    <div class="search-filter-bar">
+        <div class="row align-items-center g-3">
+            <div class="col-md-6">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="searchInput" class="form-control" placeholder="Rechercher par nom, email, téléphone...">
                 </div>
             </div>
+            <div class="col-md-6 text-end">
+                <span class="text-muted"><i class="fas fa-filter"></i> {{ clients|length }} client(s) trouvé(s)</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Clients List -->
+    {% if clients is empty %}
+        <div class="empty-state">
+            <i class="fas fa-users-slash"></i>
+            <h3>Aucun client enregistré</h3>
+            <p class="text-muted">Les nouveaux clients apparaîtront ici automatiquement</p>
+        </div>
+    {% else %}
+        <div id="clientsList">
+            {% for client in clients %}
+                {% set initials = (client.prenom|first ~ client.nom|first)|upper %}
+                {% set colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'] %}
+                {% set avatarColor = colors[client.id % 6] %}
+                
+                <div class="client-card" data-client="{{ client.nom|lower }} {{ client.prenom|lower }} {{ client.email|lower }}">
+                    <div class="client-avatar" style="background: {{ avatarColor }};">
+                        {{ initials }}
+                    </div>
+                    
+                    <div class="client-info">
+                        <div class="client-name">{{ client.prenom }} {{ client.nom }}</div>
+                        <div class="client-email"><i class="fas fa-envelope"></i> {{ client.email }}</div>
+                        <div class="client-meta">
+                            <span><i class="fas fa-phone"></i> {{ client.telephone ?? 'N/A' }}</span>
+                            <span><i class="fas fa-calendar"></i> Inscrit le {{ client.dateInscription|date('d/m/Y') }}</span>
+                            <span><i class="fas fa-hashtag"></i> ID: {{ client.id }}</span>
+                        </div>
+                    </div>
+                    
+                    <div class="client-badges">
+                        {% if 'ROLE_OWNER' in client.roles %}
+                            <span class="badge-modern bg-warning text-dark">
+                                <i class="fas fa-crown"></i> Owner
+                            </span>
+                        {% elseif 'ROLE_RESPONSABLE' in client.roles %}
+                            <span class="badge-modern" style="background: #3b82f6; color: white;">
+                                <i class="fas fa-user-tie"></i> Responsable
+                            </span>
+                        {% else %}
+                            <span class="badge-modern bg-secondary text-white">
+                                <i class="fas fa-user"></i> Client
+                            </span>
+                        {% endif %}
+                        
+                        <span class="badge-modern {{ client.statutCompte == 'actif' ? 'bg-success text-white' : 'bg-danger text-white' }}">
+                            {{ client.statutCompte|upper }}
+                        </span>
+                    </div>
+                    
+                    <div class="client-actions">
+                        {% if client.statutCompte == 'actif' and 'ROLE_CLIENT' in client.roles %}
+                            <form action="{{ path('app_responsable_client_suspend', {id: client.id}) }}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ client.id) }}">
+                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir suspendre {{ client.prenom }} {{ client.nom }} ?')">
+                                    <i class="fas fa-ban"></i> Suspendre
+                                </button>
+                            </form>
+                        {% elseif client.statutCompte == 'suspendu' %}
+                            <button class="btn btn-sm btn-secondary" disabled>
+                                <i class="fas fa-lock"></i> Suspendu
+                            </button>
+                        {% else %}
+                            <button class="btn btn-sm btn-light" disabled>
+                                <i class="fas fa-shield-alt"></i> Protégé
+                            </button>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     {% endif %}
 </div>
+
+<script>
+// Live Search
+document.getElementById('searchInput')?.addEventListener('keyup', function(e) {
+    const search = e.target.value.toLowerCase();
+    const cards = document.querySelectorAll('.client-card');
+    
+    cards.forEach(card => {
+        const data = card.getAttribute('data-client');
+        card.style.display = data.includes(search) ? 'flex' : 'none';
+    });
+});
+</script>
 {% endblock %}

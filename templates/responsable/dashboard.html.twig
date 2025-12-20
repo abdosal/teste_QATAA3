@@ -1,69 +1,243 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard Responsable - Qataa3.ma{% endblock %}
+{% block title %}Dashboard Responsable{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <div class="row mb-4">
-        <div class="col">
-            <h1><i class="fas fa-chart-line"></i> Dashboard Responsable</h1>
-            <p class="text-muted">Bienvenue {{ app.user.prenom }} {{ app.user.nom }}</p>
+<style>
+    .admin-header {
+        background: linear-gradient(to right, #ffffff, #f8fafc);
+        padding: 24px 32px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .page-title h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.025em;
+    }
+    .page-title p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    .badge-modern {
+        padding: 6px 12px;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .badge-primary-soft { background: #dbeafe; color: #1e40af; }
+    
+    .quick-action-card {
+        border-radius: 16px;
+        padding: 20px;
+        text-decoration: none;
+        display: block;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        background: white;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    }
+    .quick-action-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+        border-color: #667eea;
+    }
+    .quick-action-icon {
+        width: 52px;
+        height: 52px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        margin-bottom: 12px;
+    }
+    .quick-action-title {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    .quick-action-desc {
+        font-size: 0.85rem;
+        color: #64748b;
+        margin: 0;
+    }
+    
+    .stat-card {
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        position: relative;
+        overflow: hidden;
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+    .stat-card-body { position: relative; z-index: 1; padding: 20px 22px; }
+    .stat-label {
+        letter-spacing: .08em;
+        font-size: .72rem;
+        text-transform: uppercase;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+    .stat-value {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    .stat-helper { font-size: 0.8rem; color: #9ca3af; }
+    .stat-icon {
+        width: 44px; height: 44px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 14px; font-size: 1.3rem;
+    }
+    .stat-icon-primary { background:#eff6ff; color:#2563eb; }
+    .stat-icon-success { background:#ecfdf3; color:#16a34a; }
+    .stat-icon-warning { background:#fef9c3; color:#ca8a04; }
+    .stat-icon-info    { background:#e0f2fe; color:#0284c7; }
+    
+    .revenue-card {
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+    }
+    .revenue-card-body { padding: 28px; }
+</style>
+
+<div class="admin-header">
+    <div class="page-title">
+        <h1>Dashboard Responsable</h1>
+        <p>Bienvenue {{ app.user.prenom }} {{ app.user.nom }}</p>
+    </div>
+    <span class="badge-modern badge-primary-soft">
+        <i class="fas fa-user-tie"></i> Espace responsable
+    </span>
+</div>
+
+<div class="container-fluid px-4 pb-5">
+
+    <!-- Navigation rapide -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <a href="{{ path('app_responsable_evenements') }}" class="quick-action-card">
+                <div class="quick-action-icon" style="background: #eff6ff; color: #2563eb;">
+                    <i class="fas fa-calendar-alt"></i>
+                </div>
+                <div class="quick-action-title">Gestion Événements</div>
+                <p class="quick-action-desc">Créer et gérer vos événements</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ path('app_responsable_clients') }}" class="quick-action-card">
+                <div class="quick-action-icon" style="background: #ecfdf3; color: #16a34a;">
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="quick-action-title">Gestion Clients</div>
+                <p class="quick-action-desc">Consulter et gérer les clients</p>
+            </a>
+        </div>
+        <div class="col-md-4">
+            <a href="{{ path('app_responsable_evenements') }}" class="quick-action-card">
+                <div class="quick-action-icon" style="background: #e0f2fe; color: #0284c7;">
+                    <i class="fas fa-ticket-alt"></i>
+                </div>
+                <div class="quick-action-title">Gestion Billets</div>
+                <p class="quick-action-desc">Gérer les types de billets</p>
+            </a>
         </div>
     </div>
 
-    <!-- KPIs Cards -->
-    <div class="row g-4 mb-4">
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card text-white bg-primary shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <h6 class="card-title text-white-50">Billets Vendus Aujourd'hui</h6>
-                            <h2 class="mb-0">{{ billets_vendus }}</h2>
+                            <div class="stat-label">Billets vendus aujourd'hui</div>
+                            <div class="stat-value">{{ billets_vendus }}</div>
                         </div>
-                        <i class="fas fa-ticket-alt fa-3x opacity-50"></i>
+                        <div class="stat-icon stat-icon-primary">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Ventes de la journée en cours
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-white bg-success shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <h6 class="card-title text-white-50">Événements Actifs</h6>
-                            <h2 class="mb-0">{{ evenements_actifs }}</h2>
+                            <div class="stat-label">Événements actifs</div>
+                            <div class="stat-value">{{ evenements_actifs }}</div>
                         </div>
-                        <i class="fas fa-calendar-check fa-3x opacity-50"></i>
+                        <div class="stat-icon stat-icon-success">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Événements ouverts à la vente
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-white bg-info shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <h6 class="card-title text-white-50">Utilisateurs Inscrits</h6>
-                            <h2 class="mb-0">{{ utilisateurs_inscrits }}</h2>
+                            <div class="stat-label">Utilisateurs inscrits</div>
+                            <div class="stat-value">{{ utilisateurs_inscrits }}</div>
                         </div>
-                        <i class="fas fa-users fa-3x opacity-50"></i>
+                        <div class="stat-icon stat-icon-info">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Comptes clients actifs
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-white bg-warning shadow">
-                <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
                         <div>
-                            <h6 class="card-title text-white-50">Billets Disponibles</h6>
-                            <h2 class="mb-0">{{ billets_disponibles }}</h2>
+                            <div class="stat-label">Billets disponibles</div>
+                            <div class="stat-value">{{ billets_disponibles }}</div>
                         </div>
-                        <i class="fas fa-box fa-3x opacity-50"></i>
+                        <div class="stat-icon stat-icon-warning">
+                            <i class="fas fa-box"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Stock total restant
                     </div>
                 </div>
             </div>
@@ -71,58 +245,6 @@
     </div>
 
     <!-- Revenus -->
-    <div class="row mb-4">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-dollar-sign text-success"></i> Revenus Total (Mode Démo)</h5>
-                    <h2 class="text-success">{{ revenus_total|number_format(2, '.', ',') }} MAD</h2>
-                    <small class="text-muted">Toutes les transactions sont en mode démonstration</small>
-                </div>
-            </div>
-        </div>
-    </div>
 
-    <!-- Actions Rapides -->
-    <div class="row g-4">
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar-plus fa-3x text-primary mb-3"></i>
-                    <h5>Gestion Événements</h5>
-                    <p class="text-muted">Créer et gérer vos événements</p>
-                    <a href="{{ path('app_responsable_evenements') }}" class="btn btn-primary">
-                        <i class="fas fa-arrow-right"></i> Accéder
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x text-success mb-3"></i>
-                    <h5>Gestion Clients</h5>
-                    <p class="text-muted">Consulter et gérer les clients</p>
-                    <a href="{{ path('app_responsable_clients') }}" class="btn btn-success">
-                        <i class="fas fa-arrow-right"></i> Accéder
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card shadow-sm h-100">
-                <div class="card-body text-center">
-                    <i class="fas fa-ticket-alt fa-3x text-info mb-3"></i>
-                    <h5>Gestion Billets</h5>
-                    <p class="text-muted">Gérer les types de billets</p>
-                    <a href="{{ path('app_responsable_evenements') }}" class="btn btn-info">
-                        <i class="fas fa-arrow-right"></i> Accéder
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 {% endblock %}

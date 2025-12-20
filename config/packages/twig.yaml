@@ -1,6 +1,4 @@
 twig:
-    file_name_pattern: '*.twig'
-
-when@test:
-    twig:
-        strict_variables: true
+    debug: '%kernel.debug%'
+    strict_variables: false
+    auto_reload: true

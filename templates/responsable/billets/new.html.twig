@@ -4,129 +4,480 @@
 
 {% block body %}
 <style>
-    body { background-color: #f8fafc; }
+    body { background: #f8fafc; }
 
-    /* Couleurs Qataa3 */
-    :root {
-        --brand-color: #6366f1;
-        --brand-hover: #4f46e5;
+    .page-breadcrumb {
+        background: white;
+        padding: 20px 32px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 32px;
+    }
+    .breadcrumb {
+        margin: 0;
+        font-size: 0.85rem;
+        background: transparent;
+        padding: 0;
+    }
+    .breadcrumb-item a {
+        color: #64748b;
+        text-decoration: none;
+    }
+    .breadcrumb-item.active {
+        color: #0f172a;
+        font-weight: 600;
     }
 
-    /* Carte du formulaire */
+    .form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding-bottom: 60px;
+    }
+
+    .event-context {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 32px;
+        border-radius: 18px;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        box-shadow: 0 8px 24px rgba(102, 126, 234, 0.25);
+    }
+    .event-icon {
+        width: 64px;
+        height: 64px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.8rem;
+        flex-shrink: 0;
+    }
+    .event-info h2 {
+        font-size: 1.3rem;
+        font-weight: 700;
+        margin: 0 0 4px 0;
+    }
+    .event-info p {
+        margin: 0;
+        opacity: 0.9;
+        font-size: 0.9rem;
+    }
+
     .form-card {
-        background: white; border-radius: 16px; border: 1px solid #e2e8f0;
-        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05), 0 4px 6px -2px rgba(0, 0, 0, 0.025);
-        max-width: 650px; margin: 40px auto; overflow: hidden;
+        background: white;
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
     }
 
-    /* En-tête propre (plus de bleu agressif) */
-    .form-header {
-        padding: 40px 40px 20px; text-align: center;
+    .form-section {
+        padding: 32px;
+        border-bottom: 1px solid #f1f5f9;
     }
-    .icon-box {
-        width: 50px; height: 50px; background: #e0e7ff; color: var(--brand-color);
-        border-radius: 12px; display: inline-flex; align-items: center; justify-content: center;
-        margin-bottom: 16px; font-size: 1.25rem;
+    .form-section:last-child {
+        border-bottom: none;
     }
-    .form-title { font-size: 1.5rem; font-weight: 800; color: #1e293b; margin-bottom: 4px; }
-    .form-subtitle { color: #64748b; font-size: 0.95rem; }
 
-    .form-content { padding: 0 40px 40px; }
+    .section-header {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 24px;
+    }
+    .section-icon {
+        width: 40px;
+        height: 40px;
+        background: #eff6ff;
+        color: #3b82f6;
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.1rem;
+    }
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0;
+    }
 
-    /* Champs stylisés */
-    .form-label { font-weight: 600; color: #334155; font-size: 0.9rem; margin-bottom: 8px; }
+    .form-label {
+        font-weight: 600;
+        color: #334155;
+        font-size: 0.9rem;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .label-required {
+        color: #ef4444;
+        font-size: 0.75rem;
+    }
+
     .form-control, .form-select {
-        border-radius: 10px; border: 1px solid #cbd5e1; padding: 12px 16px; font-size: 0.95rem;
-        transition: all 0.2s; background-color: #ffffff;
+        border-radius: 12px;
+        border: 1.5px solid #cbd5e1;
+        padding: 13px 16px;
+        font-size: 0.95rem;
+        transition: all 0.2s;
+        background: #ffffff;
     }
     .form-control:focus, .form-select:focus {
-        border-color: var(--brand-color);
-        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1); outline: none;
+        border-color: #6366f1;
+        box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+        outline: none;
+        background: #ffffff;
     }
-    
-    /* Input Group pour le prix */
-    .input-group-text {
-        background: #f1f5f9; border-color: #cbd5e1; color: #64748b; font-weight: 600;
-        border-top-right-radius: 10px !important; border-bottom-right-radius: 10px !important;
+    .form-control::placeholder {
+        color: #94a3b8;
     }
 
-    /* Boutons */
+    .input-group-text {
+        background: #f8fafc;
+        border: 1.5px solid #cbd5e1;
+        border-left: none;
+        color: #475569;
+        font-weight: 600;
+        font-size: 0.9rem;
+        border-radius: 0 12px 12px 0 !important;
+    }
+    .input-group .form-control {
+        border-right: none;
+        border-radius: 12px 0 0 12px !important;
+    }
+    .input-group:focus-within .input-group-text {
+        border-color: #6366f1;
+    }
+    .input-group:focus-within .form-control {
+        border-color: #6366f1;
+    }
+
+    .field-hint {
+        font-size: 0.8rem;
+        color: #64748b;
+        margin-top: 6px;
+        display: flex;
+        align-items: flex-start;
+        gap: 6px;
+    }
+    .field-hint i {
+        margin-top: 2px;
+        color: #94a3b8;
+    }
+
+    .form-error {
+        color: #ef4444;
+        font-size: 0.85rem;
+        margin-top: 6px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .status-options {
+        display: grid;
+        gap: 12px;
+        margin-top: 12px;
+    }
+    .status-option {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        padding: 14px;
+        border: 1.5px solid #e2e8f0;
+        border-radius: 12px;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: #fafbfc;
+    }
+    .status-option:hover {
+        border-color: #6366f1;
+        background: #f5f6ff;
+    }
+    .status-option input[type="radio"] {
+        margin-top: 2px;
+        cursor: pointer;
+    }
+    .status-option-label {
+        flex: 1;
+    }
+    .status-option-title {
+        font-weight: 600;
+        color: #0f172a;
+        font-size: 0.9rem;
+        margin-bottom: 2px;
+    }
+    .status-option-desc {
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+
     .form-actions {
-        display: flex; gap: 16px; margin-top: 32px; padding-top: 24px;
-        border-top: 1px solid #f1f5f9;
+        padding: 24px 32px;
+        background: #f8fafc;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+    .btn-cancel {
+        padding: 12px 24px;
+        border: 1.5px solid #cbd5e1;
+        background: white;
+        color: #475569;
+        border-radius: 10px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-cancel:hover {
+        background: #f8fafc;
+        border-color: #94a3b8;
+        color: #1e293b;
     }
     .btn-submit {
-        flex: 2; background: var(--brand-color); color: white; border: none; padding: 14px;
-        border-radius: 10px; font-weight: 600; transition: all 0.2s; display: flex;
-        align-items: center; justify-content: center; gap: 8px;
+        padding: 12px 32px;
+        background: #6366f1;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        transition: all 0.2s;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
     }
-    .btn-submit:hover { background: var(--brand-hover); transform: translateY(-1px); color: white; }
+    .btn-submit:hover {
+        background: #4f46e5;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(99, 102, 241, 0.4);
+    }
 
-    .btn-cancel {
-        flex: 1; background: white; color: #64748b; border: 1px solid #cbd5e1; padding: 14px;
-        border-radius: 10px; font-weight: 600; text-decoration: none; transition: all 0.2s; text-align: center;
+    .price-preview {
+        background: #f0fdf4;
+        border: 1px solid #86efac;
+        border-radius: 10px;
+        padding: 12px;
+        margin-top: 12px;
+        display: none;
     }
-    .btn-cancel:hover { background: #f8fafc; color: #1e293b; border-color: #94a3b8; }
+    .price-preview.active {
+        display: block;
+    }
+    .price-preview-text {
+        font-size: 0.85rem;
+        color: #166534;
+        font-weight: 600;
+    }
 </style>
 
-<div class="container">
-    <div class="form-card">
-        <div class="form-header">
-            <div class="icon-box">
-                <i class="fas fa-ticket-alt"></i>
-            </div>
-            <h1 class="form-title">Nouveau Type de Billet</h1>
-            <p class="form-subtitle">Configuration pour l'événement <span class="fw-bold text-dark">{{ evenement.titre }}</span></p>
-        </div>
-
-        <div class="form-content">
-            {{ form_start(form) }}
-                
-                <!-- Nom du billet -->
-                <div class="mb-4">
-                    {{ form_label(form.nomType, 'Nom du Billet', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.nomType, {'attr': {'class': 'form-control', 'placeholder': 'Ex: VIP, Early Bird...'}}) }}
-                    <div class="form-text text-danger">{{ form_errors(form.nomType) }}</div>
-                </div>
-
-                <!-- Ligne Prix et Quantité -->
-                <div class="row g-4 mb-4">
-                    <div class="col-md-6">
-                        {{ form_label(form.prix, 'Prix Unitaire', {'label_attr': {'class': 'form-label'}}) }}
-                        <div class="input-group">
-                            {{ form_widget(form.prix, {'attr': {'class': 'form-control', 'placeholder': '0.00'}}) }}
-                            <span class="input-group-text">MAD</span>
-                        </div>
-                        <div class="form-text text-danger">{{ form_errors(form.prix) }}</div>
-                    </div>
-                    <div class="col-md-6">
-                        {{ form_label(form.quantiteTotale, 'Quantité Totale', {'label_attr': {'class': 'form-label'}}) }}
-                        {{ form_widget(form.quantiteTotale, {'attr': {'class': 'form-control', 'placeholder': 'Ex: 1000'}}) }}
-                        <div class="form-text text-danger">{{ form_errors(form.quantiteTotale) }}</div>
-                    </div>
-                </div>
-
-                <!-- Statut -->
-                <div class="mb-2">
-                    {{ form_label(form.statut, 'Statut Initial', {'label_attr': {'class': 'form-label'}}) }}
-                    {{ form_widget(form.statut, {'attr': {'class': 'form-select'}}) }}
-                    <div class="form-text text-muted small mt-1">
-                        <i class="fas fa-info-circle me-1"></i> Définit si les billets sont immédiatement disponibles à la vente.
-                    </div>
-                </div>
-
-                <!-- Actions -->
-                <div class="form-actions">
-                    <a href="{{ path('app_responsable_billets', {id: evenement.id}) }}" class="btn-cancel">
-                        Annuler
-                    </a>
-                    <button type="submit" class="btn-submit">
-                        <i class="fas fa-check"></i> Créer le Billet
-                    </button>
-                </div>
-
-            {{ form_end(form) }}
-        </div>
+<div class="page-breadcrumb">
+    <div class="container-fluid px-4">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="{{ path('app_responsable_dashboard') }}"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_responsable_evenements') }}">Événements</a></li>
+                <li class="breadcrumb-item"><a href="{{ path('app_responsable_billets', {id: evenement.id}) }}">{{ evenement.titre }}</a></li>
+                <li class="breadcrumb-item active">Nouveau billet</li>
+            </ol>
+        </nav>
     </div>
 </div>
+
+<div class="container-fluid px-4">
+    <div class="form-container">
+        
+        <div class="event-context">
+            <div class="event-icon">
+                <i class="fas fa-calendar-alt"></i>
+            </div>
+            <div class="event-info">
+                <h2>{{ evenement.titre }}</h2>
+                <p><i class="fas fa-plus-circle"></i> Ajout d'un nouveau type de billet</p>
+            </div>
+        </div>
+
+        {{ form_start(form, {'attr': {'id': 'ticketForm'}}) }}
+        <div class="form-card">
+            
+            <!-- Section 1: Informations générales -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon">
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    <h3 class="section-title">Informations générales</h3>
+                </div>
+
+                <div class="mb-0">
+                    {{ form_label(form.nomType, 'Nom du type de billet', {
+                        'label_attr': {'class': 'form-label'}
+                    }) }}
+                    <span class="label-required">*</span>
+                    {{ form_widget(form.nomType, {
+                        'attr': {
+                            'class': 'form-control',
+                            'placeholder': 'Ex: VIP, Standard, Early Bird, Student...'
+                        }
+                    }) }}
+                    {% if form_errors(form.nomType) %}
+                        <div class="form-error">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ form_errors(form.nomType) }}
+                        </div>
+                    {% else %}
+                        <div class="field-hint">
+                            <i class="fas fa-lightbulb"></i>
+                            <span>Choisissez un nom clair et descriptif pour vos clients</span>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Section 2: Tarification et disponibilité -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon" style="background: #fef3c7; color: #d97706;">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3 class="section-title">Tarification et disponibilité</h3>
+                </div>
+
+                <div class="row g-4">
+                    <div class="col-md-6">
+                        {{ form_label(form.prix, 'Prix unitaire', {
+                            'label_attr': {'class': 'form-label'}
+                        }) }}
+                        <span class="label-required">*</span>
+                        <div class="input-group">
+                            {{ form_widget(form.prix, {
+                                'attr': {
+                                    'class': 'form-control',
+                                    'placeholder': '0.00',
+                                    'id': 'priceInput'
+                                }
+                            }) }}
+                            <span class="input-group-text">MAD</span>
+                        </div>
+                        {% if form_errors(form.prix) %}
+                            <div class="form-error">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form_errors(form.prix) }}
+                            </div>
+                        {% endif %}
+                        <div id="pricePreview" class="price-preview">
+                            <div class="price-preview-text"></div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        {{ form_label(form.quantiteTotale, 'Quantité disponible', {
+                            'label_attr': {'class': 'form-label'}
+                        }) }}
+                        <span class="label-required">*</span>
+                        {{ form_widget(form.quantiteTotale, {
+                            'attr': {
+                                'class': 'form-control',
+                                'placeholder': 'Ex: 1000',
+                                'id': 'quantityInput'
+                            }
+                        }) }}
+                        {% if form_errors(form.quantiteTotale) %}
+                            <div class="form-error">
+                                <i class="fas fa-exclamation-circle"></i>
+                                {{ form_errors(form.quantiteTotale) }}
+                            </div>
+                        {% else %}
+                            <div class="field-hint">
+                                <i class="fas fa-info-circle"></i>
+                                <span>Nombre total de billets de ce type</span>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Statut initial -->
+            <div class="form-section">
+                <div class="section-header">
+                    <div class="section-icon" style="background: #ecfdf5; color: #059669;">
+                        <i class="fas fa-toggle-on"></i>
+                    </div>
+                    <h3 class="section-title">Statut de vente</h3>
+                </div>
+
+                {{ form_label(form.statut, null, {'label_attr': {'class': 'd-none'}}) }}
+                
+                <div class="status-options">
+                    {% for choice in form.statut %}
+                        <label class="status-option">
+                            {{ form_widget(choice) }}
+                            <div class="status-option-label">
+                                <div class="status-option-title">
+                                    {% if choice.vars.value == 'disponible' %}
+                                        <i class="fas fa-check-circle text-success"></i> Disponible à la vente
+                                    {% else %}
+                                        <i class="fas fa-lock text-secondary"></i> Non disponible
+                                    {% endif %}
+                                </div>
+                                <div class="status-option-desc">
+                                    {% if choice.vars.value == 'disponible' %}
+                                        Les billets seront immédiatement achetables par les clients
+                                    {% else %}
+                                        Les billets seront créés mais pas encore mis en vente
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </label>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="form-actions">
+                <a href="{{ path('app_responsable_billets', {id: evenement.id}) }}" class="btn-cancel">
+                    <i class="fas fa-times"></i> Annuler
+                </a>
+                <button type="submit" class="btn-submit">
+                    <i class="fas fa-check-circle"></i> Créer le billet
+                </button>
+            </div>
+
+        </div>
+        {{ form_end(form) }}
+
+    </div>
+</div>
+
+<script>
+// Price preview
+const priceInput = document.getElementById('priceInput');
+const quantityInput = document.getElementById('quantityInput');
+const pricePreview = document.getElementById('pricePreview');
+
+function updatePricePreview() {
+    const price = parseFloat(priceInput?.value) || 0;
+    const quantity = parseInt(quantityInput?.value) || 0;
+    
+    if (price > 0 && quantity > 0) {
+        const total = (price * quantity).toFixed(2);
+        pricePreview.classList.add('active');
+        pricePreview.querySelector('.price-preview-text').textContent = 
+            `Revenus potentiels: ${total} MAD (${quantity} × ${price} MAD)`;
+    } else {
+        pricePreview.classList.remove('active');
+    }
+}
+
+priceInput?.addEventListener('input', updatePricePreview);
+quantityInput?.addEventListener('input', updatePricePreview);
+</script>
 {% endblock %}

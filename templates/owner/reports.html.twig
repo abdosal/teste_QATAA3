@@ -3,68 +3,285 @@
 {% block title %}Rapports - Owner{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <h1 class="mb-4"><i class="fas fa-chart-bar"></i> Rapports et Statistiques (Mode Démo)</h1>
+<style>
+    .admin-header {
+        background: linear-gradient(to right, #ffffff, #f8fafc);
+        padding: 24px 32px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .page-title h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.025em;
+    }
+    .page-title p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
+    .badge-modern {
+        padding: 6px 12px;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .badge-info-soft { background: #dbeafe; color: #1e40af; }
+    .stat-card {
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        position: relative;
+        overflow: hidden;
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+    .stat-card-body { position: relative; z-index: 1; padding: 20px 22px; }
+    .stat-label {
+        letter-spacing: .08em;
+        font-size: .72rem;
+        text-transform: uppercase;
+        color: #6b7280;
+        margin-bottom: 8px;
+    }
+    .stat-value {
+        font-size: 1.9rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 4px;
+    }
+    .stat-helper { font-size: 0.8rem; color: #9ca3af; }
+    .stat-icon {
+        width: 44px; height: 44px;
+        display: inline-flex; align-items: center; justify-content: center;
+        border-radius: 14px; font-size: 1.3rem;
+    }
+    .stat-icon-primary { background:#eff6ff; color:#2563eb; }
+    .stat-icon-success { background:#ecfdf3; color:#16a34a; }
+    .stat-icon-warning { background:#fef9c3; color:#ca8a04; }
+    .stat-icon-info    { background:#e0f2fe; color:#0284c7; }
+    .card-analytics {
+        border-radius: 18px;
+        border: 1px solid #e2e8f0;
+        overflow: hidden;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+    }
+    .card-analytics-header {
+        background: linear-gradient(120deg, #1d4ed8, #4f46e5);
+        color: white;
+        padding: 16px 22px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .card-analytics-body { padding: 22px; background: #ffffff; }
+</style>
 
-    <div class="alert alert-info">
-        <i class="fas fa-info-circle"></i> Toutes les données financières sont en mode démonstration.
+<div class="admin-header">
+    <div class="page-title">
+        <h1>Rapports & statistiques</h1>
+        <p>Vue synthétique des performances (données de démonstration)</p>
     </div>
-
-    <div class="row g-4 mb-4">
-        <div class="col-md-3">
-            <div class="card shadow text-center">
-                <div class="card-body">
-                    <i class="fas fa-calendar-check fa-3x text-primary mb-3"></i>
-                    <h6 class="text-muted">Total Événements</h6>
-                    <h2>{{ revenue_by_period|length }}</h2>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow text-center">
-                <div class="card-body">
-                    <i class="fas fa-ticket-alt fa-3x text-success mb-3"></i>
-                    <h6 class="text-muted">Billets Vendus</h6>
-                    <h2>-</h2>
-                    <small class="text-muted">Démo</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow text-center">
-                <div class="card-body">
-                    <i class="fas fa-dollar-sign fa-3x text-warning mb-3"></i>
-                    <h6 class="text-muted">Revenus Total</h6>
-                    <h2>-</h2>
-                    <small class="text-muted">Démo</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card shadow text-center">
-                <div class="card-body">
-                    <i class="fas fa-users fa-3x text-info mb-3"></i>
-                    <h6 class="text-muted">Clients Actifs</h6>
-                    <h2>-</h2>
-                    <small class="text-muted">Démo</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="card shadow">
-        <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="fas fa-chart-line"></i> Évolution des Ventes (30 derniers jours)</h5>
-        </div>
-        <div class="card-body">
-            <div class="alert alert-warning">
-                <i class="fas fa-info-circle"></i> Graphiques disponibles en version complète
-            </div>
-            <p class="text-muted">Les rapports détaillés et graphiques seront disponibles dans une prochaine version.</p>
-        </div>
-    </div>
+    <span class="badge-modern badge-info-soft">
+        <i class="fas fa-flask"></i> Mode démo
+    </span>
 </div>
+
+<div class="container-fluid px-4 pb-5">
+
+    <div class="alert alert-info mb-4">
+        <i class="fas fa-info-circle me-2"></i>
+        Toutes les données financières sont actuellement affichées en mode démonstration.
+    </div>
+
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-3">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <div class="stat-label">Total événements</div>
+                            <div class="stat-value">{{ revenue_by_period|length }}</div>
+                        </div>
+                        <div class="stat-icon stat-icon-primary">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Événements suivis sur les 30 derniers jours
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <div class="stat-label">Billets vendus</div>
+                            <div class="stat-value">{{ total_billets_vendus }}</div>
+                        </div>
+                        <div class="stat-icon stat-icon-success">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Nombre cumulé de billets vendus
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <div class="stat-label">Revenus total</div>
+                            <div class="stat-value">
+                                {{ revenus_total|number_format(0, ',', ' ') }} MAD
+                            </div>
+                        </div>
+                        <div class="stat-icon stat-icon-warning">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Montants fictifs (données de démonstration)
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-3">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="d-flex justify-content-between align-items-start mb-2">
+                        <div>
+                            <div class="stat-label">Clients actifs</div>
+                            <div class="stat-value">{{ total_clients }}</div>
+                        </div>
+                        <div class="stat-icon stat-icon-info">
+                            <i class="fas fa-users"></i>
+                        </div>
+                    </div>
+                    <div class="stat-helper">
+                        Basé sur les comptes clients enregistrés
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Graphique + résumé -->
+    <div class="row mb-4">
+        <div class="col-lg-8">
+            <div class="card-analytics h-100">
+                <div class="card-analytics-header">
+                    <h5><i class="fas fa-chart-line me-2"></i> Évolution des ventes (30 derniers jours)</h5>
+                    <span class="badge-modern badge-info-soft">
+                        <i class="fas fa-bolt"></i> Graphique interactif
+                    </span>
+                </div>
+                <div class="card-analytics-body">
+                    <div style="height: 320px;">
+                        <canvas id="salesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 mt-3 mt-lg-0">
+            <div class="stat-card h-100">
+                <div class="stat-card-body">
+                    <div class="stat-label">Résumé de la période</div>
+                    <div class="stat-helper">
+                        Meilleur jour :
+                        <strong>{{ best_day_label ?? '–' }}</strong><br>
+                        Revenu max :
+                        <strong>{{ best_day_amount|number_format(0, ',', ' ') }} MAD</strong><br>
+                        Revenu moyen / jour :
+                        <strong>{{ average_revenue|number_format(0, ',', ' ') }} MAD</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tableau par événement -->
+    {% if stats_by_event is defined and stats_by_event is not empty %}
+        <div class="card-analytics">
+            <div class="card-analytics-header">
+                <h5><i class="fas fa-list-ul me-2"></i> Performances par événement</h5>
+            </div>
+            <div class="card-analytics-body">
+                <div class="table-responsive">
+                    <table class="table table-hover table-striped align-middle">
+                        <thead>
+                            <tr>
+                                <th>Événement</th>
+                                <th class="text-end">Billets vendus</th>
+                                <th class="text-end">Revenus (MAD)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in stats_by_event %}
+                                <tr>
+                                    <td>{{ row.event_title }}</td>
+                                    <td class="text-end">{{ row.billets_vendus }}</td>
+                                    <td class="text-end">
+                                        {{ row.revenus|number_format(2, ',', ' ') }}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <p class="text-muted small mb-0">
+                    Chiffres agrégés sur l'ensemble de l'historique des ventes.
+                </p>
+            </div>
+        </div>
+    {% endif %}
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    const ctx = document.getElementById('salesChart').getContext('2d');
+
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: {{ labels|json_encode|raw }},
+            datasets: [{
+                label: 'Revenus par jour',
+                data: {{ data|json_encode|raw }},
+                borderColor: 'rgba(37, 99, 235, 1)',
+                backgroundColor: 'rgba(37, 99, 235, 0.15)',
+                tension: 0.35,
+                fill: true,
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                y: { beginAtZero: true }
+            }
+        }
+    });
+</script>
 {% endblock %}

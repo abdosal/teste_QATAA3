@@ -48,18 +48,25 @@ class CommandeRepository extends ServiceEntityRepository
         
         return $result ? (float)$result : 0;
     }
+// Revenus par période (test sans filtre de statut)
+public function getRevenueByPeriod(\DateTime $startDate, \DateTime $endDate): array
+{
+    return $this->createQueryBuilder('c')
+        ->where('c.dateCommande BETWEEN :start AND :end')
+        ->setParameter('start', $startDate)
+        ->setParameter('end', $endDate)
+        ->orderBy('c.dateCommande', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
+public function findLastOrders(int $limit = 5): array
+{
+    return $this->createQueryBuilder('c')
+        ->orderBy('c.dateCommande', 'DESC')
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+}
 
-    // Revenus par période (version simplifiée)
-    public function getRevenueByPeriod(\DateTime $startDate, \DateTime $endDate): array
-    {
-        return $this->createQueryBuilder('c')
-            ->where('c.dateCommande BETWEEN :start AND :end')
-            ->andWhere('c.statutCommande = :statut')
-            ->setParameter('start', $startDate)
-            ->setParameter('end', $endDate)
-            ->setParameter('statut', 'paid_demo')
-            ->orderBy('c.dateCommande', 'ASC')
-            ->getQuery()
-            ->getResult();
-    }
+
 }

@@ -161,4 +161,18 @@ class Commande
         $this->recu = $recu;
         return $this;
     }
+    public function getStatsByEvent(): array
+{
+    return $this->createQueryBuilder('l')
+        ->select('e.id AS event_id, e.titre AS event_title')
+        ->addSelect('SUM(l.quantite) AS billets_vendus')
+        ->addSelect('SUM(l.quantite * l.prixUnitaire) AS revenus')
+        ->join('l.evenement', 'e')
+        ->groupBy('e.id')
+        ->orderBy('revenus', 'DESC')
+        ->getQuery()
+        ->getArrayResult();
+}
+
+
 }

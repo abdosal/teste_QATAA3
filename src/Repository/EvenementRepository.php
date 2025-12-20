@@ -49,4 +49,30 @@ class EvenementRepository extends ServiceEntityRepository
             ->getQuery()
             ->getSingleScalarResult();
     }
+    // Met à jour les statuts en fonction de la date de l'événement
+public function updateStatusesByDate(): void
+{
+    $now = new \DateTimeImmutable();
+
+    $qb = $this->createQueryBuilder('e')
+        ->update()
+        ->set('e.statut', ':inactif')
+        ->where('e.dateEvenement < :now')
+        ->andWhere('e.statut = :actif')
+        ->setParameter('inactif', 'inactif')
+        ->setParameter('actif', 'actif')
+        ->setParameter('now', $now);
+
+    $qb->getQuery()->execute();
+}
+
+// Récupérer tous les événements, triés par date
+public function findAllOrderByDate(): array
+{
+    return $this->createQueryBuilder('e')
+        ->orderBy('e.dateEvenement', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
+
 }

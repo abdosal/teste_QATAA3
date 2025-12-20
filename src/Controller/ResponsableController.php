@@ -54,13 +54,20 @@ class ResponsableController extends AbstractController
     
     #[Route('/evenements', name: 'app_responsable_evenements')]
     public function evenements(EvenementRepository $evenementRepository): Response
-    {
-        $evenements = $evenementRepository->findAll();
+{
+    // 1) Mettre à jour les statuts en fonction de la date
+    $evenementRepository->updateStatusesByDate();
 
-        return $this->render('responsable/evenements/index.html.twig', [
-            'evenements' => $evenements,
-        ]);
-    }
+    // 2) Afficher tous les événements (actifs + inactifs) avec le bon statut
+    $evenements = $evenementRepository->findAllOrderByDate();
+
+    return $this->render('responsable/evenements/index.html.twig', [
+        'evenements' => $evenements,
+    ]);
+}
+
+
+
 
     #[Route('/evenement/new', name: 'app_responsable_evenement_new')]
     public function newEvenement(Request $request, EntityManagerInterface $em): Response
