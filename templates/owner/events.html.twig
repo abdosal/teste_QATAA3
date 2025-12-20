@@ -1,66 +1,275 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Événements - Owner{% endblock %}
+{% block title %}Tous les Événements - Owner{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <h1 class="mb-4"><i class="fas fa-calendar"></i> Tous les Événements (Consultation)</h1>
+<style>
+    body { background-color: #f3f4f6; }
 
-    <div class="alert alert-warning">
-        <i class="fas fa-info-circle"></i> <strong>Mode Lecture Seule</strong> - Vous pouvez consulter les événements mais pas les modifier.
+    .page-wrapper-owner {
+        padding: 32px 40px 48px 40px;
+    }
+
+    .owner-header-card {
+        background: linear-gradient(135deg, #ffffff, #f9fafb);
+        border-radius: 20px;
+        padding: 20px 24px;
+        border: 1px solid #e2e8f0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 24px;
+        box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+    }
+
+    .owner-header-left h1 {
+        font-size: 1.9rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin: 0;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
+
+    .owner-header-left h1 i {
+        color: #4f46e5;
+        font-size: 1.4rem;
+    }
+
+    .owner-header-left span {
+        display: block;
+        font-size: 0.9rem;
+        color: #6b7280;
+        margin-top: 4px;
+    }
+
+    .owner-badge-readonly {
+        background: #fef9c3;
+        color: #92400e;
+        border-radius: 999px;
+        padding: 7px 16px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        text-transform: uppercase;
+        box-shadow: 0 6px 16px rgba(234, 179, 8, 0.3);
+    }
+
+    .owner-badge-readonly i {
+        font-size: 0.85rem;
+    }
+
+    .card-table-wrapper {
+        background: #ffffff;
+        border-radius: 18px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 14px 35px rgba(15, 23, 42, 0.06);
+        overflow: hidden;
+    }
+
+    .table-owner {
+        margin: 0;
+    }
+
+    .table-owner thead {
+        background: #f9fafb;
+    }
+
+    .table-owner thead th {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.06em;
+        color: #6b7280;
+        font-weight: 700;
+        border-bottom: 1px solid #e5e7eb;
+        padding: 14px 18px;
+        white-space: nowrap;
+    }
+
+    .table-owner tbody tr {
+        transition: background 0.15s ease, transform 0.05s ease, box-shadow 0.1s ease;
+    }
+
+    .table-owner tbody tr:hover {
+        background: #f9fafb;
+        box-shadow: 0 2px 6px rgba(15, 23, 42, 0.05);
+        transform: translateY(-1px);
+    }
+
+    .table-owner tbody td {
+        padding: 13px 18px;
+        vertical-align: middle;
+        font-size: 0.95rem;
+        color: #111827;
+        border-top: 1px solid #f3f4f6;
+        white-space: nowrap;
+    }
+
+    .col-title-main {
+        font-weight: 600;
+    }
+
+    .badge-category {
+        border-radius: 999px;
+        padding: 4px 11px;
+        font-size: 0.76rem;
+        font-weight: 700;
+        color: #ffffff;
+        box-shadow: 0 4px 10px rgba(15, 23, 42, 0.15);
+    }
+
+    .badge-category.Concert { background: #6366f1; }
+    .badge-category.Festival { background: #ec4899; }
+    .badge-category.Spectacle { background: #22c55e; }
+    .badge-category.Formation { background: #0ea5e9; }
+    .badge-category.Conférence { background: #f97316; }
+    .badge-category.default { background: #6b7280; }
+
+    .badge-status {
+        border-radius: 999px;
+        padding: 4px 11px;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .badge-status.ACTIF,
+    .badge-status.actif,
+    .badge-status.Actif {
+        background: #dcfce7;
+        color: #166534;
+        border: 1px solid #bbf7d0;
+    }
+
+    .badge-status.INACTIF,
+    .badge-status.inactif,
+    .badge-status.Inactif {
+        background: #fee2e2;
+        color: #b91c1c;
+        border: 1px solid #fecaca;
+    }
+
+    .text-number {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+    }
+
+    .table-footer-info {
+        padding: 14px 18px;
+        font-size: 0.85rem;
+        color: #6b7280;
+        background: #f9fafb;
+        border-top: 1px solid #e5e7eb;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    @media (max-width: 992px) {
+        .page-wrapper-owner {
+            padding: 24px 16px 32px 16px;
+        }
+        .owner-header-card {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 10px;
+        }
+    }
+</style>
+
+<div class="page-wrapper-owner">
+    <!-- En-tête -->
+    <div class="owner-header-card">
+        <div class="owner-header-left">
+            <h1>
+                <i class="fas fa-calendar-alt"></i>
+                Tous les événements
+            </h1>
+            <span>Vue globale des performances de vos événements sur Qataa3.ma</span>
+        </div>
+        <div class="owner-header-right">
+            <span class="owner-badge-readonly">
+                <i class="fas fa-lock"></i> Mode lecture seule
+            </span>
+        </div>
     </div>
 
-    {% if evenements is empty %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Aucun événement enregistré.
-        </div>
-    {% else %}
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
+    <!-- Tableau -->
+    <div class="card-table-wrapper">
+        <table class="table table-hover table-owner align-middle">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Titre</th>
+                    <th>Date</th>
+                    <th>Lieu</th>
+                    <th>Catégorie</th>
+                    <th>Statut</th>
+                    <th class="text-number">Billets vendus</th>
+                    <th class="text-number">Revenus (Démo)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for evenement in evenements %}
+                    {% set cat = evenement.categorie|default('') %}
+                    {% set statut = evenement.statut|default('') %}
+                    {% set statutClass = statut|upper %}
                     <tr>
-                        <th>ID</th>
-                        <th>Titre</th>
-                        <th>Date</th>
-                        <th>Lieu</th>
-                        <th>Catégorie</th>
-                        <th>Statut</th>
-                        <th>Billets Vendus</th>
-                        <th>Revenus (Démo)</th>
+                        <td>{{ evenement.id }}</td>
+                        <td class="col-title-main">{{ evenement.titre|default('') }}</td>
+                        <td>
+                            {% if evenement.dateHeure is defined and evenement.dateHeure %}
+                                {{ evenement.dateHeure|date('d/m/Y H:i') }}
+                            {% else %}
+                                -
+                            {% endif %}
+                        </td>
+                        <td>{{ evenement.lieu|default('') }}</td>
+                        <td>
+                            <span class="badge-category {{ cat ?: 'default' }}">
+                                {{ cat ?: 'N/A' }}
+                            </span>
+                        </td>
+                        <td>
+                            <span class="badge-status {{ statutClass }}">
+                                {{ statut ?: 'N/A' }}
+                            </span>
+                        </td>
+                        <td class="text-number">
+                            {% if attribute(evenement, 'billetsVendus') is defined %}
+                                {{ attribute(evenement, 'billetsVendus') }}
+                            {% else %}
+                                0
+                            {% endif %}
+                        </td>
+                        <td class="text-number">
+                            {% if attribute(evenement, 'revenuDemo') is defined %}
+                                {% set revenu = attribute(evenement, 'revenuDemo') %}
+                            {% else %}
+                                {% set revenu = 0 %}
+                            {% endif %}
+                            {{ revenu|number_format(2, '.', ' ') }} MAD
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    {% for evenement in evenements %}
-                        <tr>
-                            <td>{{ evenement.id }}</td>
-                            <td><strong>{{ evenement.titre }}</strong></td>
-                            <td>{{ evenement.dateEvenement|date('d/m/Y H:i') }}</td>
-                            <td>{{ evenement.lieu }}</td>
-                            <td><span class="badge bg-info">{{ evenement.categorie }}</span></td>
-                            <td>
-                                <span class="badge bg-{{ evenement.statut == 'actif' ? 'success' : 'secondary' }}">
-                                    {{ evenement.statut|upper }}
-                                </span>
-                            </td>
-                            <td>
-                                {% set total_vendus = 0 %}
-                                {% for billet in evenement.typeBillets %}
-                                    {% set total_vendus = total_vendus + (billet.quantiteTotale - billet.quantiteRestante) %}
-                                {% endfor %}
-                                {{ total_vendus }}
-                            </td>
-                            <td>
-                                {% set revenus = 0 %}
-                                {% for billet in evenement.typeBillets %}
-                                    {% set revenus = revenus + ((billet.quantiteTotale - billet.quantiteRestante) * billet.prix) %}
-                                {% endfor %}
-                                {{ revenus|number_format(2, '.', ',') }} MAD
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                {% else %}
+                    <tr>
+                        <td colspan="8" class="text-center text-muted py-4">
+                            Aucun événement trouvé pour le moment.
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="table-footer-info">
+            <span>{{ evenements|length }} événement(s) affiché(s)</span>
+            <span class="text-muted">
+                Données de revenus à titre indicatif uniquement.
+            </span>
         </div>
-    {% endif %}
+    </div>
 </div>
 {% endblock %}

@@ -38,4 +38,30 @@ class LigneCommandeRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    // ✅ Total de tous les billets vendus (tous événements confondus)
+    public function countTotalTicketsSold(): int
+    {
+        return (int) $this->createQueryBuilder('lc')
+            ->select('COALESCE(SUM(lc.quantite), 0)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
+    // ✅ Billets vendus aujourd'hui
+    // Utilise lc.commande.dateCommande comme confirmé dans l'entité
+    public function countTicketsSoldToday(): int
+    {
+        $start = (new \DateTime('today'))->setTime(0, 0, 0);
+        $end   = (new \DateTime('today'))->setTime(23, 59, 59);
+
+        return (int) $this->createQueryBuilder('lc')
+            ->select('COALESCE(SUM(lc.quantite), 0)')
+            ->join('lc.commande', 'c')
+            ->where('c.dateCommande BETWEEN :start AND :end')
+            ->setParameter('start', $start)
+            ->setParameter('end', $end)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 }

@@ -3,76 +3,176 @@
 {% block title %}Mon Profil - Qataa3.ma{% endblock %}
 
 {% block body %}
+<style>
+    /* Fond de page gris ardoise léger */
+    body { background-color: #f1f5f9; }
+
+    /* Carte Profil - Bleu Royal Intense */
+    .profile-card-royal {
+        background-color: #2563eb; /* Bleu Royal exact */
+        background-image: radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 40%);
+        border-radius: 24px;
+        color: white;
+        padding: 40px 30px;
+        text-align: center;
+        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
+
+    /* Cercles déco subtils */
+    .profile-card-royal::before {
+        content: ''; position: absolute; bottom: -50px; left: -50px;
+        width: 150px; height: 150px; background: rgba(255,255,255,0.05);
+        border-radius: 50%;
+    }
+
+    .avatar-royal {
+        width: 110px; height: 110px;
+        background: white;
+        border-radius: 50%;
+        margin: 0 auto 20px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 3rem; color: #2563eb;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+
+    /* Badge Vérifié */
+    .badge-verified {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 600;
+        display: inline-flex; align-items: center; gap: 8px;
+        backdrop-filter: blur(5px);
+        margin-bottom: 25px;
+    }
+
+    /* Bouton Blanc Premium */
+    .btn-white-royal {
+        background: white;
+        color: #2563eb; border: none;
+        padding: 14px 25px; border-radius: 12px;
+        font-weight: 700; width: 100%;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        transition: transform 0.2s;
+        text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;
+    }
+    .btn-white-royal:hover {
+        transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); color: #1e40af;
+    }
+
+    /* Carte Infos Droite */
+    .details-card-clean {
+        background: white;
+        border-radius: 24px;
+        padding: 40px;
+        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        height: 100%;
+        border: 1px solid #e2e8f0;
+    }
+
+    .section-title {
+        color: #2563eb; font-weight: 800; text-transform: uppercase; 
+        font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 25px;
+    }
+
+    .info-group-clean { margin-bottom: 25px; }
+    .info-label-clean { 
+        color: #94a3b8; font-size: 0.75rem; font-weight: 700; 
+        text-transform: uppercase; margin-bottom: 5px; 
+    }
+    .info-value-clean { 
+        color: #1e293b; font-size: 1.1rem; font-weight: 600; 
+        border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; width: 100%;
+    }
+
+    .btn-back-clean {
+        color: #64748b; font-weight: 600; text-decoration: none;
+        display: inline-flex; align-items: center; gap: 8px;
+        transition: color 0.2s;
+    }
+    .btn-back-clean:hover { color: #2563eb; }
+</style>
+
 <div class="container py-5">
-    <h1 class="mb-4"><i class="fas fa-user-circle"></i> Mon Profil</h1>
-
-    <div class="row">
-        <div class="col-md-8">
-            <div class="card shadow">
-                <div class="card-header bg-primary text-white">
-                    <h5 class="mb-0">Informations Personnelles</h5>
+    <div class="row justify-content-center align-items-stretch g-4">
+        
+        <!-- Carte Profil (Bleu Royal) -->
+        <div class="col-lg-4">
+            <div class="profile-card-royal">
+                <div class="avatar-royal">
+                    <i class="fas fa-user"></i>
                 </div>
-                <div class="card-body">
-                    <table class="table table-borderless">
-                        <tr>
-                            <th width="30%">Nom:</th>
-                            <td>{{ user.nom }}</td>
-                        </tr>
-                        <tr>
-                            <th>Prénom:</th>
-                            <td>{{ user.prenom }}</td>
-                        </tr>
-                        <tr>
-                            <th>Email:</th>
-                            <td>{{ user.email }}</td>
-                        </tr>
-                        <tr>
-                            <th>Téléphone:</th>
-                            <td>{{ user.telephone ?? 'Non renseigné' }}</td>
-                        </tr>
-                        <tr>
-                            <th>Date d'inscription:</th>
-                            <td>{{ user.dateInscription|date('d/m/Y') }}</td>
-                        </tr>
-                        <tr>
-                            <th>Statut du compte:</th>
-                            <td>
-                                <span class="badge bg-{{ user.statutCompte == 'actif' ? 'success' : 'danger' }}">
-                                    {{ user.statutCompte|upper }}
-                                </span>
-                            </td>
-                        </tr>
-                    </table>
+                
+                <h3 class="fw-bold mb-1">{{ user.prenom }} {{ user.nom }}</h3>
+                <p class="opacity-75 mb-4">{{ user.email }}</p>
 
-                    <hr>
+                <div class="mb-2">
+                    {% if user.statutCompte == 'actif' %}
+                        <div class="badge-verified">
+                            <i class="fas fa-check-circle"></i> Compte Vérifié
+                        </div>
+                    {% else %}
+                        <div class="badge bg-warning text-dark mb-4">
+                            {{ user.statutCompte|capitalize }}
+                        </div>
+                    {% endif %}
+                </div>
 
-                    <div class="d-flex justify-content-between">
-                        <a href="{{ path('app_client_dashboard') }}" class="btn btn-secondary">
-                            <i class="fas fa-arrow-left"></i> Retour au dashboard
-                        </a>
+                <a href="{{ path('app_client_dashboard') }}" class="btn-white-royal">
+                    <i class="fas fa-columns me-2"></i> Mon Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Carte Infos (Blanche & Clean) -->
+        <div class="col-lg-7">
+            <div class="details-card-clean">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <div class="section-title">Informations Personnelles</div>
+                    <a href="{{ path('app_home') }}" class="btn-back-clean">
+                        <i class="fas fa-arrow-left"></i> Retour
+                    </a>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="info-group-clean">
+                            <div class="info-label-clean">Nom Complet</div>
+                            <div class="info-value-clean">{{ user.prenom }} {{ user.nom }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-group-clean">
+                            <div class="info-label-clean">Email</div>
+                            <div class="info-value-clean">{{ user.email }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-group-clean">
+                            <div class="info-label-clean">Téléphone</div>
+                            <div class="info-value-clean">{{ user.telephone ?? 'Non renseigné' }}</div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="info-group-clean">
+                            <div class="info-label-clean">Membre depuis</div>
+                            <div class="info-value-clean">{{ user.dateInscription|date('d F Y') }}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Securité -->
+                <div class="mt-4 pt-4 border-top border-light">
+                    <div class="d-flex align-items-center text-muted">
+                        <i class="fas fa-lock text-success me-3 fs-5"></i>
+                        <small>Connexion sécurisée SSL. Vos données personnelles sont cryptées.</small>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-4">
-            <div class="card shadow mb-3">
-                <div class="card-body text-center">
-                    <i class="fas fa-user-circle fa-5x text-primary mb-3"></i>
-                    <h5>{{ user.prenom }} {{ user.nom }}</h5>
-                    <p class="text-muted">{{ user.email }}</p>
-                </div>
-            </div>
-
-            <div class="card shadow">
-                <div class="card-body">
-                    <h6 class="mb-3"><i class="fas fa-shield-alt text-success"></i> Sécurité</h6>
-                    <p class="text-muted small mb-0">
-                        Votre compte est sécurisé. Pour toute modification, contactez le support.
-                    </p>
-                </div>
-            </div>
-        </div>
     </div>
 </div>
 {% endblock %}

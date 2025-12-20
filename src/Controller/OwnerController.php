@@ -24,21 +24,27 @@ class OwnerController extends AbstractController
         TypeBilletRepository $typeBilletRepository,
         LigneCommandeRepository $ligneCommandeRepository
     ): Response {
-        // KPIs Globaux
-        $totalBilletsVendus = $commandeRepository->countTodaySales();
+        // ✅ Total billets vendus (toutes lignes de commande)
+        $totalBilletsVendus = $ligneCommandeRepository->countTotalTicketsSold();
+
+        // Revenus totaux (méthode existante dans CommandeRepository)
         $revenusTotal = $commandeRepository->getTotalRevenue();
+
+        // Total clients
         $totalClients = count($clientRepository->findAll());
+
+        // Événements actifs
         $evenementsActifs = $evenementRepository->countActiveEvents();
 
-        // Statistiques par événement
+        // Statistiques par événement (déjà existant)
         $ventesByEvent = $ligneCommandeRepository->getVentesByEvent();
 
         return $this->render('owner/dashboard.html.twig', [
             'total_billets_vendus' => $totalBilletsVendus,
-            'revenus_total' => $revenusTotal,
-            'total_clients' => $totalClients,
-            'evenements_actifs' => $evenementsActifs,
-            'ventes_by_event' => $ventesByEvent,
+            'revenus_total'        => $revenusTotal,
+            'total_clients'        => $totalClients,
+            'evenements_actifs'    => $evenementsActifs,
+            'ventes_by_event'      => $ventesByEvent,
         ]);
     }
 
@@ -65,9 +71,8 @@ class OwnerController extends AbstractController
     #[Route('/reports', name: 'app_owner_reports')]
     public function reports(CommandeRepository $commandeRepository): Response
     {
-        // Revenus par période
         $startDate = new \DateTime('-30 days');
-        $endDate = new \DateTime();
+        $endDate   = new \DateTime();
         $revenueByPeriod = $commandeRepository->getRevenueByPeriod($startDate, $endDate);
 
         return $this->render('owner/reports.html.twig', [

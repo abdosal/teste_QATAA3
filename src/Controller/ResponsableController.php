@@ -9,6 +9,7 @@ use App\Form\TypeBilletType;
 use App\Repository\ClientRepository;
 use App\Repository\CommandeRepository;
 use App\Repository\EvenementRepository;
+use App\Repository\LigneCommandeRepository;
 use App\Repository\TypeBilletRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,10 +27,13 @@ class ResponsableController extends AbstractController
         CommandeRepository $commandeRepository,
         EvenementRepository $evenementRepository,
         ClientRepository $clientRepository,
-        TypeBilletRepository $typeBilletRepository
+        TypeBilletRepository $typeBilletRepository,
+        LigneCommandeRepository $ligneCommandeRepository
     ): Response {
         // KPIs
-        $billetsVendusAujourdhui = $commandeRepository->countTodaySales();
+        // ✅ Correction : on utilise LigneCommandeRepository pour compter le volume de billets
+        $billetsVendusAujourdhui = $ligneCommandeRepository->countTicketsSoldToday();
+
         $evenementsActifs = $evenementRepository->countActiveEvents();
         $utilisateursInscrits = count($clientRepository->findActiveClients());
         $billetsDisponibles = $typeBilletRepository->getTotalRemainingTickets();
@@ -59,98 +63,90 @@ class ResponsableController extends AbstractController
     }
 
     #[Route('/evenement/new', name: 'app_responsable_evenement_new')]
-public function newEvenement(Request $request, EntityManagerInterface $em): Response
-{
-    $evenement = new Evenement();
-    $form = $this->createForm(EvenementType::class, $evenement);
-    $form->handleRequest($request);
+    public function newEvenement(Request $request, EntityManagerInterface $em): Response
+    {
+        $evenement = new Evenement();
+        $form = $this->createForm(EvenementType::class, $evenement);
+        $form->handleRequest($request);
 
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Gérer l'upload d'image
-        $imageFile = $form->get('imageFile')->getData();
-        
-        if ($imageFile) {
-            // Créer un nom unique pour le fichier
-            $newFilename = uniqid().'.'.$imageFile->guessExtension();
+        if ($form->isSubmitted() && $form->isValid()) {
+            // Gérer l'upload d'image
+            $imageFile = $form->get('imageFile')->getData();
             
-            // Créer le dossier s'il n'existe pas
-            $uploadDir = $this->getParameter('kernel.project_dir').'/public/images/events';
-            if (!file_exists($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-            
-            try {
-                // Déplacer le fichier uploadé
-                $imageFile->move($uploadDir, $newFilename);
-                $evenement->setImage($newFilename);
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage());
-            }
-        }
-        
-        $em->persist($evenement);
-        $em->flush();
-
-        $this->addFlash('success', 'Événement créé avec succès !');
-        return $this->redirectToRoute('app_responsable_evenements');
-    }
-
-    return $this->render('responsable/evenements/new.html.twig', [
-        'form' => $form,
-    ]);
-}
-
-
-    #[Route('/evenement/{id}/edit', name: 'app_responsable_evenement_edit')]
-public function editEvenement(
-    Request $request,
-    Evenement $evenement,
-    EntityManagerInterface $em
-): Response {
-    $form = $this->createForm(EvenementType::class, $evenement);
-    $form->handleRequest($request);
-
-    if ($form->isSubmitted() && $form->isValid()) {
-        // Gérer l'upload d'image
-        $imageFile = $form->get('imageFile')->getData();
-        
-        if ($imageFile) {
-            // Supprimer l'ancienne image si elle existe
-            if ($evenement->getImage()) {
-                $oldImagePath = $this->getParameter('kernel.project_dir').'/public/images/events/'.$evenement->getImage();
-                if (file_exists($oldImagePath)) {
-                    unlink($oldImagePath);
+            if ($imageFile) {
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                
+                $uploadDir = $this->getParameter('kernel.project_dir').'/public/images/events';
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+                
+                try {
+                    $imageFile->move($uploadDir, $newFilename);
+                    $evenement->setImage($newFilename);
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage());
                 }
             }
             
-            // Créer un nom unique pour le nouveau fichier
-            $newFilename = uniqid().'.'.$imageFile->guessExtension();
-            
-            // Créer le dossier s'il n'existe pas
-            $uploadDir = $this->getParameter('kernel.project_dir').'/public/images/events';
-            if (!file_exists($uploadDir)) {
-                mkdir($uploadDir, 0777, true);
-            }
-            
-            try {
-                $imageFile->move($uploadDir, $newFilename);
-                $evenement->setImage($newFilename);
-            } catch (\Exception $e) {
-                $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
-            }
-        }
-        
-        $em->flush();
+            $em->persist($evenement);
+            $em->flush();
 
-        $this->addFlash('success', 'Événement modifié avec succès !');
-        return $this->redirectToRoute('app_responsable_evenements');
+            $this->addFlash('success', 'Événement créé avec succès !');
+            return $this->redirectToRoute('app_responsable_evenements');
+        }
+
+        return $this->render('responsable/evenements/new.html.twig', [
+            'form' => $form,
+        ]);
     }
 
-    return $this->render('responsable/evenements/edit.html.twig', [
-        'form' => $form,
-        'evenement' => $evenement,
-    ]);
-}
+    #[Route('/evenement/{id}/edit', name: 'app_responsable_evenement_edit')]
+    public function editEvenement(
+        Request $request,
+        Evenement $evenement,
+        EntityManagerInterface $em
+    ): Response {
+        $form = $this->createForm(EvenementType::class, $evenement);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $imageFile = $form->get('imageFile')->getData();
+            
+            if ($imageFile) {
+                if ($evenement->getImage()) {
+                    $oldImagePath = $this->getParameter('kernel.project_dir').'/public/images/events/'.$evenement->getImage();
+                    if (file_exists($oldImagePath)) {
+                        unlink($oldImagePath);
+                    }
+                }
+                
+                $newFilename = uniqid().'.'.$imageFile->guessExtension();
+                
+                $uploadDir = $this->getParameter('kernel.project_dir').'/public/images/events';
+                if (!file_exists($uploadDir)) {
+                    mkdir($uploadDir, 0777, true);
+                }
+                
+                try {
+                    $imageFile->move($uploadDir, $newFilename);
+                    $evenement->setImage($newFilename);
+                } catch (\Exception $e) {
+                    $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
+                }
+            }
+            
+            $em->flush();
+
+            $this->addFlash('success', 'Événement modifié avec succès !');
+            return $this->redirectToRoute('app_responsable_evenements');
+        }
+
+        return $this->render('responsable/evenements/edit.html.twig', [
+            'form' => $form,
+            'evenement' => $evenement,
+        ]);
+    }
 
     #[Route('/evenement/{id}/delete', name: 'app_responsable_evenement_delete', methods: ['POST'])]
     public function deleteEvenement(
@@ -200,7 +196,6 @@ public function editEvenement(
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // Initialiser quantité restante = quantité totale
             $typeBillet->setQuantiteRestante($typeBillet->getQuantiteTotale());
             
             $em->persist($typeBillet);

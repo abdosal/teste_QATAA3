@@ -3,107 +3,246 @@
 {% block title %}Dashboard Owner - Qataa3.ma{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <div class="row mb-4">
-        <div class="col">
-            <h1><i class="fas fa-crown text-warning"></i> Dashboard Owner (Lecture Seule)</h1>
-            <p class="text-muted">Bienvenue {{ app.user.prenom }} {{ app.user.nom }}</p>
+<style>
+    .dashboard-wrapper {
+        background: radial-gradient(circle at top left, #eef4ff 0, transparent 55%),
+                    radial-gradient(circle at bottom right, #e8fff7 0, transparent 55%);
+        min-height: calc(100vh - 70px);
+    }
+
+    .kpi-card {
+        border: none;
+        border-radius: 18px;
+        background: #ffffff;
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        position: relative;
+        overflow: hidden;
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .kpi-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+
+    .kpi-card::after {
+        content: "";
+        position: absolute;
+        right: -40px;
+        top: -40px;
+        width: 120px;
+        height: 120px;
+        background: radial-gradient(circle, rgba(59,130,246,0.12) 0, transparent 60%);
+    }
+
+    .kpi-label {
+        letter-spacing: .08em;
+        font-size: .72rem;
+    }
+
+    .kpi-icon-badge {
+        width: 44px;
+        height: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 14px;
+        background: #f3f4ff;
+        color: #4f46e5;
+    }
+
+    .section-card {
+        border-radius: 18px;
+        border: none;
+        background: rgba(255,255,255,0.9);
+        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        backdrop-filter: blur(8px);
+        transition: transform .25s ease, box-shadow .25s ease;
+    }
+
+    .section-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+    }
+
+    .section-icon-pill {
+        width: 46px;
+        height: 46px;
+        border-radius: 16px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.2rem;
+    }
+</style>
+
+<div class="container-fluid py-4 dashboard-wrapper">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <div class="d-flex align-items-center mb-2">
+                <span class="me-2 fs-4">👑</span>
+                <h1 class="h3 mb-0">Tableau de bord Owner</h1>
+            </div>
+            <p class="text-muted mb-0">
+                Bienvenue {{ app.user.prenom }} {{ app.user.nom }} · Vue globale de la plateforme
+            </p>
         </div>
     </div>
 
-    <!-- KPIs Cards -->
-    <div class="row g-4 mb-4">
+    <!-- KPIs -->
+    <div class="row g-3 mb-4">
         <div class="col-md-3">
-            <div class="card text-white bg-primary shadow">
+            <div class="card kpi-card h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-white-50">Total Billets Vendus</h6>
-                            <h2 class="mb-0">{{ total_billets_vendus }}</h2>
+                            <p class="text-muted text-uppercase kpi-label mb-1">Total billets vendus</p>
+                            <h3 class="fw-semibold mb-1" data-counter>{{ total_billets_vendus }}</h3>
+                            <p class="text-muted small mb-0">Depuis le lancement</p>
                         </div>
-                        <i class="fas fa-ticket-alt fa-3x opacity-50"></i>
+                        <div class="kpi-icon-badge">
+                            <i class="fas fa-ticket-alt"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-white bg-success shadow">
+            <div class="card kpi-card h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-white-50">Revenus Total (Démo)</h6>
-                            <h2 class="mb-0">{{ revenus_total|number_format(0, '.', ',') }} MAD</h2>
+                            <p class="text-muted text-uppercase kpi-label mb-1">Revenus totaux</p>
+                            <h3 class="fw-semibold mb-1" data-counter>{{ revenus_total }}</h3>
+                            <p class="text-muted small mb-0">MAD cumulés</p>
                         </div>
-                        <i class="fas fa-dollar-sign fa-3x opacity-50"></i>
+                        <div class="kpi-icon-badge" style="background:#ecfdf3;color:#16a34a;">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-white bg-info shadow">
+            <div class="card kpi-card h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-white-50">Total Clients</h6>
-                            <h2 class="mb-0">{{ total_clients }}</h2>
+                            <p class="text-muted text-uppercase kpi-label mb-1">Total clients</p>
+                            <h3 class="fw-semibold mb-1" data-counter>{{ total_clients }}</h3>
+                            <p class="text-muted small mb-0">Clients enregistrés</p>
                         </div>
-                        <i class="fas fa-users fa-3x opacity-50"></i>
+                        <div class="kpi-icon-badge" style="background:#e0f2fe;color:#0284c7;">
+                            <i class="fas fa-users"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card text-white bg-warning shadow">
+            <div class="card kpi-card h-100">
                 <div class="card-body">
-                    <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex justify-content-between align-items-start">
                         <div>
-                            <h6 class="card-title text-white-50">Événements Actifs</h6>
-                            <h2 class="mb-0">{{ evenements_actifs }}</h2>
+                            <p class="text-muted text-uppercase kpi-label mb-1">Événements actifs</p>
+                            <h3 class="fw-semibold mb-1" data-counter>{{ evenements_actifs }}</h3>
+                            <p class="text-muted small mb-0">Actuellement en vente</p>
                         </div>
-                        <i class="fas fa-calendar-check fa-3x opacity-50"></i>
+                        <div class="kpi-icon-badge" style="background:#fef9c3;color:#eab308;">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Actions -->
-    <div class="row g-4">
+    <!-- Sections -->
+    <div class="row g-3">
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-calendar fa-3x text-primary mb-3"></i>
-                    <h5>Événements</h5>
-                    <p class="text-muted">Consulter tous les événements</p>
-                    <a href="{{ path('app_owner_events') }}" class="btn btn-primary">Voir</a>
+            <div class="card section-card h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="section-icon-pill bg-primary bg-opacity-10 text-primary me-3">
+                            <i class="fas fa-calendar"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">Événements</h5>
+                            <p class="text-muted small mb-0">Consulter et analyser les événements publiés.</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <a href="{{ path('app_owner_events') }}" class="btn btn-primary w-100">Voir les événements</a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-users fa-3x text-success mb-3"></i>
-                    <h5>Clients</h5>
-                    <p class="text-muted">Consulter la liste des clients</p>
-                    <a href="{{ path('app_owner_clients') }}" class="btn btn-success">Voir</a>
+            <div class="card section-card h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="section-icon-pill bg-success bg-opacity-10 text-success me-3">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">Clients</h5>
+                            <p class="text-muted small mb-0">Accéder à la base complète de vos clients.</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <a href="{{ path('app_owner_clients') }}" class="btn btn-success w-100">Voir les clients</a>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-chart-bar fa-3x text-info mb-3"></i>
-                    <h5>Rapports</h5>
-                    <p class="text-muted">Consulter les rapports</p>
-                    <a href="{{ path('app_owner_reports') }}" class="btn btn-info">Voir</a>
+            <div class="card section-card h-100">
+                <div class="card-body d-flex flex-column">
+                    <div class="d-flex align-items-center mb-3">
+                        <div class="section-icon-pill bg-info bg-opacity-10 text-info me-3">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div>
+                            <h5 class="mb-0">Rapports</h5>
+                            <p class="text-muted small mb-0">Visualiser les performances et les statistiques.</p>
+                        </div>
+                    </div>
+                    <div class="mt-auto">
+                        <a href="{{ path('app_owner_reports') }}" class="btn btn-info w-100">Voir les rapports</a>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<script>
+// Animation compteur KPI
+const counters = document.querySelectorAll('[data-counter]');
+counters.forEach(counter => {
+    const target = +counter.innerText;
+    let current = 0;
+    const step = Math.max(1, Math.floor(target / 40));
+
+    counter.innerText = '0';
+
+    const interval = setInterval(() => {
+        current += step;
+        if (current >= target) {
+            counter.innerText = target.toLocaleString('fr-FR');
+            clearInterval(interval);
+        } else {
+            counter.innerText = current.toLocaleString('fr-FR');
+        }
+    }, 20);
+});
+</script>
+
 {% endblock %}

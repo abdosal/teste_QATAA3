@@ -3,62 +3,184 @@
 {% block title %}Gestion Billets - {{ evenement.titre }}{% endblock %}
 
 {% block body %}
-<div class="container py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <div>
-            <h1><i class="fas fa-ticket-alt"></i> Gestion des Billets</h1>
-            <p class="text-muted mb-0">Événement: {{ evenement.titre }}</p>
-        </div>
-        <div>
-            <a href="{{ path('app_responsable_billet_new', {id: evenement.id}) }}" class="btn btn-primary">
-                <i class="fas fa-plus"></i> Nouveau Type de Billet
-            </a>
-            <a href="{{ path('app_responsable_evenement_detail', {id: evenement.id}) }}" class="btn btn-secondary">
-                <i class="fas fa-arrow-left"></i> Retour
-            </a>
-        </div>
-    </div>
+<style>
+    body { background-color: #f8fafc; }
 
+    /* --- Couleurs de la Marque (Adaptation) --- */
+    :root {
+        --brand-color: #6366f1; /* Indigo doux comme le logo */
+        --brand-hover: #4f46e5;
+        --accent-1: #8b5cf6; /* Violet */
+        --accent-2: #ec4899; /* Rose */
+        --accent-3: #10b981; /* Emeraude pour le succès */
+    }
+
+    /* Header Page */
+    .page-header {
+        background: white; padding: 24px 32px; border-bottom: 1px solid #e2e8f0; margin-bottom: 32px;
+        display: flex; justify-content: space-between; align-items: center;
+    }
+    .page-title h1 {
+        font-size: 1.5rem; font-weight: 700; color: #1e293b; margin: 0;
+        display: flex; align-items: center; gap: 12px;
+    }
+    .page-subtitle { font-size: 0.9rem; color: #64748b; margin-top: 4px; }
+
+    /* Carte Billet */
+    .ticket-type-card {
+        background: white; border-radius: 16px; border: 1px solid #e2e8f0; overflow: hidden;
+        transition: all 0.3s ease; position: relative; height: 100%;
+        display: flex; flex-direction: column;
+    }
+    .ticket-type-card:hover {
+        transform: translateY(-5px); box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        border-color: #cbd5e1;
+    }
+
+    /* Bandeau de couleur thématique */
+    .card-top-strip { height: 6px; width: 100%; background: #e2e8f0; }
+    /* Cycle de couleurs harmonieuses */
+    .ticket-type-card:nth-child(3n+1) .card-top-strip { background: var(--brand-color); }
+    .ticket-type-card:nth-child(3n+2) .card-top-strip { background: var(--accent-1); }
+    .ticket-type-card:nth-child(3n+3) .card-top-strip { background: var(--accent-2); }
+
+    .card-content { padding: 24px; flex: 1; display: flex; flex-direction: column; }
+
+    .ticket-name {
+        font-size: 1.25rem; font-weight: 800; color: #1e293b; margin-bottom: 5px;
+        text-transform: uppercase; letter-spacing: 0.5px;
+    }
+    
+    .ticket-price {
+        font-size: 2rem; font-weight: 800; color: #1e293b; margin-bottom: 20px;
+        display: flex; align-items: baseline; gap: 4px;
+    }
+    .ticket-price small { font-size: 1rem; font-weight: 500; color: #64748b; }
+
+    /* Stats Grid */
+    .stats-grid {
+        display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 24px;
+        background: #f8fafc; padding: 12px; border-radius: 12px;
+    }
+    .stat-item { display: flex; flex-direction: column; }
+    .stat-label { font-size: 0.7rem; color: #64748b; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
+    .stat-val { font-size: 1rem; font-weight: 700; color: #334155; }
+    
+    /* Couleur dynamique pour les chiffres */
+    .ticket-type-card:nth-child(3n+1) .text-highlight { color: var(--brand-color); }
+    .ticket-type-card:nth-child(3n+2) .text-highlight { color: var(--accent-1); }
+    .ticket-type-card:nth-child(3n+3) .text-highlight { color: var(--accent-2); }
+
+    /* Progress Bar */
+    .progress-container { margin-bottom: 20px; }
+    .progress-info { display: flex; justify-content: space-between; font-size: 0.8rem; margin-bottom: 6px; color: #64748b; }
+    .progress { height: 6px; background-color: #f1f5f9; border-radius: 4px; overflow: hidden; }
+    
+    .ticket-type-card:nth-child(3n+1) .progress-bar { background-color: var(--brand-color); }
+    .ticket-type-card:nth-child(3n+2) .progress-bar { background-color: var(--accent-1); }
+    .ticket-type-card:nth-child(3n+3) .progress-bar { background-color: var(--accent-2); }
+
+    /* Badge Statut */
+    .status-badge {
+        display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 20px;
+        font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    }
+    .status-active { background: #dcfce7; color: #15803d; }
+    .status-inactive { background: #f1f5f9; color: #475569; }
+
+    /* Boutons */
+    .btn-create {
+        background: var(--brand-color); color: white; border: none; padding: 10px 20px; border-radius: 8px; font-weight: 600;
+        text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+        box-shadow: 0 4px 6px -1px rgba(99, 102, 241, 0.2); /* Ombre indigo */
+    }
+    .btn-create:hover { background: var(--brand-hover); color: white; transform: translateY(-1px); }
+
+    .btn-back {
+        background: white; color: #475569; border: 1px solid #cbd5e1; padding: 10px 20px; border-radius: 8px; font-weight: 600;
+        text-decoration: none; display: inline-flex; align-items: center; gap: 8px; transition: all 0.2s;
+    }
+    .btn-back:hover { background: #f8fafc; color: #1e293b; border-color: #94a3b8; }
+    
+    .empty-state {
+        text-align: center; padding: 60px; background: white; border-radius: 20px; border: 1px dashed #cbd5e1;
+    }
+</style>
+
+<!-- Header -->
+<div class="page-header">
+    <div>
+        <div class="page-title">
+            <!-- Icone en violet pour matcher le logo -->
+            <h1><i class="fas fa-ticket-alt" style="color: var(--brand-color);"></i> Gestion des Billets</h1>
+        </div>
+        <div class="page-subtitle">Événement : <span class="fw-bold text-dark">{{ evenement.titre }}</span></div>
+    </div>
+    <div class="d-flex gap-2">
+        <a href="{{ path('app_responsable_billet_new', {id: evenement.id}) }}" class="btn-create">
+            <i class="fas fa-plus"></i> Nouveau Type
+        </a>
+        <a href="{{ path('app_responsable_evenement_detail', {id: evenement.id}) }}" class="btn-back">
+            <i class="fas fa-arrow-left"></i> Retour
+        </a>
+    </div>
+</div>
+
+<div class="container-fluid px-4 pb-5">
     {% if billets is empty %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Aucun type de billet créé pour cet événement.
+        <div class="empty-state">
+            <div class="mb-4">
+                <div class="d-inline-flex align-items-center justify-content-center bg-light rounded-circle" style="width: 80px; height: 80px;">
+                    <i class="fas fa-ticket-alt fa-2x text-muted opacity-50"></i>
+                </div>
+            </div>
+            <h4 class="fw-bold text-dark">Aucun billet configuré</h4>
+            <p class="text-muted mb-4">Créez des types de billets (VIP, Standard...) pour commencer à vendre.</p>
         </div>
     {% else %}
         <div class="row g-4">
             {% for billet in billets %}
-                <div class="col-md-4">
-                    <div class="card shadow-sm h-100">
-                        <div class="card-header bg-primary text-white">
-                            <h5 class="mb-0">{{ billet.nomType }}</h5>
-                        </div>
-                        <div class="card-body">
-                            <p class="h3 text-primary mb-3">{{ billet.prix }} MAD</p>
+                <div class="col-md-6 col-xl-4">
+                    <div class="ticket-type-card">
+                        <div class="card-top-strip"></div>
+                        <div class="card-content">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <div class="ticket-name">{{ billet.nomType }}</div>
+                                <span class="status-badge {{ billet.statut == 'actif' ? 'status-active' : 'status-inactive' }}">
+                                    {{ billet.statut|default('Inactif') }}
+                                </span>
+                            </div>
+
+                            <div class="ticket-price">
+                                {{ billet.prix }} <small>MAD</small>
+                            </div>
+
+                            <div class="stats-grid">
+                                <div class="stat-item">
+                                    <span class="stat-label">Total</span>
+                                    <span class="stat-val">{{ billet.quantiteTotale }}</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-label">Restants</span>
+                                    <span class="stat-val text-highlight">{{ billet.quantiteRestante }}</span>
+                                </div>
+                            </div>
                             
-                            <div class="mb-3">
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Quantité totale:</span>
-                                    <strong>{{ billet.quantiteTotale }}</strong>
+                            {% set vendus = billet.quantiteTotale - billet.quantiteRestante %}
+                            {% set pourcentage = billet.quantiteTotale > 0 ? ((vendus / billet.quantiteTotale) * 100)|round : 0 %}
+                            
+                            <div class="progress-container mt-auto">
+                                <div class="progress-info">
+                                    <span>Progression des ventes</span>
+                                    <span class="fw-bold text-dark">{{ pourcentage }}%</span>
                                 </div>
-                                <div class="d-flex justify-content-between mb-1">
-                                    <span>Restants:</span>
-                                    <strong class="text-warning">{{ billet.quantiteRestante }}</strong>
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: {{ pourcentage }}%"></div>
                                 </div>
-                                <div class="d-flex justify-content-between">
-                                    <span>Vendus:</span>
-                                    <strong class="text-success">{{ billet.quantiteTotale - billet.quantiteRestante }}</strong>
-                                </div>
-                            </div>
-
-                            <div class="progress mb-3" style="height: 25px;">
-                                {% set pourcentage = ((billet.quantiteTotale - billet.quantiteRestante) / billet.quantiteTotale * 100)|round %}
-                                <div class="progress-bar bg-success" style="width: {{ pourcentage }}%">
-                                    {{ pourcentage }}%
+                                <div class="mt-2 text-end text-muted small">
+                                    <span class="fw-bold text-dark">{{ vendus }}</span> vendus
                                 </div>
                             </div>
-
-                            <span class="badge bg-{{ billet.statut == 'actif' ? 'success' : 'secondary' }}">
-                                {{ billet.statut|upper }}
-                            </span>
                         </div>
                     </div>
                 </div>

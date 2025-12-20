@@ -3,321 +3,402 @@
 {% block title %}Accueil - Qataa3.ma{% endblock %}
 
 {% block stylesheets %}
-{{ parent() }}
-<style>
-    /* Hero Section avec Image de Fond */
-    .hero-section {
-        position: relative;
-        height: 600px;
-        background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), 
-                    url('{{ asset('images/concert-hero.jpg') }}') center center/cover;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        overflow: hidden;
-    }
-
-    .hero-section::before {
-        content: '';
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: linear-gradient(135deg, rgba(99, 102, 241, 0.3), rgba(139, 92, 246, 0.3));
-    }
-
-    .hero-content {
-        position: relative;
-        z-index: 2;
-        text-align: center;
-        max-width: 900px;
-        padding: 0 20px;
-    }
-
-    .hero-content h1 {
-        font-size: 3.5rem;
-        font-weight: 800;
-        margin-bottom: 1.5rem;
-        text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-        animation: fadeInUp 0.8s ease;
-    }
-
-    .hero-content p {
-        font-size: 1.3rem;
-        margin-bottom: 2.5rem;
-        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.3);
-        animation: fadeInUp 0.8s ease 0.2s both;
-    }
-
-    /* Barre de Recherche Moderne */
-    .search-container {
-        position: relative;
-        max-width: 700px;
-        margin: 0 auto;
-        animation: fadeInUp 0.8s ease 0.4s both;
-    }
-
-    .search-box {
-        display: flex;
-        background: white;
-        border-radius: 50px;
-        overflow: hidden;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-    }
-
-    .search-box input {
-        flex: 1;
-        border: none;
-        padding: 20px 30px;
-        font-size: 1.1rem;
-        outline: none;
-        color: #333;
-    }
-
-    .search-box input::placeholder {
-        color: #94a3b8;
-    }
-
-    .search-box button {
-        background: #1e1b4b;
-        border: none;
-        padding: 20px 35px;
-        cursor: pointer;
-        transition: all 0.3s ease;
-    }
-
-    .search-box button:hover {
-        background: #312e81;
-    }
-
-    .search-box button i {
-        color: white;
-        font-size: 1.3rem;
-    }
-
-    /* Section Événements */
-    .events-section {
-        padding: 80px 0;
-        background: #f8fafc;
-    }
-
-    .section-title {
-        text-align: center;
-        margin-bottom: 50px;
-    }
-
-    .section-title h2 {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 15px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 15px;
-    }
-
-    .section-title h2 i {
-        color: #6366f1;
-    }
-
-    /* Cartes d'Événements Modernes */
-    .event-card {
-        background: white;
-        border-radius: 20px;
-        overflow: hidden;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-        transition: all 0.3s ease;
-        margin-bottom: 30px;
-        height: 100%;
-    }
-
-    .event-card:hover {
-        transform: translateY(-10px);
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
-    }
-
-    .event-card-image {
-        position: relative;
-        height: 250px;
-        overflow: hidden;
-    }
-
-    .event-card-image img {
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-        transition: transform 0.3s ease;
-    }
-
-    .event-card:hover .event-card-image img {
-        transform: scale(1.1);
-    }
-
-    .event-badge {
-        position: absolute;
-        top: 15px;
-        right: 15px;
-        background: #6366f1;
-        color: white;
-        padding: 8px 15px;
-        border-radius: 20px;
-        font-size: 0.85rem;
-        font-weight: 600;
-    }
-
-    .event-card-body {
-        padding: 25px;
-    }
-
-    .event-title {
-        font-size: 1.4rem;
-        font-weight: 700;
-        color: #1e293b;
-        margin-bottom: 10px;
-    }
-
-    .event-artist {
-        color: #64748b;
-        font-size: 1rem;
-        margin-bottom: 15px;
-    }
-
-    .event-rating {
-        color: #fbbf24;
-        font-size: 1.1rem;
-        margin-bottom: 20px;
-    }
-
-    .btn-book-now {
-        background: #1e1b4b;
-        color: white;
-        border: none;
-        padding: 12px 30px;
-        border-radius: 50px;
-        font-weight: 600;
-        transition: all 0.3s ease;
-        width: 100%;
-        text-decoration: none;
-        display: inline-block;
-        text-align: center;
-    }
-
-    .btn-book-now:hover {
-        background: #6366f1;
-        transform: scale(1.05);
-        color: white;
-    }
-
-    /* Animations */
-    @keyframes fadeInUp {
-        from {
-            opacity: 0;
-            transform: translateY(30px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
+    {{ parent() }}
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <style>
+        /* --- HERO SECTION --- */
         .hero-section {
-            height: 500px;
+            position: relative;
+            height: 600px;
+            /* Image de fond avec overlay sombre */
+            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)), url('{{ asset('images/concert-hero.jpg') }}') center center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            margin-bottom: 0;
+        }
+
+        .hero-content {
+            text-align: center;
+            max-width: 800px;
+            padding: 20px;
+            z-index: 2;
         }
 
         .hero-content h1 {
-            font-size: 2rem;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            line-height: 1.2;
         }
 
         .hero-content p {
-            font-size: 1rem;
+            font-size: 1.25rem;
+            font-weight: 300;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        /* --- BARRE DE RECHERCHE --- */
+        .search-container {
+            position: relative;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .search-box {
+            background: white;
+            padding: 8px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
         }
 
         .search-box input {
-            padding: 15px 20px;
-            font-size: 0.95rem;
+            border: none;
+            padding: 15px 25px;
+            flex: 1;
+            outline: none;
+            font-size: 1rem;
+            border-radius: 50px;
+            background: transparent;
         }
-    }
-</style>
+
+        .search-box button {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            background: #2563eb;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .search-box button:hover {
+            background: #1d4ed8;
+            transform: scale(1.05);
+        }
+
+        /* --- SECTION ÉVÉNEMENTS --- */
+        .events-section {
+            padding: 80px 0;
+            background: #f8fafc;
+            overflow: hidden;
+        }
+
+        /* --- NOUVEAU TITRE DESIGN --- */
+        .section-header-modern {
+            text-align: center;
+            margin-bottom: 60px;
+            position: relative;
+        }
+        
+        .fw-900 { font-weight: 900; }
+        .text-gradient {
+            background: linear-gradient(90deg, #1e293b, #3b82f6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .separator-line {
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(90deg, #2563eb, #60a5fa);
+            border-radius: 2px;
+            margin: 20px auto 0;
+        }
+
+        /* CARTE MODERNE CLEAN */
+        .event-card-clean {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid #f1f5f9;
+        }
+
+        .event-card-clean:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        }
+
+        .card-img-wrapper {
+            position: relative;
+            height: 220px;
+            overflow: hidden;
+        }
+
+        .card-img-top {
+            height: 100%;
+            width: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .event-card-clean:hover .card-img-top {
+            transform: scale(1.05);
+        }
+
+        .card-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: rgba(255, 255, 255, 0.95);
+            color: #0f172a;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 0.75rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-transform: uppercase;
+            z-index: 2;
+            letter-spacing: 0.5px;
+        }
+
+        .card-body {
+            padding: 24px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .event-date {
+            color: #2563eb;
+            font-weight: 700;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .event-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 8px;
+            line-height: 1.3;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .event-location {
+            color: #64748b;
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-action {
+            margin-top: auto;
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            background: #f1f5f9;
+            color: #0f172a;
+            font-weight: 700;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s ease;
+            display: block;
+        }
+
+        .btn-action:hover {
+            background: #0f172a;
+            color: white;
+        }
+
+        /* SWIPER NAVIGATION CUSTOM */
+        .swiper-button-next, .swiper-button-prev {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border-radius: 50%;
+            color: #0f172a;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .swiper-button-next:after, .swiper-button-prev:after {
+            font-size: 1rem;
+            font-weight: 900;
+        }
+
+        .swiper-button-next:hover, .swiper-button-prev:hover {
+            background: #2563eb;
+            color: white;
+        }
+
+        .swiper-container-wrapper {
+            position: relative;
+            padding: 0 20px;
+        }
+
+        .swiper {
+            padding: 20px 5px 40px 5px !important;
+        }
+
+        @media (max-width: 768px) {
+            .hero-section { height: 500px; }
+            .hero-content h1 { font-size: 2.5rem; }
+        }
+    </style>
 {% endblock %}
 
 {% block body %}
-<!-- Hero Section avec Image -->
-<section class="hero-section">
-    <div class="hero-content">
-        <h1>Découvrez les meilleurs événements au Maroc</h1>
-        <p>Concerts, festivals, conférences... Réservez vos billets en quelques clics</p>
-        
-        <div class="search-container">
-            <form action="{{ path('app_events') }}" method="get">
-                <div class="search-box">
-                    <input type="text" name="search" placeholder="Rechercher des événements, concerts, conférences...">
-                    <button type="submit">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </form>
-        </div>
-    </div>
-</section>
-
-<!-- Section Événements à Venir -->
-<section class="events-section">
-    <div class="container">
-        <div class="section-title">
-            <h2><i class="fas fa-star"></i> Événements à venir</h2>
-        </div>
-
-        <div class="row">
-            {% if evenements is empty %}
-                <div class="col-12 text-center">
-                    <p class="text-muted fs-5">Aucun événement disponible pour le moment.</p>
-                    {% if is_granted('ROLE_ORGANISATEUR') %}
-                        <a href="{{ path('app_evenement_new') }}" class="btn btn-primary btn-lg mt-3">
-                            <i class="fas fa-plus-circle"></i> Créer un événement
-                        </a>
-                    {% endif %}
-                </div>
-            {% else %}
-                {% for evenement in evenements %}
-                <div class="col-md-4">
-                    <div class="event-card">
-                        <div class="event-card-image">
-                            {% if evenement.image %}
-                                <img src="{{ asset('images/events/' ~ evenement.image) }}" alt="{{ evenement.titre }}">
-                            {% else %}
-                                <img src="https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400&h=250&fit=crop" alt="{{ evenement.titre }}">
-                            {% endif %}
-                            <span class="event-badge">{{ evenement.categorie }}</span>
-                        </div>
-                        <div class="event-card-body">
-                            <h3 class="event-title">{{ evenement.titre }}</h3>
-                            <p class="event-artist">
-                                <i class="fas fa-calendar-alt"></i> {{ evenement.dateEvenement|date('d/m/Y à H:i') }}
-                            </p>
-                            <p class="event-artist">
-                                <i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}
-                            </p>
-                            <div class="event-rating">
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                                <i class="fas fa-star"></i>
-                            </div>
-                            <a href="{{ path('app_event_detail', {id: evenement.id}) }}" class="btn btn-book-now">
-                                Réserver maintenant
-                            </a>
-                        </div>
+    <!-- HERO SECTION -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1>Vivez l'expérience live</h1>
+            <p>Les meilleurs concerts, festivals et conférences du Maroc à portée de main.</p>
+            
+            <div class="search-container">
+                <form action="{{ path('app_events') }}" method="get">
+                    <div class="search-box">
+                        <input type="text" name="search" placeholder="Artiste, ville, lieu...">
+                        <button type="submit">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </div>
-                </div>
-                {% endfor %}
-            {% endif %}
+                </form>
+            </div>
         </div>
-    </div>
-</section>
+    </section>
+
+    <!-- EVENTS SECTION -->
+    <section class="events-section">
+        <div class="container-fluid px-lg-5">
+            
+            <!-- NOUVEAU TITRE CENTRÉ ET DESIGN -->
+            <div class="section-header-modern">
+                <h2 class="display-4 fw-900 text-dark mb-2">Vivez l'instant présent</h2>
+                <div class="separator-line"></div>
+                <p class="text-muted mt-3 fs-5">Une sélection exclusive des meilleurs événements à venir</p>
+            </div>
+
+            <div class="swiper-container-wrapper">
+                <!-- Swiper -->
+                <div class="swiper mySwiper">
+                    <div class="swiper-wrapper">
+                        {% for evenement in evenements %}
+                            <div class="swiper-slide">
+                                <div class="event-card-clean">
+                                    <div class="card-img-wrapper">
+                                        <!-- Gestion sécurisée de l'image -->
+                                        {% if evenement.imageName is defined and evenement.imageName %}
+                                            <img src="{{ asset('uploads/evenements/' ~ evenement.imageName) }}" class="card-img-top" alt="{{ evenement.titre }}">
+                                        {% elseif evenement.image is defined and evenement.image %}
+                                            <img src="{{ asset('images/events/' ~ evenement.image) }}" class="card-img-top" alt="{{ evenement.titre }}">
+                                        {% else %}
+                                            <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=800&auto=format&fit=crop" class="card-img-top" alt="Image par défaut">
+                                        {% endif %}
+                                        
+                                        <!-- Badge Catégorie -->
+                                        <span class="card-badge">
+                                            {% if evenement.categorie is defined and evenement.categorie %}
+                                                {{ evenement.categorie.nom|default(evenement.categorie) }}
+                                            {% else %}
+                                                Événement
+                                            {% endif %}
+                                        </span>
+                                    </div>
+
+                                    <div class="card-body">
+                                        <div class="event-date">
+                                            <i class="far fa-calendar-alt me-1"></i>
+                                            {% if evenement.dateHeure is defined and evenement.dateHeure %}
+                                                {{ evenement.dateHeure|date('d M Y') }}
+                                            {% elseif evenement.dateEvenement is defined and evenement.dateEvenement %}
+                                                {{ evenement.dateEvenement|date('d M Y') }}
+                                            {% else %}
+                                                Date à venir
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <h3 class="event-title" title="{{ evenement.titre }}">
+                                            {{ evenement.titre }}
+                                        </h3>
+                                        
+                                        <div class="event-location">
+                                            <i class="fas fa-map-marker-alt text-danger me-1"></i>
+                                            {{ evenement.lieu|default('Lieu non défini') }}
+                                        </div>
+
+                                        <a href="{{ path('app_event_detail', {id: evenement.id}) }}" class="btn-action">
+                                            Réserver
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="col-12 text-center py-5">
+                                <p class="text-muted fs-5">Aucun événement à la une pour le moment.</p>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <div class="swiper-pagination"></div>
+                </div>
+                
+                <div class="swiper-button-next"></div>
+                <div class="swiper-button-prev"></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Scripts Swiper -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var swiper = new Swiper(".mySwiper", {
+                slidesPerView: 1,
+                spaceBetween: 20,
+                loop: true,
+                grabCursor: true,
+                autoplay: {
+                    delay: 5000,
+                    disableOnInteraction: false,
+                    pauseOnMouseEnter: true
+                },
+                pagination: {
+                    el: ".swiper-pagination",
+                    clickable: true,
+                    dynamicBullets: true,
+                },
+                navigation: {
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev",
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                        spaceBetween: 20,
+                    },
+                    768: {
+                        slidesPerView: 3,
+                        spaceBetween: 25,
+                    },
+                    1200: {
+                        slidesPerView: 4,
+                        spaceBetween: 30,
+                    },
+                },
+            });
+        });
+    </script>
 {% endblock %}

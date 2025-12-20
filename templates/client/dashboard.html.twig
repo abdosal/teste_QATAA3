@@ -3,48 +3,143 @@
 {% block title %}Mon Espace - Qataa3.ma{% endblock %}
 
 {% block body %}
-<div class="container py-5">
-    <h1 class="mb-4"><i class="fas fa-user-circle"></i> Mon Espace Client</h1>
+<style>
+    /* Fond global harmonisé */
+    body { background-color: #f1f5f9; }
+
+    /* Header Welcome */
+    .dashboard-header {
+        background: white;
+        border-radius: 20px;
+        padding: 30px;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: 1px solid #e2e8f0;
+    }
+
+    .welcome-text h1 { font-size: 1.5rem; font-weight: 800; color: #1e293b; margin: 0; }
+    .welcome-text p { color: #64748b; margin: 5px 0 0 0; font-size: 0.95rem; }
+
+    /* Cartes Dashboard */
+    .dashboard-card {
+        background: white;
+        border-radius: 24px;
+        padding: 40px 30px;
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 1px solid #e2e8f0;
+        height: 100%;
+        position: relative;
+        overflow: hidden;
+    }
     
-    <div class="row mb-4">
-        <div class="col">
-            <div class="alert alert-info">
-                <i class="fas fa-info-circle"></i> Bienvenue {{ app.user.prenom }} {{ app.user.nom }} !
-            </div>
+    .dashboard-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.15);
+        border-color: #bfdbfe;
+    }
+
+    /* Icônes dans des bulles */
+    .icon-bubble {
+        width: 80px; height: 80px;
+        border-radius: 50%;
+        display: inline-flex;
+        align-items: center; justify-content: center;
+        font-size: 2rem;
+        margin-bottom: 25px;
+        transition: transform 0.3s;
+    }
+    .dashboard-card:hover .icon-bubble { transform: scale(1.1) rotate(5deg); }
+
+    /* Couleurs spécifiques par carte */
+    .card-profile .icon-bubble { background: #eff6ff; color: #2563eb; }
+    .card-tickets .icon-bubble { background: #ecfdf5; color: #059669; }
+    .card-receipts .icon-bubble { background: #f0f9ff; color: #0891b2; }
+
+    .card-title { font-weight: 700; color: #1e293b; font-size: 1.25rem; margin-bottom: 10px; }
+    .card-text { color: #64748b; font-size: 0.95rem; margin-bottom: 30px; min-height: 45px; }
+
+    /* Boutons Ghost */
+    .btn-ghost {
+        padding: 12px 25px;
+        border-radius: 12px;
+        font-weight: 600;
+        text-decoration: none;
+        transition: all 0.2s;
+        display: inline-block;
+        border: 2px solid transparent;
+    }
+
+    .card-profile .btn-ghost { background: #eff6ff; color: #2563eb; }
+    .card-profile .btn-ghost:hover { background: #2563eb; color: white; }
+
+    .card-tickets .btn-ghost { background: #ecfdf5; color: #059669; }
+    .card-tickets .btn-ghost:hover { background: #059669; color: white; }
+
+    .card-receipts .btn-ghost { background: #f0f9ff; color: #0891b2; }
+    .card-receipts .btn-ghost:hover { background: #0891b2; color: white; }
+
+</style>
+
+<div class="container py-5">
+    
+    <!-- Header Bienvenue -->
+    <div class="dashboard-header">
+        <div class="welcome-text">
+            <h1><i class="fas fa-hand-sparkles text-warning me-2"></i>Bonjour, {{ app.user.prenom }}</h1>
+            <p>Ravi de vous revoir sur votre espace personnel Qataa3.ma</p>
+        </div>
+        <div class="d-none d-md-block">
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill">
+                <i class="far fa-calendar-alt me-2"></i> {{ "now"|date("d F Y") }}
+            </span>
         </div>
     </div>
 
+    <!-- Grille de Cartes -->
     <div class="row g-4">
+        <!-- Carte Profil -->
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-user fa-3x text-primary mb-3"></i>
-                    <h5>Mon Profil</h5>
-                    <p class="text-muted">Gérer mes informations personnelles</p>
-                    <a href="{{ path('app_client_profile') }}" class="btn btn-primary">Accéder</a>
+            <div class="dashboard-card card-profile">
+                <div class="icon-bubble">
+                    <i class="fas fa-user-circle"></i>
                 </div>
+                <h3 class="card-title">Mon Profil</h3>
+                <p class="card-text">Gérez vos informations personnelles et sécurisez votre compte.</p>
+                <a href="{{ path('app_client_profile') }}" class="btn-ghost">
+                    Gérer mon profil <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
 
+        <!-- Carte Tickets -->
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-ticket-alt fa-3x text-success mb-3"></i>
-                    <h5>Mes Tickets</h5>
-                    <p class="text-muted">Consulter mes billets achetés</p>
-                    <a href="{{ path('app_client_tickets') }}" class="btn btn-success">Accéder</a>
+            <div class="dashboard-card card-tickets">
+                <div class="icon-bubble">
+                    <i class="fas fa-ticket-alt"></i>
                 </div>
+                <h3 class="card-title">Mes Tickets</h3>
+                <p class="card-text">Retrouvez tous vos billets électroniques et codes QR.</p>
+                <a href="{{ path('app_client_tickets') }}" class="btn-ghost">
+                    Voir mes tickets <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
 
+        <!-- Carte Reçus -->
         <div class="col-md-4">
-            <div class="card shadow-sm">
-                <div class="card-body text-center">
-                    <i class="fas fa-receipt fa-3x text-info mb-3"></i>
-                    <h5>Mes Reçus</h5>
-                    <p class="text-muted">Télécharger mes reçus PDF</p>
-                    <a href="{{ path('app_client_recus') }}" class="btn btn-info">Accéder</a>
+            <div class="dashboard-card card-receipts">
+                <div class="icon-bubble">
+                    <i class="fas fa-file-invoice-dollar"></i>
                 </div>
+                <h3 class="card-title">Mes Reçus</h3>
+                <p class="card-text">Historique de vos paiements et téléchargement des factures.</p>
+                <a href="{{ path('app_client_recus') }}" class="btn-ghost">
+                    Consulter l'historique <i class="fas fa-arrow-right ms-2"></i>
+                </a>
             </div>
         </div>
     </div>

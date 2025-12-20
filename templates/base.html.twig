@@ -14,18 +14,14 @@
     
     {% block stylesheets %}
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background-color: #f8fafc;
         }
 
-        /* ============ NAVBAR ULTRA-MODERNE ============ */
+        /* NAVBAR */
         .navbar-modern {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
@@ -37,11 +33,8 @@
             transition: all 0.3s ease;
         }
 
-        .navbar-modern.scrolled {
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
+        .navbar-modern.scrolled { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08); }
 
-        /* Logo Moderne */
         .brand-logo {
             display: flex;
             align-items: center;
@@ -50,9 +43,7 @@
             transition: all 0.3s ease;
         }
 
-        .brand-logo:hover {
-            transform: scale(1.02);
-        }
+        .brand-logo:hover { transform: scale(1.02); }
 
         .brand-icon {
             width: 40px;
@@ -66,18 +57,9 @@
             font-size: 1.2rem;
         }
 
-        .brand-text {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #1e293b;
-            letter-spacing: -0.5px;
-        }
+        .brand-text { font-size: 1.5rem; font-weight: 800; color: #1e293b; letter-spacing: -0.5px; }
+        .brand-domain { color: #667eea; }
 
-        .brand-domain {
-            color: #667eea;
-        }
-
-        /* Navigation Links Moderne */
         .nav-links {
             display: flex;
             align-items: center;
@@ -101,15 +83,9 @@
             gap: 6px;
         }
 
-        .nav-link-modern i {
-            font-size: 0.9rem;
-            opacity: 0.8;
-        }
+        .nav-link-modern i { font-size: 0.9rem; opacity: 0.8; }
 
-        .nav-link-modern:hover {
-            background: #f1f5f9;
-            color: #667eea;
-        }
+        .nav-link-modern:hover { background: #f1f5f9; color: #667eea; }
 
         .nav-link-modern.active {
             background: linear-gradient(135deg, #667eea15, #764ba215);
@@ -117,16 +93,8 @@
             font-weight: 600;
         }
 
-        /* Dropdown Moderne */
-        .dropdown-modern {
-            position: relative;
-        }
-
-        .dropdown-toggle-modern {
-            background: none;
-            border: none;
-            cursor: pointer;
-        }
+        .dropdown-modern { position: relative; }
+        .dropdown-toggle-modern { background: none; border: none; cursor: pointer; }
 
         .dropdown-toggle-modern::after {
             content: '\f078';
@@ -137,9 +105,7 @@
             transition: transform 0.3s ease;
         }
 
-        .dropdown-modern:hover .dropdown-toggle-modern::after {
-            transform: rotate(180deg);
-        }
+        .dropdown-modern:hover .dropdown-toggle-modern::after { transform: rotate(180deg); }
 
         .dropdown-menu-modern {
             position: absolute;
@@ -175,10 +141,7 @@
             font-size: 0.9rem;
         }
 
-        .dropdown-item-modern i {
-            width: 20px;
-            font-size: 1rem;
-        }
+        .dropdown-item-modern i { width: 20px; font-size: 1rem; }
 
         .dropdown-item-modern:hover {
             background: #f8fafc;
@@ -186,14 +149,8 @@
             transform: translateX(4px);
         }
 
-        /* Actions Navbar (Droite) */
-        .nav-actions {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
+        .nav-actions { display: flex; align-items: center; gap: 1rem; }
 
-        /* Panier Badge Moderne */
         .cart-btn {
             position: relative;
             padding: 0.6rem 1rem;
@@ -206,13 +163,10 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
         }
 
-        .cart-btn:hover {
-            background: #667eea;
-            color: white;
-            transform: translateY(-2px);
-        }
+        .cart-btn:hover { background: #667eea; color: white; transform: translateY(-2px); }
 
         .cart-badge {
             position: absolute;
@@ -229,7 +183,6 @@
             box-shadow: 0 2px 8px rgba(239, 68, 68, 0.4);
         }
 
-        /* User Menu Moderne */
         .user-menu {
             position: relative;
             display: flex;
@@ -242,9 +195,7 @@
             transition: all 0.3s ease;
         }
 
-        .user-menu:hover {
-            background: #f1f5f9;
-        }
+        .user-menu:hover { background: #f1f5f9; }
 
         .user-avatar {
             width: 36px;
@@ -259,11 +210,7 @@
             font-size: 0.9rem;
         }
 
-        .user-name {
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 0.95rem;
-        }
+        .user-name { font-weight: 600; color: #1e293b; font-size: 0.95rem; }
 
         .user-dropdown {
             position: absolute;
@@ -292,19 +239,9 @@
             margin-bottom: 0.5rem;
         }
 
-        .user-info-name {
-            font-weight: 600;
-            color: #1e293b;
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
+        .user-info-name { font-weight: 600; color: #1e293b; font-size: 1rem; margin-bottom: 4px; }
+        .user-info-email { font-size: 0.85rem; color: #94a3b8; }
 
-        .user-info-email {
-            font-size: 0.85rem;
-            color: #94a3b8;
-        }
-
-        /* Boutons Auth Modernes */
         .btn-modern-outline {
             padding: 0.6rem 1.5rem;
             border: 2px solid #e2e8f0;
@@ -347,7 +284,6 @@
             color: white;
         }
 
-        /* Mobile Menu Toggle */
         .mobile-menu-toggle {
             display: none;
             background: none;
@@ -357,93 +293,34 @@
             cursor: pointer;
         }
 
-        /* Responsive */
         @media (max-width: 991px) {
-            .nav-links,
-            .nav-actions {
-                display: none;
-            }
-
-            .mobile-menu-toggle {
-                display: block;
-            }
-
-            .mobile-menu-active .nav-links {
-                display: flex;
-                flex-direction: column;
-                position: absolute;
-                top: 100%;
-                left: 0;
-                right: 0;
-                background: white;
-                padding: 1rem;
-                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-                border-radius: 0 0 16px 16px;
-            }
-
-            .mobile-menu-active .nav-actions {
-                display: flex;
-                flex-direction: column;
-                width: 100%;
-                margin-top: 1rem;
-            }
+            .nav-links, .nav-actions { display: none; }
+            .mobile-menu-toggle { display: block; }
         }
 
-        /* ============ FOOTER MODERNE ============ */
-       .footer-custom {
-    background: linear-gradient(135deg, #5f70c0ff 0%, #764ba2 100%);
-    color: rgba(255, 255, 255, 0.95);
-    padding: 60px 0 20px;
-    margin-top: 80px;
-}
-
-        .footer-brand {
-            font-size: 2rem;
-            font-weight: 800;
-            color: white;
-            margin-bottom: 1rem;
+        /* FOOTER */
+        .footer-custom {
+            background: linear-gradient(135deg, #5f70c0ff 0%, #764ba2 100%);
+            color: rgba(255, 255, 255, 0.95);
+            padding: 60px 0 20px;
+            margin-top: 80px;
         }
 
-        .footer-description {
-            font-size: 0.95rem;
-            line-height: 1.7;
-            color: rgba(255, 255, 255, 0.7);
-            margin-bottom: 1.5rem;
-        }
+        .footer-brand { font-size: 2rem; font-weight: 800; color: white; margin-bottom: 1rem; }
+        .footer-description { font-size: 0.95rem; line-height: 1.7; color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem; }
+        .footer-title { font-size: 1.1rem; font-weight: 700; color: white; margin-bottom: 1.5rem; }
 
-        .footer-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: white;
-            margin-bottom: 1.5rem;
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 0.8rem;
-        }
-
+        .footer-links { list-style: none; padding: 0; }
+        .footer-links li { margin-bottom: 0.8rem; }
         .footer-links a {
             color: rgba(255, 255, 255, 0.7);
             text-decoration: none;
             transition: all 0.3s ease;
             font-size: 0.95rem;
         }
+        .footer-links a:hover { color: #60a5fa; padding-left: 5px; }
 
-        .footer-links a:hover {
-            color: #60a5fa;
-            padding-left: 5px;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-        }
-
+        .social-links { display: flex; gap: 15px; }
         .social-links a {
             width: 40px;
             height: 40px;
@@ -456,11 +333,7 @@
             font-size: 1.1rem;
             transition: all 0.3s ease;
         }
-
-        .social-links a:hover {
-            background: #60a5fa;
-            transform: translateY(-3px);
-        }
+        .social-links a:hover { background: #60a5fa; transform: translateY(-3px); }
 
         .footer-bottom {
             border-top: 1px solid rgba(255, 255, 255, 0.1);
@@ -497,48 +370,23 @@
             transform: translateY(-2px);
         }
 
-        .app-btn i {
-            font-size: 1.5rem;
-        }
-
-        .app-btn-text {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-
-        .app-btn-label {
-            font-size: 0.7rem;
-            opacity: 0.8;
-        }
-
-        .app-btn-store {
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        .app-btn i { font-size: 1.5rem; }
+        .app-btn-text { display: flex; flex-direction: column; align-items: flex-start; }
+        .app-btn-label { font-size: 0.7rem; opacity: 0.8; }
+        .app-btn-store { font-size: 1rem; font-weight: 600; }
 
         @media (max-width: 768px) {
-            .footer-custom {
-                text-align: center;
-            }
-
-            .social-links {
-                justify-content: center;
-            }
-
-            .app-download-buttons {
-                justify-content: center;
-            }
+            .footer-custom { text-align: center; }
+            .social-links { justify-content: center; }
+            .app-download-buttons { justify-content: center; }
         }
     </style>
     {% endblock %}
 </head>
 <body>
-    <!-- Navbar Ultra-Moderne -->
     <nav class="navbar-modern">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center w-100">
-                <!-- Logo -->
                 <a href="{{ path('app_home') }}" class="brand-logo">
                     <div class="brand-icon">
                         <i class="fas fa-ticket-alt"></i>
@@ -546,7 +394,6 @@
                     <span class="brand-text">Qataa3<span class="brand-domain">.ma</span></span>
                 </a>
 
-                <!-- Navigation Links -->
                 <ul class="nav-links d-none d-lg-flex">
                     <li>
                         <a href="{{ path('app_home') }}" class="nav-link-modern {{ app.request.get('_route') == 'app_home' ? 'active' : '' }}">
@@ -587,11 +434,10 @@
                     </li>
                 </ul>
 
-                <!-- Actions -->
                 <div class="nav-actions d-none d-lg-flex">
                     {% if app.user %}
                         <!-- Panier -->
-                        <a href="#" class="cart-btn">
+                        <a href="{{ path('app_cart') }}" class="cart-btn">
                             <i class="fas fa-shopping-cart"></i>
                             {% set cartCount = app.session.get('cart')|default([])|reduce((carry, quantity) => carry + quantity, 0) %}
                             {% if cartCount > 0 %}
@@ -606,27 +452,27 @@
                             <i class="fas fa-chevron-down" style="font-size: 0.8rem; color: #94a3b8;"></i>
                             
                             <div class="user-dropdown">
-    <div class="user-info">
-        <div class="user-info-name">{{ app.user.prenom }} {{ app.user.nom }}</div>
-        <div class="user-info-email">{{ app.user.email }}</div>
-    </div>
-    {% if is_granted('ROLE_OWNER') %}
-        <a href="{{ path('app_owner_dashboard') }}" class="dropdown-item-modern"><i class="fas fa-chart-line"></i> Dashboard Owner</a>
-    {% elseif is_granted('ROLE_RESPONSABLE') %}
-        <a href="{{ path('app_responsable_dashboard') }}" class="dropdown-item-modern"><i class="fas fa-tasks"></i> Dashboard Responsable</a>
-        <a href="{{ path('app_responsable_evenements') }}" class="dropdown-item-modern"><i class="fas fa-calendar"></i> Mes Événements</a>
-        <a href="{{ path('app_responsable_clients') }}" class="dropdown-item-modern"><i class="fas fa-users"></i> Clients</a>
-    {% else %}
-        <a href="#" class="dropdown-item-modern"><i class="fas fa-user"></i> Mon Profil</a>
-        <a href="#" class="dropdown-item-modern"><i class="fas fa-ticket-alt"></i> Mes Tickets</a>
-        <a href="#" class="dropdown-item-modern"><i class="fas fa-receipt"></i> Mes Reçus</a>
-        <a href="#" class="dropdown-item-modern"><i class="fas fa-heart"></i> Favoris</a>
-    {% endif %}
-    <div style="height: 1px; background: #f1f5f9; margin: 0.5rem 0;"></div>
-    <a href="{{ path('app_logout') }}" class="dropdown-item-modern" style="color: #ef4444;">
-        <i class="fas fa-sign-out-alt"></i> Déconnexion
-    </a>
-</div>
+                                <div class="user-info">
+                                    <div class="user-info-name">{{ app.user.prenom }} {{ app.user.nom }}</div>
+                                    <div class="user-info-email">{{ app.user.email }}</div>
+                                </div>
+                                {% if is_granted('ROLE_OWNER') %}
+                                    <a href="{{ path('app_owner_dashboard') }}" class="dropdown-item-modern"><i class="fas fa-chart-line"></i> Dashboard Owner</a>
+                                {% elseif is_granted('ROLE_RESPONSABLE') %}
+                                    <a href="{{ path('app_responsable_dashboard') }}" class="dropdown-item-modern"><i class="fas fa-tasks"></i> Dashboard Responsable</a>
+                                    <a href="{{ path('app_responsable_evenements') }}" class="dropdown-item-modern"><i class="fas fa-calendar"></i> Mes Événements</a>
+                                    <a href="{{ path('app_responsable_clients') }}" class="dropdown-item-modern"><i class="fas fa-users"></i> Clients</a>
+                                {% else %}
+                                    <a href="{{ path('app_client_profile') }}" class="dropdown-item-modern"><i class="fas fa-user"></i> Mon Profil</a>
+                                    <a href="{{ path('app_client_tickets') }}" class="dropdown-item-modern"><i class="fas fa-ticket-alt"></i> Mes Tickets</a>
+                                    <a href="{{ path('app_client_recus') }}" class="dropdown-item-modern"><i class="fas fa-receipt"></i> Mes Reçus</a>
+                                    <a href="#" class="dropdown-item-modern"><i class="fas fa-heart"></i> Favoris</a>
+                                {% endif %}
+                                <div style="height: 1px; background: #f1f5f9; margin: 0.5rem 0;"></div>
+                                <a href="{{ path('app_logout') }}" class="dropdown-item-modern" style="color: #ef4444;">
+                                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                                </a>
+                            </div>
 
                         </div>
                     {% else %}
@@ -639,7 +485,6 @@
                     {% endif %}
                 </div>
 
-                <!-- Mobile Menu Toggle -->
                 <button class="mobile-menu-toggle d-lg-none">
                     <i class="fas fa-bars"></i>
                 </button>
@@ -647,7 +492,6 @@
         </div>
     </nav>
 
-    <!-- Flash Messages -->
     <div class="container mt-3">
         {% for label, messages in app.flashes %}
             {% for message in messages %}
@@ -659,12 +503,10 @@
         {% endfor %}
     </div>
 
-    <!-- Main Content -->
     <main>
         {% block body %}{% endblock %}
     </main>
 
-    <!-- Footer Moderne -->
     <footer class="footer-custom">
         <div class="container">
             <div class="row">
@@ -734,7 +576,6 @@
         </div>
     </footer>
 
-    <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     {% block javascripts %}{% endblock %}
 </body>

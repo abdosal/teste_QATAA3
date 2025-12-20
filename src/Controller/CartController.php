@@ -19,11 +19,11 @@ class CartController extends AbstractController
 
         return $this->render('cart/index.html.twig', [
             'cart_items' => $cartItems,
-            'total' => $total,
+            'total'      => $total,
         ]);
     }
 
-    #[Route('/add/{id}', name: 'app_cart_add')]
+    #[Route('/add/{id}', name: 'app_cart_add', methods: ['POST'])]
     public function add(int $id, Request $request, CartService $cartService): Response
     {
         $quantite = $request->request->getInt('quantite', 1);
@@ -38,7 +38,6 @@ class CartController extends AbstractController
     public function remove(int $id, CartService $cartService): Response
     {
         $cartService->remove($id);
-
         $this->addFlash('success', 'Billet retiré du panier !');
 
         return $this->redirectToRoute('app_cart');
@@ -57,7 +56,6 @@ class CartController extends AbstractController
     public function clear(CartService $cartService): Response
     {
         $cartService->clear();
-
         $this->addFlash('success', 'Panier vidé !');
 
         return $this->redirectToRoute('app_cart');

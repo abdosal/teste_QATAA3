@@ -3,88 +3,307 @@
 {% block title %}Gestion Événements - Responsable{% endblock %}
 
 {% block body %}
-<div class="container-fluid py-4">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1><i class="fas fa-calendar"></i> Gestion des Événements</h1>
-        <a href="{{ path('app_responsable_evenement_new') }}" class="btn btn-primary">
-            <i class="fas fa-plus"></i> Nouvel Événement
-        </a>
-    </div>
+<style>
+    /* Header Pro */
+    .admin-header {
+        background: #fff;
+        padding: 24px 32px;
+        border-bottom: 1px solid #e2e8f0;
+        margin-bottom: 32px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: linear-gradient(to right, #ffffff, #f8fafc);
+    }
+    .page-title h1 {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin: 0 0 4px 0;
+        letter-spacing: -0.025em;
+    }
+    .page-title p {
+        margin: 0;
+        color: #64748b;
+        font-size: 0.875rem;
+    }
 
+    /* Table Design Premium */
+    .custom-table-container {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.03), 0 4px 6px -2px rgba(0, 0, 0, 0.01);
+        border: 1px solid #f1f5f9;
+        overflow: hidden;
+    }
+    .table {
+        margin-bottom: 0;
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+    }
+    .table thead th {
+        background: #f8fafc;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.05em;
+        color: #475569;
+        padding: 16px 24px;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .table tbody td {
+        padding: 20px 24px;
+        vertical-align: middle;
+        border-bottom: 1px solid #f1f5f9;
+        color: #334155;
+        font-size: 0.95rem;
+        transition: background-color 0.2s;
+    }
+    .table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .table tbody tr:hover td {
+        background-color: #f8fafc;
+    }
+
+    /* Éléments visuels */
+    .event-thumb {
+        width: 48px;
+        height: 48px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-right: 16px;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        border: 1px solid #f1f5f9;
+    }
+    .thumb-placeholder {
+        width: 48px; height: 48px; border-radius: 10px; margin-right: 16px;
+        background: #f1f5f9; color: #94a3b8; display: flex; align-items: center; justify-content: center;
+        font-size: 1.2rem;
+    }
+    
+    .text-primary-dark { color: #0f172a; }
+    .text-secondary-muted { color: #64748b; font-size: 0.85rem; }
+
+    /* Badges Modernes */
+    .badge-modern {
+        padding: 6px 12px;
+        border-radius: 9999px;
+        font-weight: 600;
+        font-size: 0.75rem;
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+    }
+    .badge-success-soft { background: #dcfce7; color: #166534; }
+    .badge-warning-soft { background: #fef9c3; color: #854d0e; }
+    .badge-info-soft { background: #dbeafe; color: #1e40af; }
+    .badge-neutral-soft { background: #f1f5f9; color: #475569; }
+
+    /* Actions */
+    .action-group {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+    }
+    .btn-icon {
+        width: 36px;
+        height: 36px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        border: 1px solid transparent;
+        background: transparent;
+        color: #64748b;
+        transition: all 0.2s ease;
+    }
+    .btn-icon:hover {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+        color: #0f172a;
+        transform: translateY(-1px);
+    }
+    .btn-icon.delete:hover {
+        background: #fef2f2;
+        border-color: #fee2e2;
+        color: #ef4444;
+    }
+    
+    /* Bouton Principal */
+    .btn-primary-glow {
+        background: #2563eb;
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 8px;
+        font-weight: 500;
+        box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2);
+        transition: all 0.2s;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .btn-primary-glow:hover {
+        background: #1d4ed8;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 8px -1px rgba(37, 99, 235, 0.3);
+        color: white;
+    }
+</style>
+
+<!-- En-tête -->
+<div class="admin-header">
+    <div class="page-title">
+        <h1>Gestion des Événements</h1>
+        <p>Pilotez votre catalogue d'événements et suivez leur statut</p>
+    </div>
+    <a href="{{ path('app_responsable_evenement_new') }}" class="btn-primary-glow">
+        <i class="fas fa-plus"></i>
+        <span>Nouvel Événement</span>
+    </a>
+</div>
+
+<div class="container-fluid px-4 pb-5">
     {% if evenements is empty %}
-        <div class="alert alert-info">
-            <i class="fas fa-info-circle"></i> Aucun événement créé pour le moment.
+        <!-- État vide design -->
+        <div class="text-center py-5">
+            <div class="bg-light rounded-circle d-inline-flex align-items-center justify-content-center mb-4" style="width: 80px; height: 80px;">
+                <i class="fas fa-calendar-plus fa-2x text-muted opacity-50"></i>
+            </div>
+            <h3 class="text-dark fw-bold mb-2">Aucun événement</h3>
+            <p class="text-muted mb-4">Votre catalogue est vide pour le moment. Créez votre premier événement pour commencer.</p>
+            <a href="{{ path('app_responsable_evenement_new') }}" class="btn btn-outline-primary px-4 py-2">
+                Créer un événement maintenant
+            </a>
         </div>
     {% else %}
-        <div class="table-responsive">
-            <table class="table table-hover align-middle">
-                <thead class="table-light">
-                    <tr>
-                        <th>ID</th>
-                        <th>Titre</th>
-                        <th>Date</th>
-                        <th>Lieu</th>
-                        <th>Catégorie</th>
-                        <th>Statut</th>
-                        <th>Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for evenement in evenements %}
+        <!-- Tableau Pro -->
+        <div class="custom-table-container">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
                         <tr>
-                            <td>{{ evenement.id }}</td>
-                            <td><strong>{{ evenement.titre }}</strong></td>
-                            <td>{{ evenement.dateEvenement|date('d/m/Y H:i') }}</td>
-                            <td>{{ evenement.lieu }}</td>
-                            <td><span class="badge bg-info">{{ evenement.categorie }}</span></td>
-                            <td>
-                                <span class="badge bg-{{ evenement.statut == 'actif' ? 'success' : 'secondary' }}">
-                                    {{ evenement.statut|upper }}
-                                </span>
-                            </td>
-                            <td>
-                                <div class="btn-group" role="group">
-                                    <a href="{{ path('app_responsable_evenement_detail', {id: evenement.id}) }}" class="btn btn-sm btn-info" title="Détails">
-                                        <i class="fas fa-eye"></i>
-                                    </a>
-                                    <a href="{{ path('app_responsable_billets', {id: evenement.id}) }}" class="btn btn-sm btn-primary" title="Billets">
-                                        <i class="fas fa-ticket-alt"></i>
-                                    </a>
-                                    <a href="{{ path('app_responsable_evenement_edit', {id: evenement.id}) }}" class="btn btn-sm btn-warning" title="Modifier">
-                                        <i class="fas fa-edit"></i>
-                                    </a>
-                                    <button type="button" class="btn btn-sm btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ evenement.id }}" title="Supprimer">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
+                            <th style="width: 5%;">ID</th>
+                            <th style="width: 35%;">Événement</th>
+                            <th>Date & Lieu</th>
+                            <th>Catégorie</th>
+                            <th>Statut</th>
+                            <th class="text-end">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for evenement in evenements %}
+                            <tr>
+                                <td>
+                                    <span class="text-secondary-muted fw-mono">#{{ evenement.id }}</span>
+                                </td>
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        {% if evenement.image %}
+                                            <img src="{{ asset('images/events/' ~ evenement.image) }}" alt="" class="event-thumb">
+                                        {% else %}
+                                            <div class="thumb-placeholder">
+                                                <i class="fas fa-image"></i>
+                                            </div>
+                                        {% endif %}
+                                        <div>
+                                            <div class="fw-bold text-primary-dark">{{ evenement.titre }}</div>
+                                            <!-- Tu peux ajouter ici le sous-titre ou places restantes si dispo -->
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div class="d-flex flex-column gap-1">
+                                        <div class="d-flex align-items-center text-primary-dark font-medium">
+                                            <i class="far fa-calendar me-2 text-muted" style="width: 16px;"></i>
+                                            {{ evenement.dateEvenement|date('d M Y, H:i') }}
+                                        </div>
+                                        <div class="d-flex align-items-center text-secondary-muted">
+                                            <i class="fas fa-map-marker-alt me-2 text-muted" style="width: 16px;"></i>
+                                            {{ evenement.lieu }}
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="badge-modern badge-info-soft">
+                                        {{ evenement.categorie }}
+                                    </span>
+                                </td>
+                                <td>
+                                    {% if evenement.statut == 'actif' %}
+                                        <span class="badge-modern badge-success-soft">
+                                            <span class="bg-success rounded-circle" style="width: 6px; height: 6px;"></span>
+                                            Actif
+                                        </span>
+                                    {% else %}
+                                        <span class="badge-modern badge-neutral-soft">
+                                            <span class="bg-secondary rounded-circle" style="width: 6px; height: 6px;"></span>
+                                            {{ evenement.statut|capitalize }}
+                                        </span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-end">
+                                    <div class="action-group">
+                                        <a href="{{ path('app_responsable_evenement_detail', {id: evenement.id}) }}" class="btn-icon" title="Voir les détails" data-bs-toggle="tooltip">
+                                            <i class="far fa-eye"></i>
+                                        </a>
+                                        <a href="{{ path('app_responsable_billets', {id: evenement.id}) }}" class="btn-icon" title="Gérer les billets" data-bs-toggle="tooltip">
+                                            <i class="fas fa-ticket-alt"></i>
+                                        </a>
+                                        <a href="{{ path('app_responsable_evenement_edit', {id: evenement.id}) }}" class="btn-icon" title="Modifier" data-bs-toggle="tooltip">
+                                            <i class="far fa-edit"></i>
+                                        </a>
+                                        <button type="button" class="btn-icon delete" data-bs-toggle="modal" data-bs-target="#deleteModal{{ evenement.id }}" title="Supprimer">
+                                            <i class="far fa-trash-alt"></i>
+                                        </button>
+                                    </div>
 
-                                <!-- Modal Suppression -->
-                                <div class="modal fade" id="deleteModal{{ evenement.id }}" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-header">
-                                                <h5 class="modal-title">Confirmer la suppression</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                            </div>
-                                            <div class="modal-body">
-                                                Êtes-vous sûr de vouloir supprimer l'événement <strong>{{ evenement.titre }}</strong> ?
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
-                                                <form action="{{ path('app_responsable_evenement_delete', {id: evenement.id}) }}" method="post">
-                                                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ evenement.id) }}">
-                                                    <button type="submit" class="btn btn-danger">Supprimer</button>
-                                                </form>
+                                    <!-- Modal Suppression -->
+                                    <div class="modal fade" id="deleteModal{{ evenement.id }}" tabindex="-1">
+                                        <div class="modal-dialog modal-dialog-centered">
+                                            <div class="modal-content border-0 shadow-lg" style="border-radius: 16px;">
+                                                <div class="modal-header border-0 pb-0 pt-4 px-4">
+                                                    <h5 class="modal-title fw-bold">Supprimer l'événement ?</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                                </div>
+                                                <div class="modal-body px-4 py-3 text-start">
+                                                    <p class="text-muted mb-0">
+                                                        Vous êtes sur le point de supprimer définitivement <strong>{{ evenement.titre }}</strong>.<br>
+                                                        Cette action ne peut pas être annulée.
+                                                    </p>
+                                                </div>
+                                                <div class="modal-footer border-0 px-4 pb-4 pt-2">
+                                                    <button type="button" class="btn btn-light fw-medium px-4" data-bs-dismiss="modal" style="border-radius: 8px;">Annuler</button>
+                                                    <form action="{{ path('app_responsable_evenement_delete', {id: evenement.id}) }}" method="post" class="ms-2">
+                                                        <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ evenement.id) }}">
+                                                        <button type="submit" class="btn btn-danger px-4" style="border-radius: 8px; font-weight: 500;">
+                                                            Supprimer
+                                                        </button>
+                                                    </form>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
         </div>
     {% endif %}
 </div>
+
+<script>
+    // Activation des tooltips Bootstrap
+    document.addEventListener('DOMContentLoaded', function () {
+        var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+        var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+            return new bootstrap.Tooltip(tooltipTriggerEl)
+        })
+    });
+</script>
 {% endblock %}
