@@ -380,6 +380,82 @@
             .social-links { justify-content: center; }
             .app-download-buttons { justify-content: center; }
         }
+        .chat-button {
+    position: fixed;
+    right: 24px;
+    bottom: 24px;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 10px 30px rgba(15,23,42,0.35);
+    cursor: pointer;
+    z-index: 1100;
+    border: none;
+}
+.chat-button i { font-size: 1.4rem; }
+
+.chat-popup {
+    position: fixed;
+    right: 24px;
+    bottom: 90px;
+    width: 340px;
+    max-height: 480px;
+    background: #ffffff;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(15,23,42,0.35);
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    z-index: 1100;
+}
+.chat-popup-header {
+    padding: 0.9rem 1rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.chat-popup-body {
+    padding: 0.9rem;
+    height: 260px;
+    overflow-y: auto;
+    background: #f8fafc;
+    font-size: 0.9rem;
+}
+.chat-popup-footer {
+    padding: 0.75rem;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+    display: flex;
+    gap: 0.4rem;
+}
+.chat-input {
+    flex: 1;
+    border-radius: 999px;
+    border: 1px solid #e2e8f0;
+    padding: 0.45rem 0.75rem;
+    font-size: 0.9rem;
+}
+.chat-send-btn {
+    border-radius: 999px;
+    border: none;
+    background: #667eea;
+    color: #fff;
+    padding: 0.45rem 0.9rem;
+    font-size: 0.85rem;
+}
+.chat-message {
+    margin-bottom: 0.45rem;
+}
+.chat-message.user { text-align: right; color: #0f172a; }
+.chat-message.bot { text-align: left; color: #475569; }
+
     </style>
     {% endblock %}
 </head>
@@ -576,7 +652,80 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    {% block javascripts %}
-    {% endblock %}
+    <button class="chat-button d-none d-md-flex" id="chatToggle">
+    <i class="fas fa-comments"></i>
+</button>
+
+<div class="chat-popup" id="chatPopup">
+    <div class="chat-popup-header">
+        <span>Assistant Qataa3.ma</span>
+        <button type="button" class="btn btn-sm btn-light" id="chatClose">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+    <div class="chat-popup-body" id="chatMessages">
+        <div class="chat-message bot">
+            Salut 👋 Je peux t’aider à trouver un événement (concert, festival, conférence…).
+        </div>
+    </div>
+    <div class="chat-popup-footer">
+        <input type="text" id="chatInput" class="chat-input" placeholder="Pose ta question...">
+        <button class="chat-send-btn" id="chatSend">Envoyer</button>
+    </div>
+</div>
+
+{% block javascripts %}
+    <script>
+        const chatToggle = document.getElementById('chatToggle');
+        const chatPopup  = document.getElementById('chatPopup');
+        const chatClose  = document.getElementById('chatClose');
+        const chatInput  = document.getElementById('chatInput');
+        const chatSend   = document.getElementById('chatSend');
+        const chatMessages = document.getElementById('chatMessages');
+
+        function toggleChat(show) {
+            chatPopup.style.display = show ? 'flex' : 'none';
+        }
+
+        chatToggle?.addEventListener('click', () => toggleChat(true));
+        chatClose?.addEventListener('click', () => toggleChat(false));
+
+        function addMessage(text, who) {
+            const div = document.createElement('div');
+            div.className = 'chat-message ' + who;
+            div.textContent = text;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        async function sendMessage() {
+            const text = chatInput.value.trim();
+            if (!text) return;
+            addMessage(text, 'user');
+            chatInput.value = '';
+
+            try {
+                const response = await fetch('{{ path('app_chat_api') }}', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: text })
+                });
+                const data = await response.json();
+                addMessage(data.reply ?? 'Désolé, je n’ai pas compris.', 'bot');
+            } catch (e) {
+                addMessage('Erreur de connexion au chatbot.', 'bot');
+            }
+        }
+
+        chatSend?.addEventListener('click', sendMessage);
+        chatInput?.addEventListener('keydown', e => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                sendMessage();
+            }
+        });
+    </script>
+{% endblock %}
+
 </body>
 </html>

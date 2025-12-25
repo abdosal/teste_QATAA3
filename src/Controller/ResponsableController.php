@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\Client;
 use App\Entity\Evenement;
 use App\Entity\TypeBillet;
 use App\Form\EvenementType;
@@ -31,13 +32,11 @@ class ResponsableController extends AbstractController
         LigneCommandeRepository $ligneCommandeRepository
     ): Response {
         // KPIs
-        // ✅ Correction : on utilise LigneCommandeRepository pour compter le volume de billets
         $billetsVendusAujourdhui = $ligneCommandeRepository->countTicketsSoldToday();
-
         $evenementsActifs = $evenementRepository->countActiveEvents();
         $utilisateursInscrits = count($clientRepository->findActiveClients());
         $billetsDisponibles = $typeBilletRepository->getTotalRemainingTickets();
-        
+
         // Revenus
         $revenusTotal = $commandeRepository->getTotalRevenue();
 
@@ -51,23 +50,20 @@ class ResponsableController extends AbstractController
     }
 
     // ========== GESTION ÉVÉNEMENTS ==========
-    
+
     #[Route('/evenements', name: 'app_responsable_evenements')]
     public function evenements(EvenementRepository $evenementRepository): Response
-{
-    // 1) Mettre à jour les statuts en fonction de la date
-    $evenementRepository->updateStatusesByDate();
+    {
+        // 1) Mettre à jour les statuts en fonction de la date
+        $evenementRepository->updateStatusesByDate();
 
-    // 2) Afficher tous les événements (actifs + inactifs) avec le bon statut
-    $evenements = $evenementRepository->findAllOrderByDate();
+        // 2) Afficher tous les événements (actifs + inactifs) avec le bon statut
+        $evenements = $evenementRepository->findAllOrderByDate();
 
-    return $this->render('responsable/evenements/index.html.twig', [
-        'evenements' => $evenements,
-    ]);
-}
-
-
-
+        return $this->render('responsable/evenements/index.html.twig', [
+            'evenements' => $evenements,
+        ]);
+    }
 
     #[Route('/evenement/new', name: 'app_responsable_evenement_new')]
     public function newEvenement(Request $request, EntityManagerInterface $em): Response
@@ -79,15 +75,15 @@ class ResponsableController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Gérer l'upload d'image
             $imageFile = $form->get('imageFile')->getData();
-            
+
             if ($imageFile) {
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                
+
                 $uploadDir = $this->getParameter('kernel.project_dir').'/public/images/events';
                 if (!file_exists($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-                
+
                 try {
                     $imageFile->move($uploadDir, $newFilename);
                     $evenement->setImage($newFilename);
@@ -95,7 +91,7 @@ class ResponsableController extends AbstractController
                     $this->addFlash('error', 'Erreur lors de l\'upload de l\'image : ' . $e->getMessage());
                 }
             }
-            
+
             $em->persist($evenement);
             $em->flush();
 
@@ -119,7 +115,7 @@ class ResponsableController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $imageFile = $form->get('imageFile')->getData();
-            
+
             if ($imageFile) {
                 if ($evenement->getImage()) {
                     $oldImagePath = $this->getParameter('kernel.project_dir').'/public/images/events/'.$evenement->getImage();
@@ -127,14 +123,14 @@ class ResponsableController extends AbstractController
                         unlink($oldImagePath);
                     }
                 }
-                
+
                 $newFilename = uniqid().'.'.$imageFile->guessExtension();
-                
+
                 $uploadDir = $this->getParameter('kernel.project_dir').'/public/images/events';
                 if (!file_exists($uploadDir)) {
                     mkdir($uploadDir, 0777, true);
                 }
-                
+
                 try {
                     $imageFile->move($uploadDir, $newFilename);
                     $evenement->setImage($newFilename);
@@ -142,7 +138,7 @@ class ResponsableController extends AbstractController
                     $this->addFlash('error', 'Erreur lors de l\'upload de l\'image');
                 }
             }
-            
+
             $em->flush();
 
             $this->addFlash('success', 'Événement modifié avec succès !');
@@ -180,7 +176,7 @@ class ResponsableController extends AbstractController
     }
 
     // ========== GESTION BILLETS ==========
-    
+
     #[Route('/evenement/{id}/billets', name: 'app_responsable_billets')]
     public function billets(Evenement $evenement): Response
     {
@@ -198,13 +194,13 @@ class ResponsableController extends AbstractController
     ): Response {
         $typeBillet = new TypeBillet();
         $typeBillet->setEvenement($evenement);
-        
+
         $form = $this->createForm(TypeBilletType::class, $typeBillet);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $typeBillet->setQuantiteRestante($typeBillet->getQuantiteTotale());
-            
+
             $em->persist($typeBillet);
             $em->flush();
 
@@ -219,7 +215,7 @@ class ResponsableController extends AbstractController
     }
 
     // ========== GESTION CLIENTS ==========
-    
+
     #[Route('/clients', name: 'app_responsable_clients')]
     public function clients(ClientRepository $clientRepository): Response
     {
@@ -244,6 +240,25 @@ class ResponsableController extends AbstractController
             $em->flush();
 
             $this->addFlash('success', 'Client suspendu avec succès !');
+        }
+
+        return $this->redirectToRoute('app_responsable_clients');
+    }
+
+    #[Route('/client/{id}/activate', name: 'app_responsable_client_activate', methods: ['POST'])]
+    public function activateClient(
+        Request $request,
+        int $id,
+        ClientRepository $clientRepository,
+        EntityManagerInterface $em
+    ): Response {
+        $client = $clientRepository->find($id);
+
+        if ($client && $this->isCsrfTokenValid('activate'.$id, $request->request->get('_token'))) {
+            $client->setStatutCompte('actif');
+            $em->flush();
+
+            $this->addFlash('success', 'Client réactivé avec succès !');
         }
 
         return $this->redirectToRoute('app_responsable_clients');

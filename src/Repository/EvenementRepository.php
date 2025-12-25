@@ -75,4 +75,15 @@ public function findAllOrderByDate(): array
         ->getResult();
 }
 
+public function findByCategorieLimit(string $categorie, int $limit): array
+{
+    return $this->createQueryBuilder('e')
+        ->andWhere('e.categorie = :cat')
+        ->setParameter('cat', $categorie)
+        ->setMaxResults($limit)
+        ->getQuery()
+        ->getResult();
+}
+
+
 }

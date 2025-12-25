@@ -22,7 +22,7 @@
         opacity: 0.9;
         font-size: 1rem;
     }
-    
+
     .stats-row {
         margin-top: -40px;
         margin-bottom: 32px;
@@ -47,7 +47,7 @@
         text-transform: uppercase;
         letter-spacing: 0.05em;
     }
-    
+
     .search-filter-bar {
         background: white;
         border-radius: 16px;
@@ -73,7 +73,7 @@
         transform: translateY(-50%);
         color: #9ca3af;
     }
-    
+
     .client-card {
         background: white;
         border-radius: 16px;
@@ -90,7 +90,7 @@
         box-shadow: 0 8px 28px rgba(0, 0, 0, 0.12);
         transform: translateY(-2px);
     }
-    
+
     .client-avatar {
         width: 64px;
         height: 64px;
@@ -103,7 +103,7 @@
         color: white;
         flex-shrink: 0;
     }
-    
+
     .client-info {
         flex: 1;
         min-width: 0;
@@ -131,7 +131,7 @@
         align-items: center;
         gap: 6px;
     }
-    
+
     .client-badges {
         display: flex;
         gap: 8px;
@@ -146,11 +146,11 @@
         text-transform: uppercase;
         letter-spacing: 0.03em;
     }
-    
+
     .client-actions {
         flex-shrink: 0;
     }
-    
+
     .empty-state {
         text-align: center;
         padding: 80px 20px;
@@ -177,7 +177,7 @@
 </div>
 
 <div class="container-fluid px-4 pb-5">
-    
+
     <!-- Stats KPI -->
     <div class="row g-3 stats-row">
         <div class="col-md-3">
@@ -243,12 +243,12 @@
                 {% set initials = (client.prenom|first ~ client.nom|first)|upper %}
                 {% set colors = ['#3b82f6', '#8b5cf6', '#ec4899', '#f59e0b', '#10b981', '#06b6d4'] %}
                 {% set avatarColor = colors[client.id % 6] %}
-                
+
                 <div class="client-card" data-client="{{ client.nom|lower }} {{ client.prenom|lower }} {{ client.email|lower }}">
                     <div class="client-avatar" style="background: {{ avatarColor }};">
                         {{ initials }}
                     </div>
-                    
+
                     <div class="client-info">
                         <div class="client-name">{{ client.prenom }} {{ client.nom }}</div>
                         <div class="client-email"><i class="fas fa-envelope"></i> {{ client.email }}</div>
@@ -258,7 +258,7 @@
                             <span><i class="fas fa-hashtag"></i> ID: {{ client.id }}</span>
                         </div>
                     </div>
-                    
+
                     <div class="client-badges">
                         {% if 'ROLE_OWNER' in client.roles %}
                             <span class="badge-modern bg-warning text-dark">
@@ -273,24 +273,31 @@
                                 <i class="fas fa-user"></i> Client
                             </span>
                         {% endif %}
-                        
+
                         <span class="badge-modern {{ client.statutCompte == 'actif' ? 'bg-success text-white' : 'bg-danger text-white' }}">
                             {{ client.statutCompte|upper }}
                         </span>
                     </div>
-                    
+
                     <div class="client-actions">
                         {% if client.statutCompte == 'actif' and 'ROLE_CLIENT' in client.roles %}
                             <form action="{{ path('app_responsable_client_suspend', {id: client.id}) }}" method="post">
                                 <input type="hidden" name="_token" value="{{ csrf_token('suspend' ~ client.id) }}">
-                                <button type="submit" class="btn btn-outline-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir suspendre {{ client.prenom }} {{ client.nom }} ?')">
+                                <button type="submit" class="btn btn-outline-danger btn-sm"
+                                        onclick="return confirm('Êtes-vous sûr de vouloir suspendre {{ client.prenom }} {{ client.nom }} ?')">
                                     <i class="fas fa-ban"></i> Suspendre
                                 </button>
                             </form>
-                        {% elseif client.statutCompte == 'suspendu' %}
-                            <button class="btn btn-sm btn-secondary" disabled>
-                                <i class="fas fa-lock"></i> Suspendu
-                            </button>
+
+                        {% elseif client.statutCompte == 'suspendu' and 'ROLE_CLIENT' in client.roles %}
+                            <form action="{{ path('app_responsable_client_activate', {id: client.id}) }}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token('activate' ~ client.id) }}">
+                                <button type="submit" class="btn btn-outline-success btn-sm"
+                                        onclick="return confirm('Réactiver {{ client.prenom }} {{ client.nom }} ?')">
+                                    <i class="fas fa-check"></i> Réactiver
+                                </button>
+                            </form>
+
                         {% else %}
                             <button class="btn btn-sm btn-light" disabled>
                                 <i class="fas fa-shield-alt"></i> Protégé
@@ -304,11 +311,10 @@
 </div>
 
 <script>
-// Live Search
 document.getElementById('searchInput')?.addEventListener('keyup', function(e) {
     const search = e.target.value.toLowerCase();
     const cards = document.querySelectorAll('.client-card');
-    
+
     cards.forEach(card => {
         const data = card.getAttribute('data-client');
         card.style.display = data.includes(search) ? 'flex' : 'none';

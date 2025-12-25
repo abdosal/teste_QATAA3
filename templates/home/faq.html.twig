@@ -4,104 +4,477 @@
 {% block title %}FAQ - Qataa3.ma{% endblock %}
 
 {% block body %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-lg-8">
+<style>
+    .faq-hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 80px 0 60px;
+        position: relative;
+        overflow: hidden;
+    }
+    .faq-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        opacity: 0.1;
+    }
+    .faq-hero h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 1rem;
+        position: relative;
+        z-index: 1;
+    }
+    .faq-hero p {
+        font-size: 1.25rem;
+        opacity: 0.95;
+        position: relative;
+        z-index: 1;
+    }
+    .faq-icon {
+        width: 80px;
+        height: 80px;
+        background: rgba(255,255,255,0.2);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 24px;
+        backdrop-filter: blur(10px);
+    }
+    .faq-icon i { font-size: 2.5rem; }
 
-            <div class="mb-4 text-center">
-                <h1 class="h3 fw-bold mb-2">FAQ</h1>
-                <p class="text-muted mb-0">Questions fréquentes sur la billetterie Qataa3.ma</p>
+    .faq-container {
+        max-width: 900px;
+        margin: -40px auto 80px;
+        position: relative;
+        z-index: 2;
+    }
+
+    .faq-search {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        padding: 24px;
+        margin-bottom: 32px;
+    }
+    .faq-search input {
+        border: 2px solid #e2e8f0;
+        border-radius: 12px;
+        padding: 16px 20px 16px 50px;
+        font-size: 1rem;
+        width: 100%;
+        transition: all 0.3s;
+    }
+    .faq-search input:focus {
+        outline: none;
+        border-color: #667eea;
+        box-shadow: 0 0 0 4px rgba(102,126,234,0.1);
+    }
+    .search-wrapper { position: relative; }
+    .search-icon {
+        position: absolute;
+        left: 18px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #94a3b8;
+        font-size: 1.1rem;
+    }
+    .search-results-info {
+        margin-top: 12px;
+        padding: 12px 16px;
+        background: #f1f5f9;
+        border-radius: 8px;
+        color: #475569;
+        font-size: 0.9rem;
+        display: none;
+    }
+    .search-results-info.active { display: block; }
+
+    .faq-accordion {
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 10px 40px rgba(0,0,0,0.08);
+        overflow: hidden;
+    }
+    .accordion-item {
+        border: none;
+        border-bottom: 1px solid #f1f5f9;
+        transition: all 0.3s;
+    }
+    .accordion-item:last-child { border-bottom: none; }
+    .accordion-item.hidden { display: none; }
+    .accordion-item.highlighted {
+        background: #eef2ff;
+        animation: highlight 0.8s ease;
+    }
+    @keyframes highlight {
+        0%,100% { background: white; }
+        50% { background: #eef2ff; }
+    }
+    .accordion-button {
+        padding: 24px 28px;
+        font-size: 1.05rem;
+        font-weight: 600;
+        color: #0f172a;
+        background: transparent;
+        border: none;
+        transition: all 0.3s;
+    }
+    .accordion-button:not(.collapsed) {
+        background: linear-gradient(to right,#f8fafc,#ffffff);
+        color: #667eea;
+        box-shadow: none;
+    }
+    .accordion-button:focus { box-shadow: none; border: none; }
+    .accordion-button::after {
+        width: 1.5em; height: 1.5em; background-size: 1.5em;
+        filter: brightness(0) saturate(100%) invert(19%) sepia(12%)
+                saturate(1140%) hue-rotate(185deg) brightness(95%) contrast(92%);
+    }
+    .accordion-button:not(.collapsed)::after {
+        filter: brightness(0) saturate(100%) invert(48%) sepia(79%)
+                saturate(2476%) hue-rotate(224deg) brightness(96%) contrast(90%);
+    }
+    .accordion-button .question-number {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 32px; height: 32px;
+        background: #f1f5f9;
+        color: #64748b;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 700;
+        margin-right: 16px;
+        transition: all 0.3s;
+    }
+    .accordion-button:not(.collapsed) .question-number {
+        background: #667eea;
+        color: white;
+    }
+    .accordion-body {
+        padding: 0 28px 24px 76px;
+        color: #475569;
+        line-height: 1.75;
+        font-size: 0.975rem;
+    }
+    .accordion-body strong { color:#667eea; font-weight:600; }
+    .accordion-body em { color:#8b5cf6; font-style:normal; font-weight:500; }
+
+    .highlight-text {
+        background: rgba(99,102,241,0.15); /* bleu doux */
+        color: #4338ca;                    /* violet foncé */
+        padding: 2px 4px;
+        border-radius: 3px;
+        font-weight: 600;
+    }
+
+    .category-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 16px;
+        background: #f1f5f9;
+        color: #475569;
+        border-radius: 8px;
+        font-size: 0.875rem;
+        font-weight: 600;
+        margin-bottom: 24px;
+    }
+    .category-badge i { color:#667eea; }
+
+    .faq-contact {
+        background: linear-gradient(135deg,#f8fafc 0%,#e2e8f0 100%);
+        border-radius: 16px;
+        padding: 48px;
+        text-align: center;
+        margin-top: 48px;
+    }
+    .faq-contact h3 {
+        font-size:1.75rem;
+        font-weight:700;
+        color:#0f172a;
+        margin-bottom:16px;
+    }
+    .faq-contact p {
+        color:#64748b;
+        margin-bottom:32px;
+        font-size:1.05rem;
+    }
+    .btn-contact {
+        background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+        color:white;
+        padding:14px 32px;
+        border-radius:12px;
+        font-weight:600;
+        text-decoration:none;
+        display:inline-flex;
+        align-items:center;
+        gap:10px;
+        transition:all 0.3s;
+        border:none;
+        box-shadow:0 4px 12px rgba(102,126,234,0.3);
+    }
+    .btn-contact:hover {
+        transform:translateY(-2px);
+        box-shadow:0 8px 20px rgba(102,126,234,0.4);
+        color:white;
+    }
+
+    @media (max-width: 768px) {
+        .faq-hero h1 { font-size:2rem; }
+        .faq-hero p { font-size:1rem; }
+        .accordion-button { padding:20px 16px; font-size:0.95rem; }
+        .accordion-body { padding:0 16px 20px 16px; }
+        .accordion-button .question-number { display:none; }
+        .faq-contact { padding:32px 24px; }
+    }
+</style>
+
+<div class="faq-hero">
+    <div class="container">
+        <div class="text-center">
+            <div class="faq-icon">
+                <i class="fas fa-question-circle"></i>
+            </div>
+            <h1>Foire aux Questions</h1>
+            <p>Tout ce que vous devez savoir sur Qataa3.ma</p>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="faq-container">
+
+        <div class="faq-search">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="faqSearch" placeholder="Rechercher une question..." class="form-control" autocomplete="off">
+            </div>
+            <div class="search-results-info" id="searchResults"></div>
+        </div>
+
+        <div class="category-badge">
+            <i class="fas fa-layer-group"></i>
+            Questions fréquentes
+        </div>
+
+        <div class="accordion faq-accordion" id="faqAccordion">
+
+            <div class="accordion-item" data-faq-item>
+                <h2 class="accordion-header" id="faq-1-heading">
+                    <button class="accordion-button" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq-1" aria-expanded="true" aria-controls="faq-1">
+                        <span class="question-number">01</span>
+                        <span data-question-text>Comment acheter un billet sur Qataa3.ma ?</span>
+                    </button>
+                </h2>
+                <div id="faq-1" class="accordion-collapse collapse show" aria-labelledby="faq-1-heading"
+                     data-bs-parent="#faqAccordion">
+                    <div class="accordion-body" data-answer-text>
+                        Sélectionnez un événement, choisissez le type de billet et la quantité, puis validez votre panier.
+                        Le paiement se fait en <strong>mode démonstration</strong> et une commande est créée avec vos tickets associés.
+                    </div>
+                </div>
             </div>
 
-            <div class="accordion" id="faqAccordion">
-
-                {# 1. Achat & paiement #}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="faq-1-heading">
-                        <button class="accordion-button" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#faq-1" aria-expanded="true" aria-controls="faq-1">
-                            Comment acheter un billet sur Qataa3.ma ?
-                        </button>
-                    </h2>
-                    <div id="faq-1" class="accordion-collapse collapse show" aria-labelledby="faq-1-heading"
-                         data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Sélectionnez un événement, choisissez le type de billet et la quantité, puis validez votre panier.
-                            Le paiement se fait en mode démonstration et une commande est créée avec vos tickets associés. [file:26]
-                        </div>
+            <div class="accordion-item" data-faq-item>
+                <h2 class="accordion-header" id="faq-2-heading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq-2" aria-expanded="false" aria-controls="faq-2">
+                        <span class="question-number">02</span>
+                        <span data-question-text>Le paiement est-il réel ?</span>
+                    </button>
+                </h2>
+                <div id="faq-2" class="accordion-collapse collapse" aria-labelledby="faq-2-heading"
+                     data-bs-parent="#faqAccordion">
+                    <div class="accordion-body" data-answer-text>
+                        Non, tous les paiements sont effectués en <strong>mode démonstration</strong> : aucune carte réelle
+                        n'est débitée, mais le système génère une commande, des tickets et un reçu PDF comme dans un vrai parcours.
                     </div>
                 </div>
+            </div>
 
-                {# 2. Mode démonstration #}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="faq-2-heading">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#faq-2" aria-expanded="false" aria-controls="faq-2">
-                            Le paiement est-il réel ?
-                        </button>
-                    </h2>
-                    <div id="faq-2" class="accordion-collapse collapse" aria-labelledby="faq-2-heading"
-                         data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Non, tous les paiements sont effectués en <strong>mode démonstration</strong> : aucune carte réelle
-                            n’est débitée, mais le système génère une commande, des tickets et un reçu PDF comme dans un vrai parcours. [file:26]
-                        </div>
+            <div class="accordion-item" data-faq-item>
+                <h2 class="accordion-header" id="faq-3-heading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq-3" aria-expanded="false" aria-controls="faq-3">
+                        <span class="question-number">03</span>
+                        <span data-question-text>Où trouver mes tickets et leurs QR Codes ?</span>
+                    </button>
+                </h2>
+                <div id="faq-3" class="accordion-collapse collapse" aria-labelledby="faq-3-heading"
+                     data-bs-parent="#faqAccordion">
+                    <div class="accordion-body" data-answer-text>
+                        Après confirmation de la commande, vos tickets sont disponibles dans la rubrique
+                        <em>"Mes tickets"</em> de votre espace client, avec un QR Code unique pour chaque ticket.
                     </div>
                 </div>
+            </div>
 
-                {# 3. Tickets & QR Code #}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="faq-3-heading">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#faq-3" aria-expanded="false" aria-controls="faq-3">
-                            Où trouver mes tickets et leurs QR Codes ?
-                        </button>
-                    </h2>
-                    <div id="faq-3" class="accordion-collapse collapse" aria-labelledby="faq-3-heading"
-                         data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Après confirmation de la commande, vos tickets sont disponibles dans la rubrique
-                            <em>“Mes tickets”</em> de votre espace client, avec un QR Code unique pour chaque ticket. [file:26]
-                        </div>
+            <div class="accordion-item" data-faq-item>
+                <h2 class="accordion-header" id="faq-4-heading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq-4" aria-expanded="false" aria-controls="faq-4">
+                        <span class="question-number">04</span>
+                        <span data-question-text>Comment télécharger mon reçu de paiement ?</span>
+                    </button>
+                </h2>
+                <div id="faq-4" class="accordion-collapse collapse" aria-labelledby="faq-4-heading"
+                     data-bs-parent="#faqAccordion">
+                    <div class="accordion-body" data-answer-text>
+                        Un reçu PDF est généré automatiquement pour chaque commande et accessible dans la section
+                        <em>"Mes reçus"</em> de votre espace client, avec la mention du mode démonstration.
                     </div>
                 </div>
+            </div>
 
-                {# 4. Reçus PDF #}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="faq-4-heading">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#faq-4" aria-expanded="false" aria-controls="faq-4">
-                            Comment télécharger mon reçu de paiement ?
-                        </button>
-                    </h2>
-                    <div id="faq-4" class="accordion-collapse collapse" aria-labelledby="faq-4-heading"
-                         data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Un reçu PDF est généré automatiquement pour chaque commande et accessible dans la section
-                            <em>“Mes reçus”</em> de votre espace client, avec la mention du mode démonstration. [file:26]
-                        </div>
-                    </div>
-                </div>
-
-                {# 5. Contrôle à l’entrée #}
-                <div class="accordion-item">
-                    <h2 class="accordion-header" id="faq-5-heading">
-                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#faq-5" aria-expanded="false" aria-controls="faq-5">
-                            Comment les tickets sont-ils contrôlés le jour de l’événement ?
-                        </button>
-                    </h2>
-                    <div id="faq-5" class="accordion-collapse collapse" aria-labelledby="faq-5-heading"
-                         data-bs-parent="#faqAccordion">
-                        <div class="accordion-body">
-                            Le responsable de l’événement scanne le QR Code à l’entrée ; un ticket déjà utilisé ne peut
-                            plus être validé une seconde fois. [file:26]
-                        </div>
+            <div class="accordion-item" data-faq-item>
+                <h2 class="accordion-header" id="faq-5-heading">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#faq-5" aria-expanded="false" aria-controls="faq-5">
+                        <span class="question-number">05</span>
+                        <span data-question-text>Comment les tickets sont-ils contrôlés le jour de l'événement ?</span>
+                    </button>
+                </h2>
+                <div id="faq-5" class="accordion-collapse collapse" aria-labelledby="faq-5-heading"
+                     data-bs-parent="#faqAccordion">
+                    <div class="accordion-body" data-answer-text>
+                        Le responsable de l'événement scanne le QR Code à l'entrée ; un ticket déjà utilisé ne peut
+                        plus être validé une seconde fois.
                     </div>
                 </div>
             </div>
 
         </div>
+
+        <div class="faq-contact">
+            <h3>Vous ne trouvez pas votre réponse ?</h3>
+            <p>Notre équipe est là pour vous aider !</p>
+            <a href="{{ path('app_contact') }}" class="btn btn-contact">
+                <i class="fas fa-envelope"></i>
+                Contactez-nous
+            </a>
+        </div>
+
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput   = document.getElementById('faqSearch');
+    const searchResults = document.getElementById('searchResults');
+    const faqItems      = document.querySelectorAll('[data-faq-item]');
+
+    function normalizeText(text) {
+        return text
+            .toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .trim();
+    }
+
+    function clearHighlights() {
+        faqItems.forEach(item => {
+            const q = item.querySelector('[data-question-text]');
+            const a = item.querySelector('[data-answer-text]');
+            q.innerHTML = q.textContent;
+            a.innerHTML = a.textContent;
+        });
+    }
+
+    function highlightInElement(element, searchTerm) {
+        const text = element.textContent;
+        const regex = new RegExp(`(${searchTerm})`, 'gi');
+        element.innerHTML = text.replace(regex, '<span class="highlight-text">$1</span>');
+    }
+
+    searchInput.addEventListener('input', function(e) {
+        const term = e.target.value.trim();
+        const normTerm = normalizeText(term);
+
+        clearHighlights();
+
+        if (term === '') {
+            faqItems.forEach(item => {
+                item.classList.remove('hidden','highlighted');
+                const collapse = item.querySelector('.accordion-collapse');
+                const button   = item.querySelector('.accordion-button');
+                collapse.classList.remove('show');
+                button.classList.add('collapsed');
+                button.setAttribute('aria-expanded','false');
+            });
+            searchResults.classList.remove('active');
+            return;
+        }
+
+        let matchCount = 0;
+        let firstMatch = null;
+
+        faqItems.forEach(item => {
+            const q = item.querySelector('[data-question-text]');
+            const a = item.querySelector('[data-answer-text]');
+            const collapse = item.querySelector('.accordion-collapse');
+            const button   = item.querySelector('.accordion-button');
+
+            const qText = q.textContent;
+            const aText = a.textContent;
+
+            const qNorm = normalizeText(qText);
+            const aNorm = normalizeText(aText);
+
+            const match = qNorm.includes(normTerm) || aNorm.includes(normTerm);
+
+            if (match) {
+                item.classList.remove('hidden');
+                item.classList.add('highlighted');
+                matchCount++;
+
+                highlightInElement(q, term);
+                highlightInElement(a, term);
+
+                if (!firstMatch) {
+                    firstMatch = item;
+                    collapse.classList.add('show');
+                    button.classList.remove('collapsed');
+                    button.setAttribute('aria-expanded','true');
+
+                    setTimeout(() => {
+                        item.scrollIntoView({ behavior:'smooth', block:'center' });
+                    }, 100);
+                }
+            } else {
+                item.classList.add('hidden');
+                item.classList.remove('highlighted');
+                collapse.classList.remove('show');
+                button.classList.add('collapsed');
+                button.setAttribute('aria-expanded','false');
+            }
+        });
+
+        if (matchCount > 0) {
+            searchResults.innerHTML =
+                `<i class="fas fa-check-circle text-success me-2"></i>${matchCount} résultat(s) trouvé(s) pour "<strong>${term}</strong>"`;
+            searchResults.classList.add('active');
+        } else {
+            searchResults.innerHTML =
+                `<i class="fas fa-exclamation-circle text-warning me-2"></i>Aucun résultat pour "<strong>${term}</strong>"`;
+            searchResults.classList.add('active');
+        }
+    });
+
+    searchInput.addEventListener('search', function() {
+        if (this.value === '') {
+            clearHighlights();
+            faqItems.forEach(item => item.classList.remove('hidden','highlighted'));
+            searchResults.classList.remove('active');
+        }
+    });
+});
+</script>
 {% endblock %}

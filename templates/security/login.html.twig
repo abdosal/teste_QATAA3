@@ -2,58 +2,423 @@
 
 {% block title %}Connexion - Qataa3.ma{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body { background: #f8fafc; }
+
+        .auth-hero {
+            min-height: calc(100vh - 260px);
+            padding: 70px 0 40px;
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .auth-hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .auth-hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .auth-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .auth-hero-illustration {
+                order: 2;
+            }
+            .auth-hero-card {
+                order: 1;
+                margin: 0 auto;
+            }
+        }
+
+        /* ILLUSTRATION SIDE (left) */
+        .auth-hero-illustration {
+            position: relative;
+        }
+
+        .hero-blob {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 460px;
+            height: 460px;
+            background: radial-gradient(circle at 30% 20%, #e0e7ff 0, #f8fafc 55%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-phone {
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+            margin-left: 60px;
+        }
+
+        .phone-frame {
+            width: 270px;
+            height: 540px;
+            border-radius: 40px;
+            background: #111827;
+            padding: 12px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.45);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+            background: #ffffff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-header {
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .screen-header span {
+            margin-left: 8px;
+        }
+
+        .screen-body {
+            flex: 1;
+            padding: 1rem;
+            background: #f8fafc;
+            font-size: 0.8rem;
+        }
+
+        .screen-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 0.6rem 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.55rem;
+            box-shadow: 0 4px 14px rgba(148, 163, 184, 0.20);
+        }
+
+        .screen-card-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #0f172a;
+        }
+
+        .screen-card-label i {
+            color: #667eea;
+        }
+
+        .screen-card-tag {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .hero-character {
+            position: absolute;
+            bottom: 0;
+            left: 260px;
+            width: 220px;
+            height: 320px;
+            border-radius: 160px 160px 140px 140px;
+            background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(129, 140, 248, 0.4);
+            z-index: 1;
+        }
+
+        .hero-character-icon {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 3.5rem;
+        }
+
+        /* LOGIN CARD (right) */
+        .auth-hero-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2.3rem 2.4rem;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+            border: 1px solid #e5e7eb;
+            max-width: 380px;
+            margin-left: auto;
+        }
+
+        .hero-card-logo {
+            display: flex;
+            align-items: center;
+            gap: 0.55rem;
+            margin-bottom: 1.8rem;
+        }
+
+        .hero-card-logo-icon {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1rem;
+        }
+
+        .hero-card-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #0f172a;
+        }
+
+        .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.35rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 0.9rem;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.9rem;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(129, 140, 248, 0.25);
+        }
+
+        .form-check-custom {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.4rem;
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.8rem;
+            color: #6b7280;
+        }
+
+        .form-check-custom input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+            accent-color: #6366f1;
+        }
+
+        .forgot-link {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            text-decoration: none;
+        }
+
+        .btn-submit,
+        .btn-secondary {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 999px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit {
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.35);
+            margin-bottom: 0.7rem;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 10px 22px rgba(99, 102, 241, 0.45);
+        }
+
+        .btn-secondary {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            color: #6b7280;
+        }
+
+        .btn-secondary:hover {
+            border-color: #6366f1;
+            color: #4f46e5;
+            background: #f9fafb;
+        }
+
+        .alert-modern {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            border-radius: 10px;
+            padding: 0.7rem 0.9rem;
+            margin-bottom: 1.1rem;
+            color: #b91c1c;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-modern i {
+            font-size: 1rem;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5">
-            <div class="card shadow">
-                <div class="card-body p-5">
-                    <h2 class="text-center mb-4">
-                        <i class="fas fa-sign-in-alt"></i> Connexion
-                    </h2>
+<section class="auth-hero">
+    <div class="auth-hero-inner">
+        <div class="auth-hero-grid">
+            {# ILLUSTRATION SIDE #}
+            <div class="auth-hero-illustration">
+                <div class="hero-blob"></div>
 
-                    {% if error %}
-                        <div class="alert alert-danger">
-                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                <div class="hero-phone">
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="screen-header">
+                                <i class="fas fa-music"></i>
+                                <span>Qataa3.ma</span>
+                            </div>
+                            <div class="screen-body">
+                                <div class="screen-card">
+                                    <div class="screen-card-label">
+                                        <i class="fas fa-music"></i>
+                                        <span>Concert</span>
+                                    </div>
+                                    <span class="screen-card-tag">Populaire</span>
+                                </div>
+                                <div class="screen-card">
+                                    <div class="screen-card-label">
+                                        <i class="fas fa-fire"></i>
+                                        <span>Festival</span>
+                                    </div>
+                                    <span class="screen-card-tag">Nouveau</span>
+                                </div>
+                                <div class="screen-card">
+                                    <div class="screen-card-label">
+                                        <i class="fas fa-theater-masks"></i>
+                                        <span>Spectacle</span>
+                                    </div>
+                                    <span class="screen-card-tag">À venir</span>
+                                </div>
+                            </div>
                         </div>
-                    {% endif %}
+                    </div>
+                </div>
 
-                    <form method="post">
-                        <div class="mb-3">
-                            <label for="inputEmail" class="form-label">Email</label>
-                            <input type="email" value="{{ last_username }}" name="_username" id="inputEmail" class="form-control" required autofocus>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="inputPassword" class="form-label">Mot de passe</label>
-                            <input type="password" name="_password" id="inputPassword" class="form-control" required>
-                        </div>
-
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" name="_remember_me" class="form-check-input" id="remember_me">
-                            <label class="form-check-label" for="remember_me">
-                                Se souvenir de moi
-                            </label>
-                        </div>
-
-                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-
-                        <button class="btn btn-primary w-100 mb-3" type="submit">
-                            <i class="fas fa-sign-in-alt"></i> Se connecter
-                        </button>
-
-                        <div class="text-center">
-                            <p class="text-muted">Pas encore de compte ?</p>
-                            <a href="{{ path('app_register') }}" class="btn btn-outline-primary">
-                                <i class="fas fa-user-plus"></i> Créer un compte
-                            </a>
-                        </div>
-                    </form>
+                <div class="hero-character">
+                    <div class="hero-character-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
                 </div>
             </div>
 
-            
+            {# LOGIN CARD #}
+            <div class="auth-hero-card">
+                <div class="hero-card-logo">
+                    <div class="hero-card-logo-icon">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="hero-card-title">Qataa3.ma</div>
+                </div>
+
+                {% if error %}
+                    <div class="alert-modern">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <span>{{ error.messageKey|trans(error.messageData, 'security') }}</span>
+                    </div>
+                {% endif %}
+
+                <form method="post">
+                    <div class="form-group">
+                        <label for="inputEmail" class="form-label">Email</label>
+                        <input
+                            type="email"
+                            id="inputEmail"
+                            name="_username"
+                            class="form-input"
+                            value="{{ last_username }}"
+                            required
+                            autofocus
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="inputPassword" class="form-label">Mot de passe</label>
+                        <input
+                            type="password"
+                            id="inputPassword"
+                            name="_password"
+                            class="form-input"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-check-custom">
+                        <div class="checkbox-wrapper">
+                            <input type="checkbox" id="remember_me" name="_remember_me">
+                            <label for="remember_me">Se souvenir de moi</label>
+                        </div>
+                        <a href="#" class="forgot-link">Mot de passe oublié ?</a>
+                    </div>
+
+                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                    <button type="submit" class="btn-submit">
+                        Se connecter
+                    </button>
+
+                    <button type="button" class="btn-secondary" onclick="window.location='{{ path('app_register') }}'">
+                        Inscription
+                    </button>
+                </form>
+            </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}
