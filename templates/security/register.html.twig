@@ -2,60 +2,381 @@
 
 {% block title %}Inscription - Qataa3.ma{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <style>
+        body { background: #f8fafc; }
+
+        .auth-hero {
+            min-height: calc(100vh - 260px);
+            padding: 70px 0 40px;
+            display: flex;
+            align-items: center;
+            background: #f8fafc;
+        }
+
+        .auth-hero-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .auth-hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1.1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+
+        @media (max-width: 992px) {
+            .auth-hero-grid {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+            .auth-hero-illustration {
+                order: 2;
+            }
+            .auth-hero-card {
+                order: 1;
+                margin: 0 auto;
+            }
+        }
+
+        /* ILLUSTRATION (même que login) */
+        .auth-hero-illustration {
+            position: relative;
+        }
+
+        .hero-blob {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 460px;
+            height: 460px;
+            background: radial-gradient(circle at 30% 20%, #e0e7ff 0, #f8fafc 55%);
+            border-radius: 50%;
+            z-index: 0;
+        }
+
+        .hero-phone {
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+            margin-left: 60px;
+        }
+
+        .phone-frame {
+            width: 270px;
+            height: 540px;
+            border-radius: 40px;
+            background: #111827;
+            padding: 12px;
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.45);
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            border-radius: 32px;
+            background: #ffffff;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .screen-header {
+            height: 70px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .screen-header span {
+            margin-left: 8px;
+        }
+
+        .screen-body {
+            flex: 1;
+            padding: 1rem;
+            background: #f8fafc;
+            font-size: 0.8rem;
+        }
+
+        .screen-card {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 0.6rem 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.55rem;
+            box-shadow: 0 4px 14px rgba(148, 163, 184, 0.20);
+        }
+
+        .screen-card-label {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #0f172a;
+        }
+
+        .screen-card-label i {
+            color: #667eea;
+        }
+
+        .screen-card-tag {
+            font-size: 0.65rem;
+            padding: 0.15rem 0.5rem;
+            border-radius: 999px;
+            background: #eef2ff;
+            color: #4f46e5;
+        }
+
+        .hero-character {
+            position: absolute;
+            bottom: 0;
+            left: 260px;
+            width: 220px;
+            height: 320px;
+            border-radius: 160px 160px 140px 140px;
+            background: linear-gradient(135deg, #a855f7 0%, #6366f1 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 20px 50px rgba(129, 140, 248, 0.4);
+            z-index: 1;
+        }
+
+        .hero-character-icon {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #f8fafc;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 3.5rem;
+        }
+
+        /* CARTE INSCRIPTION (droite) */
+        .auth-hero-card {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.10);
+            border: 1px solid #e5e7eb;
+            max-width: 420px;
+            margin-left: auto;
+        }
+
+        .auth-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #1e293b;
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .auth-title i {
+            color: #6366f1;
+            margin-right: 0.5rem;
+        }
+
+        .form-group { margin-bottom: 1.2rem; }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+            font-size: 0.95rem;
+            background: #f9fafb;
+            transition: all 0.2s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #6366f1;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.25);
+        }
+
+        .checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #6366f1;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 0.85rem 1rem;
+            border-radius: 999px;
+            border: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 18px rgba(99, 102, 241, 0.35);
+            margin-top: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-register:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(99, 102, 241, 0.45);
+        }
+
+        .login-link {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .login-link a {
+            color: #6366f1;
+            text-decoration: none;
+            font-weight: 600;
+            margin-left: 0.3rem;
+        }
+
+        .login-link a:hover {
+            text-decoration: underline;
+        }
+    </style>
+{% endblock %}
+
 {% block body %}
-<div class="container py-5">
-    <div class="row justify-content-center">
-        <div class="col-md-6">
-            <div class="card shadow">
-                <div class="card-body p-5">
-                    <h2 class="text-center mb-4">
-                        <i class="fas fa-user-plus"></i> Inscription
-                    </h2>
+<section class="auth-hero">
+    <div class="auth-hero-inner">
+        <div class="auth-hero-grid">
+            {# COLONNE GAUCHE : même illustration que login #}
+            <div class="auth-hero-illustration">
+                <div class="hero-blob"></div>
 
-                    {{ form_start(registrationForm) }}
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                {{ form_row(registrationForm.nom) }}
+                <div class="hero-phone">
+                    <div class="phone-frame">
+                        <div class="phone-screen">
+                            <div class="screen-header">
+                                <i class="fas fa-music"></i>
+                                <span>Qataa3.ma</span>
                             </div>
-                            <div class="col-md-6 mb-3">
-                                {{ form_row(registrationForm.prenom) }}
+                            <div class="screen-body">
+                                <div class="screen-card">
+                                    <div class="screen-card-label">
+                                        <i class="fas fa-music"></i>
+                                        <span>Concert</span>
+                                    </div>
+                                    <span class="screen-card-tag">Populaire</span>
+                                </div>
+                                <div class="screen-card">
+                                    <div class="screen-card-label">
+                                        <i class="fas fa-fire"></i>
+                                        <span>Festival</span>
+                                    </div>
+                                    <span class="screen-card-tag">Nouveau</span>
+                                </div>
+                                <div class="screen-card">
+                                    <div class="screen-card-label">
+                                        <i class="fas fa-theater-masks"></i>
+                                        <span>Spectacle</span>
+                                    </div>
+                                    <span class="screen-card-tag">À venir</span>
+                                </div>
                             </div>
                         </div>
-
-                        <div class="mb-3">
-                            {{ form_row(registrationForm.email) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_row(registrationForm.telephone) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_row(registrationForm.plainPassword.first) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_row(registrationForm.plainPassword.second) }}
-                        </div>
-
-                        <div class="mb-3">
-                            {{ form_row(registrationForm.agreeTerms) }}
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100 mb-3">
-                            <i class="fas fa-user-plus"></i> S'inscrire
-                        </button>
-
-                        <div class="text-center">
-                            <p class="text-muted">Vous avez déjà un compte ?</p>
-                            <a href="{{ path('app_login') }}" class="btn btn-outline-primary">
-                                <i class="fas fa-sign-in-alt"></i> Se connecter
-                            </a>
-                        </div>
-                    {{ form_end(registrationForm) }}
+                    </div>
                 </div>
+
+                <div class="hero-character">
+                    <div class="hero-character-icon">
+                        <i class="fas fa-user-plus"></i>
+                    </div>
+                </div>
+            </div>
+
+            {# COLONNE DROITE : ton formulaire d’inscription #}
+            <div class="auth-hero-card">
+                <h2 class="auth-title">
+                    <i class="fas fa-user-plus"></i> Inscription
+                </h2>
+
+                {{ form_start(registrationForm) }}
+                    <div class="row">
+                        <div class="col-md-6 form-group">
+                            {{ form_label(registrationForm.nom, 'Nom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(registrationForm.nom, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(registrationForm.nom) }}
+                        </div>
+                        <div class="col-md-6 form-group">
+                            {{ form_label(registrationForm.prenom, 'Prénom', {'label_attr': {'class': 'form-label'}}) }}
+                            {{ form_widget(registrationForm.prenom, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_errors(registrationForm.prenom) }}
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(registrationForm.email, 'Email', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.email, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.email) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(registrationForm.telephone, 'Téléphone', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.telephone, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.telephone) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(registrationForm.plainPassword.first, 'Mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.plainPassword.first) }}
+                    </div>
+
+                    <div class="form-group">
+                        {{ form_label(registrationForm.plainPassword.second, 'Confirmer le mot de passe', {'label_attr': {'class': 'form-label'}}) }}
+                        {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                        {{ form_errors(registrationForm.plainPassword.second) }}
+                    </div>
+
+                    <div class="form-group checkbox-wrapper">
+                        {{ form_widget(registrationForm.agreeTerms) }}
+                        <label>J'accepte les conditions d'utilisation</label>
+                    </div>
+                    {{ form_errors(registrationForm.agreeTerms) }}
+
+                    <button type="submit" class="btn-register">
+                        <i class="fas fa-user-plus"></i> S'inscrire
+                    </button>
+
+                    <div class="login-link">
+                        Vous avez déjà un compte ?
+                        <a href="{{ path('app_login') }}">Se connecter</a>
+                    </div>
+                {{ form_end(registrationForm) }}
             </div>
         </div>
     </div>
-</div>
+</section>
 {% endblock %}

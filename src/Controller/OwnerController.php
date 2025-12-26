@@ -11,74 +11,66 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
-use Symfony\UX\Chartjs\Builder\ChartBuilderInterface;
-use Symfony\UX\Chartjs\Model\Chart;
-
 
 #[Route('/owner')]
 #[IsGranted('ROLE_OWNER')]
 class OwnerController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_owner_dashboard')]
-public function dashboard(
-    CommandeRepository $commandeRepository,
-    EvenementRepository $evenementRepository,
-    ClientRepository $clientRepository,
-    TypeBilletRepository $typeBilletRepository,
-    LigneCommandeRepository $ligneCommandeRepository
-): Response {
-    // KPI principaux
-    $totalBilletsVendus = $ligneCommandeRepository->countTotalTicketsSold();
-    $revenusTotal       = $commandeRepository->getTotalRevenue();
-    $totalClients       = count($clientRepository->findAll());
-    $evenementsActifs   = $evenementRepository->countActiveEvents();
+    public function dashboard(
+        CommandeRepository $commandeRepository,
+        EvenementRepository $evenementRepository,
+        ClientRepository $clientRepository,
+        TypeBilletRepository $typeBilletRepository,
+        LigneCommandeRepository $ligneCommandeRepository
+    ): Response {
+        // KPI principaux
+        $totalBilletsVendus = $ligneCommandeRepository->countTotalTicketsSold();
+        $revenusTotal       = $commandeRepository->getTotalRevenue();
+        $totalClients       = count($clientRepository->findAll());
+        $evenementsActifs   = $evenementRepository->countActiveEvents();
 
-    // Statistiques par événement
-    $ventesByEvent = $ligneCommandeRepository->getRevenueByEvent();
+        // Statistiques par événement
+        $ventesByEvent = $ligneCommandeRepository->getRevenueByEvent();
 
-    // Activité récente (5 dernières commandes)
-    $lastOrders = $commandeRepository->findLastOrders(5);
+        // Activité récente (5 dernières commandes)
+        $lastOrders = $commandeRepository->findLastOrders(5);
 
-    return $this->render('owner/dashboard.html.twig', [
-        'total_billets_vendus' => $totalBilletsVendus,
-        'revenus_total'        => $revenusTotal,
-        'total_clients'        => $totalClients,
-        'evenements_actifs'    => $evenementsActifs,
-        'ventes_by_event'      => $ventesByEvent,
-        'last_orders'          => $lastOrders,
-    ]);
-}
-
-
-#[Route('/events', name: 'app_owner_events')]
-public function events(
-    EvenementRepository $evenementRepository,
-    LigneCommandeRepository $ligneCommandeRepository
-): Response {
-    $evenements = $evenementRepository->findAll();
-
-    $ticketsByEvent = [];
-    foreach ($evenements as $evenement) {
-        $ticketsByEvent[$evenement->getId()] =
-            $ligneCommandeRepository->countTicketsByEvent($evenement->getId());
+        return $this->render('owner/dashboard.html.twig', [
+            'total_billets_vendus' => $totalBilletsVendus,
+            'revenus_total'        => $revenusTotal,
+            'total_clients'        => $totalClients,
+            'evenements_actifs'    => $evenementsActifs,
+            'ventes_by_event'      => $ventesByEvent,
+            'last_orders'          => $lastOrders,
+        ]);
     }
 
-    // ✅ ICI : appel sur le REPOSITORY
-    $revenueData = $ligneCommandeRepository->getRevenueByEvent();
-    $revenueByEvent = [];
-    foreach ($revenueData as $data) {
-        $revenueByEvent[$data['event_id']] = $data['revenus'];
+    #[Route('/events', name: 'app_owner_events')]
+    public function events(
+        EvenementRepository $evenementRepository,
+        LigneCommandeRepository $ligneCommandeRepository
+    ): Response {
+        $evenements = $evenementRepository->findAll();
+
+        $ticketsByEvent = [];
+        foreach ($evenements as $evenement) {
+            $ticketsByEvent[$evenement->getId()] =
+                $ligneCommandeRepository->countTicketsByEvent($evenement->getId());
+        }
+
+        $revenueData = $ligneCommandeRepository->getRevenueByEvent();
+        $revenueByEvent = [];
+        foreach ($revenueData as $data) {
+            $revenueByEvent[$data['event_id']] = $data['revenus'];
+        }
+
+        return $this->render('owner/events.html.twig', [
+            'evenements'       => $evenements,
+            'tickets_by_event' => $ticketsByEvent,
+            'revenue_by_event' => $revenueByEvent,
+        ]);
     }
-
-    return $this->render('owner/events.html.twig', [
-        'evenements'       => $evenements,
-        'tickets_by_event' => $ticketsByEvent,
-        'revenue_by_event' => $revenueByEvent,
-    ]);
-}
-
-
-
 
     #[Route('/clients', name: 'app_owner_clients')]
     public function clients(ClientRepository $clientRepository): Response
@@ -90,60 +82,56 @@ public function events(
         ]);
     }
 
-#[Route('/reports', name: 'app_owner_reports')]
-public function reports(
-    CommandeRepository $commandeRepository,
-    LigneCommandeRepository $ligneCommandeRepository,
-    ClientRepository $clientRepository,
-    EvenementRepository $evenementRepository
-): Response {
-    $statsByEvent = $ligneCommandeRepository->getStatsByEvent();
-    $startDate = new \DateTime('-30 days');
-    $endDate   = new \DateTime();
+    #[Route('/reports', name: 'app_owner_reports')]
+    public function reports(
+        CommandeRepository $commandeRepository,
+        LigneCommandeRepository $ligneCommandeRepository,
+        ClientRepository $clientRepository,
+        EvenementRepository $evenementRepository
+    ): Response {
+        $statsByEvent = $ligneCommandeRepository->getStatsByEvent();
+        $startDate = new \DateTime('-30 days');
+        $endDate   = new \DateTime();
 
-    // Commandes sur les 30 derniers jours
-    $revenueByPeriod = $commandeRepository->getRevenueByPeriod($startDate, $endDate);
+        $revenueByPeriod = $commandeRepository->getRevenueByPeriod($startDate, $endDate);
 
-    // KPI
-    $totalBilletsVendus = $ligneCommandeRepository->countTotalTicketsSold();
-    $revenusTotal       = $commandeRepository->getTotalRevenue();
-    $totalClients       = count($clientRepository->findAll());
-    $evenementsActifs   = $evenementRepository->countActiveEvents();
-    $statsByEvent       = $ligneCommandeRepository->getStatsByEvent();
+        $totalBilletsVendus = $ligneCommandeRepository->countTotalTicketsSold();
+        $revenusTotal       = $commandeRepository->getTotalRevenue();
+        $totalClients       = count($clientRepository->findAll());
+        $evenementsActifs   = $evenementRepository->countActiveEvents();
+        $statsByEvent       = $ligneCommandeRepository->getStatsByEvent();
 
-    // Données pour le graphique
-    $labels = [];
-    $data   = [];
+        $labels = [];
+        $data   = [];
 
-    foreach ($revenueByPeriod as $commande) {
-        $labels[] = $commande->getDateCommande()->format('d/m');
-        $data[]   = (float) $commande->getMontantTotal();
+        foreach ($revenueByPeriod as $commande) {
+            $labels[] = $commande->getDateCommande()->format('d/m');
+            $data[]   = (float) $commande->getMontantTotal();
+        }
+
+        $bestDayLabel   = null;
+        $bestDayAmount  = 0;
+        $averageRevenue = 0;
+
+        if (!empty($data)) {
+            $bestIndex      = array_keys($data, max($data))[0];
+            $bestDayLabel   = $labels[$bestIndex];
+            $bestDayAmount  = $data[$bestIndex];
+            $averageRevenue = array_sum($data) / count($data);
+        }
+
+        return $this->render('owner/reports.html.twig', [
+            'revenue_by_period'    => $revenueByPeriod,
+            'total_billets_vendus' => $totalBilletsVendus,
+            'revenus_total'        => $revenusTotal,
+            'total_clients'        => $totalClients,
+            'evenements_actifs'    => $evenementsActifs,
+            'stats_by_event'       => $statsByEvent,
+            'labels'               => $labels,
+            'data'                 => $data,
+            'best_day_label'       => $bestDayLabel,
+            'best_day_amount'      => $bestDayAmount,
+            'average_revenue'      => $averageRevenue,
+        ]);
     }
-
-    // Résumé période (meilleur jour + moyenne)
-    $bestDayLabel   = null;
-    $bestDayAmount  = 0;
-    $averageRevenue = 0;
-
-    if (!empty($data)) {
-        $bestIndex      = array_keys($data, max($data))[0];
-        $bestDayLabel   = $labels[$bestIndex];
-        $bestDayAmount  = $data[$bestIndex];
-        $averageRevenue = array_sum($data) / count($data);
-    }
-
-    return $this->render('owner/reports.html.twig', [
-        'revenue_by_period'    => $revenueByPeriod,
-        'total_billets_vendus' => $totalBilletsVendus,
-        'revenus_total'        => $revenusTotal,
-        'total_clients'        => $totalClients,
-        'evenements_actifs'    => $evenementsActifs,
-        'stats_by_event'       => $statsByEvent,
-        'labels'               => $labels,
-        'data'                 => $data,
-        'best_day_label'       => $bestDayLabel,
-        'best_day_amount'      => $bestDayAmount,
-        'average_revenue'      => $averageRevenue,
-    ]);
-}
 }

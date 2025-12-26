@@ -6,271 +6,303 @@
     {{ parent() }}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
-        /* --- HERO SECTION --- */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        /* HERO PROFESSIONNEL */
         .hero-section {
             position: relative;
-            height: 600px;
-            /* Image de fond avec overlay sombre */
-            background: linear-gradient(rgba(15, 23, 42, 0.6), rgba(15, 23, 42, 0.8)), url('{{ asset('images/concert-hero.jpg') }}') center center/cover no-repeat;
+            height: 85vh;
+            min-height: 650px;
+            background: linear-gradient(135deg, #1a1f36 0%, #2d3561 100%);
+            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            margin-bottom: 0;
         }
-
+        .hero-bg {
+            position: absolute;
+            inset: 0;
+            background: url('{{ asset('images/concert-hero.jpg') }}') center/cover no-repeat;
+            opacity: 0.12;
+        }
+        .hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(ellipse at 30% 50%, rgba(59,130,246,0.15), transparent 70%);
+        }
+        
         .hero-content {
+            position: relative;
+            z-index: 10;
             text-align: center;
-            max-width: 800px;
-            padding: 20px;
-            z-index: 2;
+            max-width: 850px;
+            padding: 40px;
+            animation: fadeIn 1.2s ease;
         }
-
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
         .hero-content h1 {
-            font-size: 3.5rem;
-            font-weight: 800;
+            font-size: 4rem;
+            font-weight: 700;
+            color: #fff;
             margin-bottom: 20px;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-            line-height: 1.2;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
         }
-
         .hero-content p {
             font-size: 1.25rem;
-            font-weight: 300;
-            margin-bottom: 30px;
-            opacity: 0.9;
+            color: rgba(255,255,255,0.85);
+            margin-bottom: 40px;
+            font-weight: 400;
         }
-
-        /* --- BARRE DE RECHERCHE --- */
+        
+        /* BARRE RECHERCHE MINIMALISTE */
         .search-container {
-            position: relative;
-            max-width: 600px;
+            max-width: 680px;
             margin: 0 auto;
         }
-
         .search-box {
-            background: white;
+            background: #fff;
             padding: 8px;
-            border-radius: 50px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
+            transition: all .3s;
         }
-
+        .search-box:hover {
+            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
+            transform: translateY(-2px);
+        }
         .search-box input {
             border: none;
-            padding: 15px 25px;
             flex: 1;
+            padding: 16px 24px;
+            border-radius: 8px;
             outline: none;
             font-size: 1rem;
-            border-radius: 50px;
             background: transparent;
+            color: #1a1f36;
         }
-
+        .search-box input::placeholder {
+            color: #64748b;
+        }
         .search-box button {
             width: 50px;
             height: 50px;
-            border-radius: 50%;
+            border-radius: 8px;
             border: none;
-            background: #2563eb;
-            color: white;
-            cursor: pointer;
-            transition: all 0.3s ease;
+            background: #3b82f6;
+            color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
+            transition: all .3s;
         }
-
         .search-box button:hover {
-            background: #1d4ed8;
+            background: #2563eb;
             transform: scale(1.05);
         }
 
-        /* --- SECTION ÉVÉNEMENTS --- */
+        /* SECTION ÉVÉNEMENTS */
         .events-section {
-            padding: 80px 0;
+            padding: 100px 0 120px;
             background: #f8fafc;
-            overflow: hidden;
-        }
-
-        /* --- NOUVEAU TITRE DESIGN --- */
-        .section-header-modern {
-            text-align: center;
-            margin-bottom: 60px;
             position: relative;
         }
         
-        .fw-900 { font-weight: 900; }
-        .text-gradient {
-            background: linear-gradient(90deg, #1e293b, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .section-header-modern {
+            text-align: center;
+            margin-bottom: 70px;
+        }
+        .section-header-modern h2 {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: #1a1f36;
+            margin-bottom: 16px;
+            letter-spacing: -0.02em;
         }
         .separator-line {
             width: 80px;
             height: 4px;
-            background: linear-gradient(90deg, #2563eb, #60a5fa);
-            border-radius: 2px;
-            margin: 20px auto 0;
+            background: #3b82f6;
+            border-radius: 4px;
+            margin: 24px auto 0;
+        }
+        .section-header-modern p {
+            margin-top: 24px;
+            color: #64748b;
+            font-size: 1.1rem;
         }
 
-        /* CARTE MODERNE CLEAN */
-        .event-card-clean {
-            background: white;
+        /* CARDS PROFESSIONNELLES */
+        .event-card-pro {
+            background: #fff;
             border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            height: 100%;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 2px 8px rgba(15,23,42,0.06);
+            transition: all .3s ease;
             display: flex;
             flex-direction: column;
-            border: 1px solid #f1f5f9;
+            height: 100%;
         }
-
-        .event-card-clean:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+        .event-card-pro:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 32px rgba(15,23,42,0.12);
+            border-color: #cbd5e1;
         }
-
+        
         .card-img-wrapper {
             position: relative;
-            height: 220px;
+            height: 240px;
             overflow: hidden;
+            background: #e2e8f0;
         }
-
         .card-img-top {
-            height: 100%;
             width: 100%;
+            height: 100%;
             object-fit: cover;
-            transition: transform 0.5s ease;
+            transition: transform .5s ease;
         }
-
-        .event-card-clean:hover .card-img-top {
-            transform: scale(1.05);
+        .event-card-pro:hover .card-img-top {
+            transform: scale(1.08);
         }
-
         .card-badge {
             position: absolute;
-            top: 15px;
-            right: 15px;
-            background: rgba(255, 255, 255, 0.95);
-            color: #0f172a;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-weight: 700;
-            font-size: 0.75rem;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            top: 16px;
+            right: 16px;
+            background: #fff;
+            color: #3b82f6;
             text-transform: uppercase;
-            z-index: 2;
-            letter-spacing: 0.5px;
+            font-size: .7rem;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            letter-spacing: .08em;
+            z-index: 3;
         }
-
-        .card-body {
+        
+        .card-body-premium {
             padding: 24px;
-            flex-grow: 1;
             display: flex;
             flex-direction: column;
+            flex: 1;
         }
-
         .event-date {
-            color: #2563eb;
-            font-weight: 700;
-            font-size: 0.85rem;
+            font-size: .85rem;
+            font-weight: 600;
+            color: #3b82f6;
             text-transform: uppercase;
-            margin-bottom: 8px;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            margin-bottom: 10px;
+            letter-spacing: 0.05em;
         }
-
         .event-title {
             font-size: 1.25rem;
-            font-weight: 800;
-            color: #0f172a;
-            margin-bottom: 8px;
+            font-weight: 700;
+            color: #1a1f36;
+            margin-bottom: 10px;
             line-height: 1.3;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
-
         .event-location {
+            font-size: .9rem;
             color: #64748b;
-            font-size: 0.9rem;
-            margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 6px;
+            margin-bottom: 20px;
+            font-weight: 500;
         }
-
-        .btn-action {
+        
+        .btn-reserver {
             margin-top: auto;
             width: 100%;
             padding: 12px;
-            border-radius: 10px;
-            background: #f1f5f9;
-            color: #0f172a;
-            font-weight: 700;
-            text-decoration: none;
+            border-radius: 8px;
+            border: none;
             text-align: center;
-            transition: all 0.2s ease;
-            display: block;
+            font-weight: 600;
+            font-size: .95rem;
+            color: #fff;
+            background: #1a1f36;
+            text-decoration: none;
+            transition: all .3s;
+        }
+        .btn-reserver:hover {
+            background: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59,130,246,0.3);
+            color: #fff;
         }
 
-        .btn-action:hover {
-            background: #0f172a;
-            color: white;
+        /* SWIPER */
+        .swiper {
+            padding: 30px 15px 70px !important;
         }
-
-        /* SWIPER NAVIGATION CUSTOM */
-        .swiper-button-next, .swiper-button-prev {
-            width: 44px;
-            height: 44px;
-            background: white;
+        .swiper-button-next,.swiper-button-prev {
+            width: 48px;
+            height: 48px;
             border-radius: 50%;
-            color: #0f172a;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            background: #fff;
+            border: 1px solid #e2e8f0;
+            color: #1a1f36;
+            box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+            transition: all .3s;
         }
-
-        .swiper-button-next:after, .swiper-button-prev:after {
-            font-size: 1rem;
+        .swiper-button-next:after,.swiper-button-prev:after {
+            font-size: 1.1rem;
             font-weight: 900;
         }
-
-        .swiper-button-next:hover, .swiper-button-prev:hover {
-            background: #2563eb;
-            color: white;
+        .swiper-button-next:hover,.swiper-button-prev:hover {
+            background: #3b82f6;
+            color: #fff;
+            border-color: #3b82f6;
+            box-shadow: 0 8px 20px rgba(59,130,246,0.25);
         }
-
-        .swiper-container-wrapper {
-            position: relative;
-            padding: 0 20px;
+        .swiper-pagination-bullet {
+            width: 8px;
+            height: 8px;
+            background: #cbd5e1;
+            opacity: 1;
+            transition: all .3s;
         }
-
-        .swiper {
-            padding: 20px 5px 40px 5px !important;
+        .swiper-pagination-bullet-active {
+            background: #3b82f6;
+            width: 28px;
+            border-radius: 999px;
         }
-
+        
         @media (max-width: 768px) {
-            .hero-section { height: 500px; }
+            .hero-section { min-height: 550px; }
             .hero-content h1 { font-size: 2.5rem; }
+            .section-header-modern h2 { font-size: 2rem; }
         }
     </style>
 {% endblock %}
 
 {% block body %}
-    <!-- HERO SECTION -->
     <section class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="hero-overlay"></div>
+        
         <div class="hero-content">
             <h1>Vivez l'expérience live</h1>
-            <p>Les meilleurs concerts, festivals et conférences du Maroc à portée de main.</p>
-            
+            <p>Découvrez les événements les plus captivants du Maroc</p>
             <div class="search-container">
                 <form action="{{ path('app_events') }}" method="get">
                     <div class="search-box">
-                        <input type="text" name="search" placeholder="Artiste, ville, lieu...">
+                        <input type="text" name="search" placeholder="Rechercher un événement, artiste, ville..." autocomplete="off">
                         <button type="submit">
                             <i class="fas fa-search"></i>
                         </button>
@@ -280,26 +312,21 @@
         </div>
     </section>
 
-    <!-- EVENTS SECTION -->
     <section class="events-section">
         <div class="container-fluid px-lg-5">
-            
-            <!-- NOUVEAU TITRE CENTRÉ ET DESIGN -->
             <div class="section-header-modern">
-                <h2 class="display-4 fw-900 text-dark mb-2">Vivez l'instant présent</h2>
+                <h2>Événements à la une</h2>
                 <div class="separator-line"></div>
-                <p class="text-muted mt-3 fs-5">Une sélection exclusive des meilleurs événements à venir</p>
+                <p>Les expériences inoubliables vous attendent</p>
             </div>
 
-            <div class="swiper-container-wrapper">
-                <!-- Swiper -->
+            <div class="position-relative">
                 <div class="swiper mySwiper">
                     <div class="swiper-wrapper">
                         {% for evenement in evenements %}
                             <div class="swiper-slide">
-                                <div class="event-card-clean">
+                                <div class="event-card-pro">
                                     <div class="card-img-wrapper">
-                                        <!-- Gestion sécurisée de l'image -->
                                         {% if evenement.imageName is defined and evenement.imageName %}
                                             <img src="{{ asset('uploads/evenements/' ~ evenement.imageName) }}" class="card-img-top" alt="{{ evenement.titre }}">
                                         {% elseif evenement.image is defined and evenement.image %}
@@ -307,67 +334,62 @@
                                         {% else %}
                                             <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=800&auto=format&fit=crop" class="card-img-top" alt="Image par défaut">
                                         {% endif %}
-                                        
-                                        <!-- Badge Catégorie -->
                                         <span class="card-badge">
                                             {% if evenement.categorie is defined and evenement.categorie %}
                                                 {{ evenement.categorie.nom|default(evenement.categorie) }}
                                             {% else %}
-                                                Événement
+                                                EVENT
                                             {% endif %}
                                         </span>
                                     </div>
 
-                                    <div class="card-body">
+                                    <div class="card-body-premium">
                                         <div class="event-date">
-                                            <i class="far fa-calendar-alt me-1"></i>
+                                            <i class="far fa-calendar-alt"></i>
                                             {% if evenement.dateHeure is defined and evenement.dateHeure %}
                                                 {{ evenement.dateHeure|date('d M Y') }}
                                             {% elseif evenement.dateEvenement is defined and evenement.dateEvenement %}
                                                 {{ evenement.dateEvenement|date('d M Y') }}
                                             {% else %}
-                                                Date à venir
+                                                Bientôt
                                             {% endif %}
                                         </div>
-                                        
-                                        <h3 class="event-title" title="{{ evenement.titre }}">
-                                            {{ evenement.titre }}
-                                        </h3>
-                                        
+
+                                        <h3 class="event-title">{{ evenement.titre }}</h3>
+
                                         <div class="event-location">
-                                            <i class="fas fa-map-marker-alt text-danger me-1"></i>
-                                            {{ evenement.lieu|default('Lieu non défini') }}
+                                            <i class="fas fa-map-marker-alt"></i>
+                                            {{ evenement.lieu|default('Lieu à confirmer') }}
                                         </div>
 
-                                        <a href="{{ path('app_event_detail', {id: evenement.id}) }}" class="btn-action">
-                                            Réserver
+                                        <a href="{{ path('app_event_detail', {id: evenement.id}) }}" class="btn-reserver">
+                                            Réserver maintenant
                                         </a>
                                     </div>
                                 </div>
                             </div>
                         {% else %}
                             <div class="col-12 text-center py-5">
-                                <p class="text-muted fs-5">Aucun événement à la une pour le moment.</p>
+                                <p class="text-muted fs-5">Aucun événement disponible pour le moment.</p>
                             </div>
                         {% endfor %}
                     </div>
-                    
+
                     <div class="swiper-pagination"></div>
                 </div>
-                
+
                 <div class="swiper-button-next"></div>
                 <div class="swiper-button-prev"></div>
             </div>
         </div>
     </section>
 
-    <!-- Scripts Swiper -->
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            var swiper = new Swiper(".mySwiper", {
+            new Swiper(".mySwiper", {
                 slidesPerView: 1,
-                spaceBetween: 20,
+                spaceBetween: 24,
                 loop: true,
                 grabCursor: true,
                 autoplay: {
@@ -378,26 +400,18 @@
                 pagination: {
                     el: ".swiper-pagination",
                     clickable: true,
-                    dynamicBullets: true,
+                    dynamicBullets: true
                 },
                 navigation: {
                     nextEl: ".swiper-button-next",
-                    prevEl: ".swiper-button-prev",
+                    prevEl: ".swiper-button-prev"
                 },
                 breakpoints: {
-                    640: {
-                        slidesPerView: 2,
-                        spaceBetween: 20,
-                    },
-                    768: {
-                        slidesPerView: 3,
-                        spaceBetween: 25,
-                    },
-                    1200: {
-                        slidesPerView: 4,
-                        spaceBetween: 30,
-                    },
+                    640: { slidesPerView: 2, spaceBetween: 24 },
+                    992: { slidesPerView: 3, spaceBetween: 28 },
+                    1400: { slidesPerView: 4, spaceBetween: 32 }
                 },
+                speed: 600
             });
         });
     </script>

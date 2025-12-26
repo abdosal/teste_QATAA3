@@ -93,8 +93,16 @@
             font-weight: 600;
         }
 
-        .dropdown-modern { position: relative; }
-        .dropdown-toggle-modern { background: none; border: none; cursor: pointer; }
+        /* DROPDOWN AMÉLIORÉ */
+        .dropdown-modern {
+            position: relative;
+        }
+
+        .dropdown-toggle-modern {
+            background: none;
+            border: none;
+            cursor: pointer;
+        }
 
         .dropdown-toggle-modern::after {
             content: '\f078';
@@ -102,25 +110,28 @@
             font-weight: 900;
             font-size: 0.7rem;
             margin-left: 6px;
-            transition: transform 0.3s ease;
+            transition: transform 0.25s ease;
         }
 
-        .dropdown-modern:hover .dropdown-toggle-modern::after { transform: rotate(180deg); }
+        .dropdown-modern:hover .dropdown-toggle-modern::after {
+            transform: rotate(180deg);
+        }
 
         .dropdown-menu-modern {
             position: absolute;
             top: calc(100% + 10px);
             left: 0;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
+            background: #ffffff;
+            border-radius: 18px;
+            box-shadow: 0 18px 45px rgba(15, 23, 42, 0.16);
             padding: 0.5rem;
-            min-width: 220px;
+            min-width: 240px;
             opacity: 0;
             visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
+            transform: translateY(-8px);
+            transition: all 0.22s ease;
             z-index: 1000;
+            border: 1px solid #e5e7eb;
         }
 
         .dropdown-modern:hover .dropdown-menu-modern {
@@ -133,20 +144,23 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 0.7rem 1rem;
-            color: #475569;
+            padding: 0.7rem 0.9rem;
+            color: #1f2937;
             text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.2s ease;
+            border-radius: 12px;
+            transition: all 0.18s ease;
             font-size: 0.9rem;
         }
 
-        .dropdown-item-modern i { width: 20px; font-size: 1rem; }
+        .dropdown-item-modern i {
+            width: 22px;
+            font-size: 1.05rem;
+        }
 
         .dropdown-item-modern:hover {
-            background: #f8fafc;
-            color: #667eea;
-            transform: translateX(4px);
+            background: linear-gradient(135deg, #eef2ff 0%, #f5f3ff 100%);
+            color: #4f46e5;
+            transform: translateX(3px);
         }
 
         .nav-actions { display: flex; align-items: center; gap: 1rem; }
@@ -300,7 +314,7 @@
 
         /* FOOTER */
         .footer-custom {
-            background: linear-gradient(135deg, #5f70c0ff 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: rgba(255, 255, 255, 0.95);
             padding: 60px 0 20px;
             margin-top: 80px;
@@ -380,82 +394,83 @@
             .social-links { justify-content: center; }
             .app-download-buttons { justify-content: center; }
         }
+
+        /* CHAT BUTTON */
         .chat-button {
-    position: fixed;
-    right: 24px;
-    bottom: 24px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 10px 30px rgba(15,23,42,0.35);
-    cursor: pointer;
-    z-index: 1100;
-    border: none;
-}
-.chat-button i { font-size: 1.4rem; }
+            position: fixed;
+            right: 24px;
+            bottom: 24px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 30px rgba(15,23,42,0.35);
+            cursor: pointer;
+            z-index: 1100;
+            border: none;
+        }
+        .chat-button i { font-size: 1.4rem; }
 
-.chat-popup {
-    position: fixed;
-    right: 24px;
-    bottom: 90px;
-    width: 340px;
-    max-height: 480px;
-    background: #ffffff;
-    border-radius: 20px;
-    box-shadow: 0 20px 60px rgba(15,23,42,0.35);
-    display: none;
-    flex-direction: column;
-    overflow: hidden;
-    z-index: 1100;
-}
-.chat-popup-header {
-    padding: 0.9rem 1rem;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: #fff;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-.chat-popup-body {
-    padding: 0.9rem;
-    height: 260px;
-    overflow-y: auto;
-    background: #f8fafc;
-    font-size: 0.9rem;
-}
-.chat-popup-footer {
-    padding: 0.75rem;
-    background: #ffffff;
-    border-top: 1px solid #e2e8f0;
-    display: flex;
-    gap: 0.4rem;
-}
-.chat-input {
-    flex: 1;
-    border-radius: 999px;
-    border: 1px solid #e2e8f0;
-    padding: 0.45rem 0.75rem;
-    font-size: 0.9rem;
-}
-.chat-send-btn {
-    border-radius: 999px;
-    border: none;
-    background: #667eea;
-    color: #fff;
-    padding: 0.45rem 0.9rem;
-    font-size: 0.85rem;
-}
-.chat-message {
-    margin-bottom: 0.45rem;
-}
-.chat-message.user { text-align: right; color: #0f172a; }
-.chat-message.bot { text-align: left; color: #475569; }
-
+        .chat-popup {
+            position: fixed;
+            right: 24px;
+            bottom: 90px;
+            width: 340px;
+            max-height: 480px;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(15,23,42,0.35);
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            z-index: 1100;
+        }
+        .chat-popup-header {
+            padding: 0.9rem 1rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .chat-popup-body {
+            padding: 0.9rem;
+            height: 260px;
+            overflow-y: auto;
+            background: #f8fafc;
+            font-size: 0.9rem;
+        }
+        .chat-popup-footer {
+            padding: 0.75rem;
+            background: #ffffff;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            gap: 0.4rem;
+        }
+        .chat-input {
+            flex: 1;
+            border-radius: 999px;
+            border: 1px solid #e2e8f0;
+            padding: 0.45rem 0.75rem;
+            font-size: 0.9rem;
+        }
+        .chat-send-btn {
+            border-radius: 999px;
+            border: none;
+            background: #667eea;
+            color: #fff;
+            padding: 0.45rem 0.9rem;
+            font-size: 0.85rem;
+        }
+        .chat-message {
+            margin-bottom: 0.45rem;
+        }
+        .chat-message.user { text-align: right; color: #0f172a; }
+        .chat-message.bot { text-align: left; color: #475569; }
     </style>
     {% endblock %}
 </head>
@@ -483,23 +498,23 @@
                     </li>
                     <li class="dropdown-modern">
                         <a href="#" class="nav-link-modern dropdown-toggle-modern">
-                            <i class="fas fa-grid-2"></i> Catégories
+                            <i class="fas fa-layer-group"></i> Catégories
                         </a>
                         <div class="dropdown-menu-modern">
                             <a href="{{ path('app_events', {categorie: 'Concert'}) }}" class="dropdown-item-modern">
-                                <i class="fas fa-music" style="color: #667eea;"></i> Concerts
+                                <i class="fas fa-music" style="color:#6366f1;"></i> Concerts
                             </a>
                             <a href="{{ path('app_events', {categorie: 'Festival'}) }}" class="dropdown-item-modern">
-                                <i class="fas fa-flag" style="color: #10b981;"></i> Festivals
+                                <i class="fas fa-flag" style="color:#10b981;"></i> Festivals
                             </a>
                             <a href="{{ path('app_events', {categorie: 'Conférence'}) }}" class="dropdown-item-modern">
-                                <i class="fas fa-microphone" style="color: #3b82f6;"></i> Conférences
+                                <i class="fas fa-microphone" style="color:#3b82f6;"></i> Conférences
                             </a>
                             <a href="{{ path('app_events', {categorie: 'Spectacle'}) }}" class="dropdown-item-modern">
-                                <i class="fas fa-theater-masks" style="color: #f59e0b;"></i> Spectacles
+                                <i class="fas fa-theater-masks" style="color:#f59e0b;"></i> Spectacles
                             </a>
                             <a href="{{ path('app_events', {categorie: 'Formation'}) }}" class="dropdown-item-modern">
-                                <i class="fas fa-graduation-cap" style="color: #ef4444;"></i> Formations
+                                <i class="fas fa-graduation-cap" style="color:#ef4444;"></i> Formations
                             </a>
                         </div>
                     </li>
@@ -548,7 +563,6 @@
                                     <i class="fas fa-sign-out-alt"></i> Déconnexion
                                 </a>
                             </div>
-
                         </div>
                     {% else %}
                         <a href="{{ path('app_login') }}" class="btn-modern-outline">
@@ -605,7 +619,7 @@
                         <li><a href="{{ path('app_events') }}">Billetterie</a></li>
                         <li><a href="#">Cinéma</a></li>
                         <li><a href="#">Voyage</a></li>
-                        <li><a href="#">Sport</a></li>
+                        <li><a href="#">Concert</a></li>
                     </ul>
                 </div>
 
@@ -652,29 +666,30 @@
     </footer>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <button class="chat-button d-none d-md-flex" id="chatToggle">
-    <i class="fas fa-comments"></i>
-</button>
+        <i class="fas fa-comments"></i>
+    </button>
 
-<div class="chat-popup" id="chatPopup">
-    <div class="chat-popup-header">
-        <span>Assistant Qataa3.ma</span>
-        <button type="button" class="btn btn-sm btn-light" id="chatClose">
-            <i class="fas fa-times"></i>
-        </button>
-    </div>
-    <div class="chat-popup-body" id="chatMessages">
-        <div class="chat-message bot">
-            Salut 👋 Je peux t’aider à trouver un événement (concert, festival, conférence…).
+    <div class="chat-popup" id="chatPopup">
+        <div class="chat-popup-header">
+            <span>Assistant Qataa3.ma</span>
+            <button type="button" class="btn btn-sm btn-light" id="chatClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="chat-popup-body" id="chatMessages">
+            <div class="chat-message bot">
+                Salut 👋 Je peux t'aider à trouver un événement (concert, festival, conférence…).
+            </div>
+        </div>
+        <div class="chat-popup-footer">
+            <input type="text" id="chatInput" class="chat-input" placeholder="Pose ta question...">
+            <button class="chat-send-btn" id="chatSend">Envoyer</button>
         </div>
     </div>
-    <div class="chat-popup-footer">
-        <input type="text" id="chatInput" class="chat-input" placeholder="Pose ta question...">
-        <button class="chat-send-btn" id="chatSend">Envoyer</button>
-    </div>
-</div>
 
-{% block javascripts %}
+    {% block javascripts %}
     <script>
         const chatToggle = document.getElementById('chatToggle');
         const chatPopup  = document.getElementById('chatPopup');
@@ -711,7 +726,7 @@
                     body: JSON.stringify({ message: text })
                 });
                 const data = await response.json();
-                addMessage(data.reply ?? 'Désolé, je n’ai pas compris.', 'bot');
+                addMessage(data.reply ?? 'Désolé, je n'ai pas compris.', 'bot');
             } catch (e) {
                 addMessage('Erreur de connexion au chatbot.', 'bot');
             }
@@ -725,7 +740,7 @@
             }
         });
     </script>
-{% endblock %}
+    {% endblock %}
 
 </body>
 </html>

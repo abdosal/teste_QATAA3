@@ -27,20 +27,23 @@ class HomeController extends AbstractController
         EvenementRepository $evenementRepository
     ): Response {
         $categorie = $request->query->get('categorie');
+        $search    = $request->query->get('search');
 
-        if ($categorie) {
+        if ($search) {
+            $evenements = $evenementRepository->searchByTerm($search);
+        } elseif ($categorie) {
             $evenements = $evenementRepository->findByCategorie($categorie);
         } else {
             $evenements = $evenementRepository->findActiveEvents();
         }
 
-        // Liste des catégories disponibles
         $categories = ['Concert', 'Conférence', 'Festival', 'Spectacle', 'Formation'];
 
         return $this->render('home/events.html.twig', [
-            'evenements' => $evenements,
-            'categories' => $categories,
+            'evenements'        => $evenements,
+            'categories'        => $categories,
             'current_categorie' => $categorie,
+            'current_search'    => $search,
         ]);
     }
 
@@ -63,11 +66,10 @@ class HomeController extends AbstractController
     {
         return $this->render('home/contact.html.twig');
     }
-    // src/Controller/HomeController.php
-#[Route('/faq', name: 'app_faq')]
-public function faq(): Response
-{
-    return $this->render('home/faq.html.twig');
-}
 
+    #[Route('/faq', name: 'app_faq')]
+    public function faq(): Response
+    {
+        return $this->render('home/faq.html.twig');
+    }
 }

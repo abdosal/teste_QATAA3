@@ -85,5 +85,19 @@ public function findByCategorieLimit(string $categorie, int $limit): array
         ->getResult();
 }
 
+public function searchByTerm(string $term): array
+{
+    $qb = $this->createQueryBuilder('e');
+
+    return $qb
+        ->where($qb->expr()->orX(
+            $qb->expr()->like('LOWER(e.titre)', ':term'),
+            $qb->expr()->like('LOWER(e.lieu)', ':term')
+        ))
+        ->setParameter('term', '%'.mb_strtolower($term).'%')
+        ->orderBy('e.dateEvenement', 'ASC')
+        ->getQuery()
+        ->getResult();
+}
 
 }
