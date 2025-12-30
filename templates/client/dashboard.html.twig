@@ -11,15 +11,15 @@
 
     /* Header Welcome */
     .dashboard-header {
-        background: white;
+        background: #ffffff;
         border-radius: 24px;
         padding: 35px 40px;
         margin-bottom: 35px;
-        box-shadow: 0 10px 25px -5px rgba(0,0,0,0.08);
+        box-shadow: 0 10px 25px -5px rgba(15,23,42,0.08);
         display: flex;
         justify-content: space-between;
         align-items: center;
-        border: 1px solid rgba(255,255,255,0.8);
+        border: 1px solid #e2e8f0;
         animation: slideDown 0.5s ease;
     }
 
@@ -32,20 +32,15 @@
         font-size: 1.75rem; 
         font-weight: 800; 
         color: #1e293b; 
-        margin: 0 0 8px 0;
+        margin: 0;
         display: flex;
         align-items: center;
         gap: 12px;
     }
-    .welcome-text p { 
-        color: #64748b; 
-        margin: 0; 
-        font-size: 0.98rem; 
-    }
 
     .date-badge {
         background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-        border: 2px solid #e2e8f0;
+        border: 1px solid #e2e8f0;
         padding: 12px 20px;
         border-radius: 50px;
         font-weight: 600;
@@ -56,15 +51,37 @@
         gap: 8px;
     }
 
-    /* Cartes Dashboard */
+    /* SECTIONS TITLE */
+    .section-title {
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding-bottom: 15px;
+        border-bottom: 3px solid #e2e8f0;
+    }
+
+    .section-title i {
+        color: #2563eb;
+        font-size: 1.4rem;
+    }
+
+    /* ACTIONS RAPIDES */
+    .actions-section {
+        margin-bottom: 45px;
+    }
+
     .dashboard-card {
-        background: white;
+        background: #ffffff;
         border-radius: 24px;
-        padding: 45px 35px;
+        padding: 40px 30px;
         text-align: center;
         transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-        border: 1px solid rgba(255,255,255,0.8);
-        box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1);
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 10px 30px -5px rgba(15,23,42,0.1);
         height: 100%;
         position: relative;
         overflow: hidden;
@@ -75,34 +92,28 @@
         from { opacity: 0; transform: translateY(30px); }
         to { opacity: 1; transform: translateY(0); }
     }
-    
-    .dashboard-card:nth-child(1) { animation-delay: 0.1s; }
-    .dashboard-card:nth-child(2) { animation-delay: 0.2s; }
-    .dashboard-card:nth-child(3) { animation-delay: 0.3s; }
 
     .dashboard-card:hover {
-        transform: translateY(-10px) scale(1.03);
-        box-shadow: 0 25px 50px -10px rgba(0,0,0,0.15);
+        transform: translateY(-8px);
+        box-shadow: 0 20px 40px -10px rgba(15,23,42,0.15);
     }
 
-    /* Icônes dans des bulles */
     .icon-bubble {
-        width: 90px; 
-        height: 90px;
+        width: 85px; 
+        height: 85px;
         border-radius: 50%;
         display: inline-flex;
         align-items: center; 
         justify-content: center;
-        font-size: 2.2rem;
-        margin-bottom: 28px;
+        font-size: 2rem;
+        margin-bottom: 22px;
         transition: transform 0.4s;
-        box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+        box-shadow: 0 8px 20px rgba(15,23,42,0.08);
     }
     .dashboard-card:hover .icon-bubble { 
-        transform: scale(1.15) rotate(-5deg); 
+        transform: scale(1.12) rotate(-8deg); 
     }
 
-    /* Couleurs spécifiques par carte */
     .card-profile .icon-bubble { 
         background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%); 
         color: #2563eb; 
@@ -122,18 +133,16 @@
     .card-title { 
         font-weight: 800; 
         color: #1e293b; 
-        font-size: 1.35rem; 
-        margin-bottom: 15px; 
+        font-size: 1.3rem; 
+        margin-bottom: 12px; 
     }
     .card-text { 
         color: #64748b; 
-        font-size: 0.98rem; 
-        margin-bottom: 32px; 
-        min-height: 50px; 
+        font-size: 0.95rem; 
+        margin-bottom: 28px; 
         line-height: 1.6;
     }
 
-    /* Boutons Modernes */
     .btn-action {
         padding: 14px 28px;
         border-radius: 12px;
@@ -149,35 +158,187 @@
 
     .card-profile .btn-action { 
         background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
-        color: white;
+        color: #ffffff;
         box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
     }
     .card-profile .btn-action:hover { 
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
-        color: white;
+        color: #ffffff;
     }
 
     .card-tickets .btn-action { 
         background: linear-gradient(135deg, #059669 0%, #047857 100%);
-        color: white;
+        color: #ffffff;
         box-shadow: 0 4px 15px rgba(5, 150, 105, 0.3);
     }
     .card-tickets .btn-action:hover { 
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(5, 150, 105, 0.4);
-        color: white;
+        color: #ffffff;
     }
 
     .card-receipts .btn-action { 
         background: linear-gradient(135deg, #d97706 0%, #b45309 100%);
-        color: white;
+        color: #ffffff;
         box-shadow: 0 4px 15px rgba(217, 119, 6, 0.3);
     }
     .card-receipts .btn-action:hover { 
         transform: translateY(-3px);
         box-shadow: 0 8px 25px rgba(217, 119, 6, 0.4);
-        color: white;
+        color: #ffffff;
+    }
+
+    /* SECTION STATISTIQUES */
+    .stats-section {
+        margin-bottom: 45px;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        animation: fadeInUp 0.6s ease 0.1s backwards;
+    }
+
+    .stat-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 28px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px -5px rgba(15,23,42,0.08);
+        transition: all 0.3s;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px -5px rgba(15,23,42,0.12);
+    }
+
+    .stat-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .stat-icon {
+        width: 55px;
+        height: 55px;
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.6rem;
+        flex-shrink: 0;
+    }
+
+    .stat-icon.blue { background: #eff6ff; color: #2563eb; }
+    .stat-icon.green { background: #ecfdf5; color: #059669; }
+    .stat-icon.orange { background: #fef3c7; color: #d97706; }
+
+    .stat-info {
+        flex: 1;
+    }
+
+    .stat-value {
+        font-size: 2rem;
+        font-weight: 800;
+        color: #1e293b;
+        margin: 0;
+        line-height: 1;
+    }
+
+    .stat-label {
+        color: #64748b;
+        font-size: 0.9rem;
+        font-weight: 600;
+        margin-top: 5px;
+    }
+
+    /* ACTIVITÉ RÉCENTE */
+    .activity-section {
+        margin-bottom: 30px;
+    }
+
+    .activity-card {
+        background: #ffffff;
+        border-radius: 20px;
+        padding: 30px;
+        border: 1px solid #e2e8f0;
+        box-shadow: 0 4px 15px -5px rgba(15,23,42,0.08);
+        animation: fadeInUp 0.6s ease 0.3s backwards;
+    }
+
+    .activity-item {
+        display: flex;
+        align-items: center;
+        padding: 16px;
+        border-radius: 12px;
+        margin-bottom: 10px;
+        transition: all 0.3s;
+        border: 1px solid transparent;
+    }
+
+    .activity-item:last-child {
+        margin-bottom: 0;
+    }
+
+    .activity-item:hover {
+        background: #f8fafc;
+        border-color: #e2e8f0;
+    }
+
+    .activity-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-right: 15px;
+        font-size: 1.2rem;
+        flex-shrink: 0;
+    }
+
+    .activity-icon.success { background: #ecfdf5; color: #059669; }
+
+    .activity-content {
+        flex: 1;
+    }
+
+    .activity-content strong {
+        display: block;
+        color: #1e293b;
+        font-weight: 700;
+        margin-bottom: 4px;
+        font-size: 0.95rem;
+    }
+
+    .activity-content small {
+        color: #64748b;
+        font-size: 0.85rem;
+    }
+
+    .activity-time {
+        color: #94a3b8;
+        font-size: 0.8rem;
+        font-weight: 600;
+        whitespace: nowrap;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 40px 20px;
+        color: #94a3b8;
+    }
+
+    .empty-state i {
+        font-size: 3rem;
+        margin-bottom: 15px;
+        opacity: 0.5;
     }
 
     /* Responsive */
@@ -188,19 +349,24 @@
             text-align: center;
         }
         .date-badge { margin-top: 10px; }
+        .stats-grid {
+            grid-template-columns: 1fr;
+        }
+        .section-title {
+            font-size: 1.3rem;
+        }
     }
 </style>
 
 <div class="container py-5">
     
-    <!-- Header Bienvenue -->
+    <!-- ========== HEADER BIENVENUE ========== -->
     <div class="dashboard-header">
         <div class="welcome-text">
             <h1>
                 <i class="fas fa-hand-sparkles" style="color: #f59e0b;"></i>
                 Bonjour, {{ app.user.prenom }}
             </h1>
-            <p>Ravi de vous revoir sur votre espace personnel Qataa3.ma</p>
         </div>
         <div class="d-none d-md-block">
             <span class="date-badge">
@@ -210,49 +376,128 @@
         </div>
     </div>
 
-    <!-- Grille de Cartes (3 colonnes) -->
-    <div class="row g-4">
-        <!-- Carte Profil -->
-        <div class="col-md-4">
-            <div class="dashboard-card card-profile">
-                <div class="icon-bubble">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-                <h3 class="card-title">Mon Profil</h3>
-                <p class="card-text">Gérez vos informations personnelles et sécurisez votre compte.</p>
-                <a href="{{ path('app_client_profile') }}" class="btn-action">
-                    Gérer mon profil <i class="fas fa-arrow-right"></i>
-                </a>
-            </div>
-        </div>
+    <!-- ========== ACTIONS RAPIDES ========== -->
+    <section class="actions-section">
+        <h2 class="section-title">
+            <i class="fas fa-bolt"></i>
+            Actions rapides
+        </h2>
 
-        <!-- Carte Tickets -->
-        <div class="col-md-4">
-            <div class="dashboard-card card-tickets">
-                <div class="icon-bubble">
-                    <i class="fas fa-ticket-alt"></i>
+        <div class="row g-4">
+            <div class="col-lg-4 col-md-6">
+                <div class="dashboard-card card-profile">
+                    <div class="icon-bubble">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h3 class="card-title">Mon Profil</h3>
+                    <p class="card-text">Gérez vos informations personnelles et sécurisez votre compte.</p>
+                    <a href="{{ path('app_client_profile') }}" class="btn-action">
+                        Gérer mon profil <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <h3 class="card-title">Mes Tickets</h3>
-                <p class="card-text">Retrouvez tous vos billets électroniques et codes QR.</p>
-                <a href="{{ path('app_client_tickets') }}" class="btn-action">
-                    Voir mes tickets <i class="fas fa-arrow-right"></i>
-                </a>
             </div>
-        </div>
 
-        <!-- Carte Reçus -->
-        <div class="col-md-4">
-            <div class="dashboard-card card-receipts">
-                <div class="icon-bubble">
-                    <i class="fas fa-file-invoice-dollar"></i>
+            <div class="col-lg-4 col-md-6">
+                <div class="dashboard-card card-tickets">
+                    <div class="icon-bubble">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <h3 class="card-title">Mes Tickets</h3>
+                    <p class="card-text">Retrouvez tous vos billets électroniques et codes QR.</p>
+                    <a href="{{ path('app_client_tickets') }}" class="btn-action">
+                        Voir mes tickets <i class="fas fa-arrow-right"></i>
+                    </a>
                 </div>
-                <h3 class="card-title">Mes Reçus</h3>
-                <p class="card-text">Historique de vos paiements et téléchargement des factures.</p>
-                <a href="{{ path('app_client_recus') }}" class="btn-action">
-                    Consulter <i class="fas fa-arrow-right"></i>
-                </a>
+            </div>
+
+            <div class="col-lg-4 col-md-6">
+                <div class="dashboard-card card-receipts">
+                    <div class="icon-bubble">
+                        <i class="fas fa-file-invoice-dollar"></i>
+                    </div>
+                    <h3 class="card-title">Mes Reçus</h3>
+                    <p class="card-text">Historique de vos paiements et téléchargement des factures.</p>
+                    <a href="{{ path('app_client_recus') }}" class="btn-action">
+                        Consulter <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- ========== STATISTIQUES ========== -->
+    <section class="stats-section">
+        <h2 class="section-title">
+            <i class="fas fa-chart-line"></i>
+            Vue d'ensemble
+        </h2>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon blue">
+                        <i class="fas fa-ticket-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ stats.ticketsActifs }}</div>
+                        <div class="stat-label">Tickets actifs</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon green">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ stats.evenementsAssistes }}</div>
+                        <div class="stat-label">Événements assistés</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div class="stat-icon orange">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">{{ stats.depenseTotal|number_format(0, ',', ' ') }} MAD</div>
+                        <div class="stat-label">Dépensé total</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ========== ACTIVITÉ RÉCENTE ========== -->
+    <section class="activity-section">
+        <h2 class="section-title">
+            <i class="fas fa-history"></i>
+            Activité récente
+        </h2>
+        <div class="activity-card">
+            {% if activites|length > 0 %}
+                {% for commande in activites %}
+                    <div class="activity-item">
+                        <div class="activity-icon success">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="activity-content">
+                            <strong>Commande #{{ commande.numeroCommande }}</strong>
+                            <small>Montant: {{ commande.montantTotal|number_format(2, ',', ' ') }} MAD</small>
+                        </div>
+                        <div class="activity-time">{{ commande.dateCommande|date('d/m/Y') }}</div>
+                    </div>
+                {% endfor %}
+            {% else %}
+                <div class="empty-state">
+                    <i class="fas fa-inbox"></i>
+                    <p>Aucune activité récente</p>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
 </div>
 {% endblock %}

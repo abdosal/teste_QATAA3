@@ -1,162 +1,297 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Dashboard Responsable{% endblock %}
+{% block title %}Dashboard Responsable - Qataa3.ma{% endblock %}
 
 {% block body %}
 <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+    body {
+        background: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    
+    /* HEADER MAUVE ENCORE PLUS FONCÉ */
     .admin-header {
-        background: linear-gradient(to right, #ffffff, #f8fafc);
-        padding: 24px 32px;
-        border-bottom: 1px solid #e2e8f0;
-        margin-bottom: 32px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        background: linear-gradient(135deg, #4c1d95 0%, #5b21b6 50%, #6b21a8 100%);
+        padding: 50px 0;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px rgba(76,29,149,0.5);
+        color: #fff;
     }
+    
     .page-title h1 {
-        font-size: 1.5rem;
+        font-size: 2.2rem;
         font-weight: 700;
-        color: #0f172a;
-        margin: 0 0 4px 0;
-        letter-spacing: -0.025em;
+        color: #fff;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.02em;
     }
+    
     .page-title p {
         margin: 0;
-        color: #64748b;
-        font-size: 0.875rem;
+        color: rgba(255,255,255,0.9);
+        font-size: 1rem;
     }
+    
     .badge-modern {
-        padding: 6px 12px;
-        border-radius: 9999px;
+        padding: 10px 20px;
+        border-radius: 10px;
         font-weight: 600;
-        font-size: 0.75rem;
+        font-size: 0.9rem;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.3);
+        transition: all .3s ease;
     }
-    .badge-primary-soft { background: #dbeafe; color: #1e40af; }
     
+    .badge-modern:hover {
+        background: rgba(255,255,255,0.3);
+        transform: scale(1.05);
+    }
+
+    /* CARTES D'ACTION MODERNES */
     .quick-action-card {
         border-radius: 16px;
-        padding: 20px;
+        padding: 32px 28px;
         text-decoration: none;
         display: block;
-        transition: all 0.3s ease;
-        border: 2px solid transparent;
+        transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+        border: 1px solid #e2e8f0;
         background: white;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        position: relative;
+        overflow: hidden;
+        height: 100%;
     }
+    
+    .quick-action-card::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #3b82f6, #60a5fa);
+        transition: width .4s ease;
+    }
+    
+    .quick-action-card:hover::after {
+        width: 100%;
+    }
+    
     .quick-action-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
-        border-color: #667eea;
+        transform: translateY(-8px);
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+        border-color: #cbd5e1;
     }
+    
     .quick-action-icon {
-        width: 52px;
-        height: 52px;
+        width: 60px;
+        height: 60px;
         border-radius: 14px;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.5rem;
-        margin-bottom: 12px;
-    }
-    .quick-action-title {
-        font-size: 1rem;
-        font-weight: 600;
-        color: #0f172a;
-        margin-bottom: 4px;
-    }
-    .quick-action-desc {
-        font-size: 0.85rem;
-        color: #64748b;
-        margin: 0;
+        font-size: 1.6rem;
+        margin-bottom: 18px;
+        transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
     }
     
-    .stat-card {
-        border-radius: 18px;
-        border: 1px solid #e2e8f0;
-        background: #ffffff;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-        position: relative;
-        overflow: hidden;
-        transition: transform .25s ease, box-shadow .25s ease;
+    .quick-action-card:hover .quick-action-icon {
+        transform: scale(1.15) rotate(5deg);
     }
-    .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
-    }
-    .stat-card-body { position: relative; z-index: 1; padding: 20px 22px; }
-    .stat-label {
-        letter-spacing: .08em;
-        font-size: .72rem;
-        text-transform: uppercase;
-        color: #6b7280;
-        margin-bottom: 8px;
-    }
-    .stat-value {
-        font-size: 1.9rem;
+    
+    .icon-blue { background: #dbeafe; color: #3b82f6; }
+    .icon-green { background: #d1fae5; color: #10b981; }
+    .icon-cyan { background: #cffafe; color: #06b6d4; }
+    
+    .quick-action-title {
+        font-size: 1.2rem;
         font-weight: 700;
         color: #0f172a;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
+        transition: color .3s;
     }
-    .stat-helper { font-size: 0.8rem; color: #9ca3af; }
-    .stat-icon {
-        width: 44px; height: 44px;
-        display: inline-flex; align-items: center; justify-content: center;
-        border-radius: 14px; font-size: 1.3rem;
-    }
-    .stat-icon-primary { background:#eff6ff; color:#2563eb; }
-    .stat-icon-success { background:#ecfdf3; color:#16a34a; }
-    .stat-icon-warning { background:#fef9c3; color:#ca8a04; }
-    .stat-icon-info    { background:#e0f2fe; color:#0284c7; }
     
-    .revenue-card {
-        border-radius: 18px;
-        border: 1px solid #e2e8f0;
-        overflow: hidden;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+    .quick-action-card:hover .quick-action-title {
+        color: #1e293b;
     }
-    .revenue-card-body { padding: 28px; }
+    
+    .quick-action-desc {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin: 0;
+        line-height: 1.5;
+    }
+
+    /* CARTES STATS ÉLÉGANTES */
+    .stat-card {
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        background: #ffffff;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        position: relative;
+        overflow: hidden;
+        transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+        height: 100%;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+        border-color: #cbd5e1;
+    }
+    
+    .stat-card-body {
+        position: relative;
+        z-index: 1;
+        padding: 28px;
+    }
+    
+    .stat-label {
+        letter-spacing: 0.05em;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 12px;
+        font-weight: 600;
+    }
+    
+    .stat-value {
+        font-size: 2.2rem;
+        font-weight: 800;
+        color: #0f172a;
+        margin-bottom: 8px;
+        line-height: 1;
+        transition: all .3s;
+    }
+    
+    .stat-card:hover .stat-value {
+        transform: scale(1.05);
+    }
+    
+    .stat-helper {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        line-height: 1.4;
+    }
+    
+    .stat-icon {
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 1.4rem;
+        transition: all .3s ease;
+    }
+    
+    .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(-5deg);
+    }
+    
+    .stat-icon-primary { background: #dbeafe; color: #3b82f6; }
+    .stat-icon-success { background: #d1fae5; color: #10b981; }
+    .stat-icon-warning { background: #fef3c7; color: #f59e0b; }
+    .stat-icon-info { background: #e0f2fe; color: #0ea5e9; }
+
+    /* SECTION TITRE */
+    .section-title {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #0f172a;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .section-title i {
+        color: #4c1d95;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .admin-header {
+            padding: 35px 0;
+        }
+        
+        .page-title h1 {
+            font-size: 1.8rem;
+        }
+        
+        .quick-action-card {
+            padding: 24px 20px;
+        }
+        
+        .quick-action-icon {
+            width: 50px;
+            height: 50px;
+            font-size: 1.3rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+        }
+        
+        .stat-card-body {
+            padding: 24px;
+        }
+    }
 </style>
 
 <div class="admin-header">
-    <div class="page-title">
-        <h1>Dashboard Responsable</h1>
-        <p>Bienvenue {{ app.user.prenom }} {{ app.user.nom }}</p>
+    <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="page-title">
+                <h1>Dashboard Responsable</h1>
+                <p>Bienvenue {{ app.user.prenom }} {{ app.user.nom }}</p>
+            </div>
+            <span class="badge-modern">
+                <i class="fas fa-user-tie"></i> Espace responsable
+            </span>
+        </div>
     </div>
-    <span class="badge-modern badge-primary-soft">
-        <i class="fas fa-user-tie"></i> Espace responsable
-    </span>
 </div>
 
 <div class="container-fluid px-4 pb-5">
 
-    <!-- Navigation rapide -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-4">
+    <!-- ACTIONS RAPIDES -->
+    <div class="section-title">
+        <i class="fas fa-bolt"></i>
+        Actions rapides
+    </div>
+    
+    <div class="row g-4 mb-5">
+        <div class="col-md-6 col-lg-4">
             <a href="{{ path('app_responsable_evenements') }}" class="quick-action-card">
-                <div class="quick-action-icon" style="background: #eff6ff; color: #2563eb;">
+                <div class="quick-action-icon icon-blue">
                     <i class="fas fa-calendar-alt"></i>
                 </div>
                 <div class="quick-action-title">Gestion Événements</div>
-                <p class="quick-action-desc">Créer et gérer vos événements</p>
+                <p class="quick-action-desc">Créer et gérer tous vos événements</p>
             </a>
         </div>
-        <div class="col-md-4">
+        
+        <div class="col-md-6 col-lg-4">
             <a href="{{ path('app_responsable_clients') }}" class="quick-action-card">
-                <div class="quick-action-icon" style="background: #ecfdf3; color: #16a34a;">
+                <div class="quick-action-icon icon-green">
                     <i class="fas fa-users"></i>
                 </div>
                 <div class="quick-action-title">Gestion Clients</div>
                 <p class="quick-action-desc">Consulter et gérer les clients</p>
             </a>
         </div>
-        <div class="col-md-4">
+        
+        <div class="col-md-6 col-lg-4">
             <a href="{{ path('app_responsable_evenements') }}" class="quick-action-card">
-                <div class="quick-action-icon" style="background: #e0f2fe; color: #0284c7;">
+                <div class="quick-action-icon icon-cyan">
                     <i class="fas fa-ticket-alt"></i>
                 </div>
                 <div class="quick-action-title">Gestion Billets</div>
@@ -165,14 +300,19 @@
         </div>
     </div>
 
-    <!-- KPIs -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+    <!-- STATISTIQUES -->
+    <div class="section-title">
+        <i class="fas fa-chart-line"></i>
+        Statistiques en temps réel
+    </div>
+    
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <div class="stat-label">Billets vendus aujourd'hui</div>
+                            <div class="stat-label">Billets vendus</div>
                             <div class="stat-value">{{ billets_vendus }}</div>
                         </div>
                         <div class="stat-icon stat-icon-primary">
@@ -186,10 +326,10 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <div class="stat-label">Événements actifs</div>
                             <div class="stat-value">{{ evenements_actifs }}</div>
@@ -205,12 +345,12 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <div class="stat-label">Utilisateurs inscrits</div>
+                            <div class="stat-label">Clients inscrits</div>
                             <div class="stat-value">{{ utilisateurs_inscrits }}</div>
                         </div>
                         <div class="stat-icon stat-icon-info">
@@ -224,12 +364,12 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
-                            <div class="stat-label">Billets disponibles</div>
+                            <div class="stat-label">Stock disponible</div>
                             <div class="stat-value">{{ billets_disponibles }}</div>
                         </div>
                         <div class="stat-icon stat-icon-warning">
@@ -237,14 +377,12 @@
                         </div>
                     </div>
                     <div class="stat-helper">
-                        Stock total restant
+                        Billets restants au total
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
-    <!-- Revenus -->
 
 </div>
 {% endblock %}

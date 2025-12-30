@@ -4,114 +4,307 @@
 
 {% block body %}
 <style>
+    body {
+        background: #f8fafc;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    /* HEADER MODERNE */
     .admin-header {
-        background: linear-gradient(to right, #ffffff, #f8fafc);
-        padding: 24px 32px;
-        border-bottom: 1px solid #e2e8f0;
-        margin-bottom: 32px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
+        background: linear-gradient(135deg, #6b21a8 0%, #7e22ce 50%, #9333ea 100%);
+        padding: 40px 0;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 20px rgba(107,33,168,0.3);
+        color: #fff;
     }
+    
     .page-title h1 {
-        font-size: 1.5rem;
+        font-size: 2rem;
         font-weight: 700;
-        color: #0f172a;
-        margin: 0 0 4px 0;
-        letter-spacing: -0.025em;
+        color: #fff;
+        margin: 0 0 8px 0;
+        letter-spacing: -0.02em;
     }
+    
     .page-title p {
         margin: 0;
-        color: #64748b;
-        font-size: 0.875rem;
+        color: rgba(255,255,255,0.9);
+        font-size: 1rem;
     }
+    
     .badge-modern {
-        padding: 6px 12px;
-        border-radius: 9999px;
+        padding: 10px 18px;
+        border-radius: 10px;
         font-weight: 600;
-        font-size: 0.75rem;
+        font-size: 0.875rem;
         display: inline-flex;
         align-items: center;
-        gap: 6px;
+        gap: 8px;
+        background: rgba(255,255,255,0.2);
+        backdrop-filter: blur(10px);
+        color: #fff;
+        border: 1px solid rgba(255,255,255,0.3);
     }
-    .badge-info-soft { background: #dbeafe; color: #1e40af; }
+
+    /* ALERT MODERNE */
+    .alert-info {
+        background: #dbeafe;
+        border: 1px solid #bfdbfe;
+        border-radius: 12px;
+        padding: 16px 20px;
+        color: #1e40af;
+        font-size: 0.9rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .alert-info i {
+        font-size: 1.2rem;
+        opacity: 0.8;
+    }
+
+    /* CARTES STATS ÉLÉGANTES */
     .stat-card {
-        border-radius: 18px;
+        border-radius: 16px;
         border: 1px solid #e2e8f0;
         background: #ffffff;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
         position: relative;
         overflow: hidden;
-        transition: transform .25s ease, box-shadow .25s ease;
+        transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
+        height: 100%;
     }
+    
     .stat-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 18px 40px rgba(15, 23, 42, 0.10);
+        transform: translateY(-6px);
+        box-shadow: 0 12px 32px rgba(15, 23, 42, 0.12);
+        border-color: #cbd5e1;
     }
-    .stat-card-body { position: relative; z-index: 1; padding: 20px 22px; }
+    
+    .stat-card-body {
+        position: relative;
+        z-index: 1;
+        padding: 28px;
+    }
+    
     .stat-label {
-        letter-spacing: .08em;
-        font-size: .72rem;
+        letter-spacing: 0.05em;
+        font-size: 0.85rem;
         text-transform: uppercase;
-        color: #6b7280;
-        margin-bottom: 8px;
+        color: #64748b;
+        margin-bottom: 12px;
+        font-weight: 600;
     }
+    
     .stat-value {
-        font-size: 1.9rem;
-        font-weight: 700;
+        font-size: 2.2rem;
+        font-weight: 800;
         color: #0f172a;
-        margin-bottom: 4px;
+        margin-bottom: 8px;
+        line-height: 1;
     }
-    .stat-helper { font-size: 0.8rem; color: #9ca3af; }
+    
+    .stat-helper {
+        font-size: 0.85rem;
+        color: #94a3b8;
+        line-height: 1.5;
+    }
+    
     .stat-icon {
-        width: 44px; height: 44px;
-        display: inline-flex; align-items: center; justify-content: center;
-        border-radius: 14px; font-size: 1.3rem;
+        width: 50px;
+        height: 50px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 12px;
+        font-size: 1.4rem;
+        transition: transform .3s ease;
     }
-    .stat-icon-primary { background:#eff6ff; color:#2563eb; }
-    .stat-icon-success { background:#ecfdf3; color:#16a34a; }
-    .stat-icon-warning { background:#fef9c3; color:#ca8a04; }
-    .stat-icon-info    { background:#e0f2fe; color:#0284c7; }
+    
+    .stat-card:hover .stat-icon {
+        transform: scale(1.1) rotate(-5deg);
+    }
+    
+    .stat-icon-primary { background: #dbeafe; color: #3b82f6; }
+    .stat-icon-success { background: #d1fae5; color: #10b981; }
+    .stat-icon-warning { background: #fef3c7; color: #f59e0b; }
+    .stat-icon-info { background: #e0f2fe; color: #0ea5e9; }
+
+    /* CARTE GRAPHIQUE */
     .card-analytics {
-        border-radius: 18px;
+        border-radius: 16px;
         border: 1px solid #e2e8f0;
         overflow: hidden;
-        box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+        background: #fff;
+        transition: all .3s ease;
     }
+    
+    .card-analytics:hover {
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+    }
+    
     .card-analytics-header {
-        background: linear-gradient(120deg, #1d4ed8, #4f46e5);
+        background: linear-gradient(135deg, #64748b, #475569);
         color: white;
-        padding: 16px 22px;
+        padding: 24px 28px;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 15px;
     }
-    .card-analytics-body { padding: 22px; background: #ffffff; }
+    
+    .card-analytics-header h5 {
+        margin: 0;
+        font-size: 1.2rem;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .card-analytics-body {
+        padding: 28px;
+        background: #ffffff;
+    }
+
+    /* TABLEAU MODERNE */
+    .table-responsive {
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    
+    .table {
+        margin-bottom: 0;
+    }
+    
+    .table thead {
+        background: #f8fafc;
+    }
+    
+    .table thead th {
+        padding: 16px 20px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: #64748b;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        border-bottom: 2px solid #e2e8f0;
+    }
+    
+    .table tbody tr {
+        transition: all .2s ease;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .table tbody tr:hover {
+        background: #f8fafc;
+        transform: translateX(4px);
+    }
+    
+    .table tbody td {
+        padding: 18px 20px;
+        color: #334155;
+        font-size: 0.95rem;
+        font-weight: 500;
+    }
+    
+    .table tbody tr:last-child {
+        border-bottom: none;
+    }
+
+    /* RÉSUMÉ CARD */
+    .summary-card {
+        background: linear-gradient(135deg, #f8fafc, #fff);
+        border-radius: 16px;
+        border: 1px solid #e2e8f0;
+        padding: 28px;
+        height: 100%;
+    }
+    
+    .summary-title {
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: #64748b;
+        margin-bottom: 20px;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+    }
+    
+    .summary-item {
+        padding: 12px 0;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    
+    .summary-item:last-child {
+        border-bottom: none;
+    }
+    
+    .summary-label {
+        font-size: 0.9rem;
+        color: #64748b;
+        margin-bottom: 4px;
+    }
+    
+    .summary-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #0f172a;
+    }
+
+    /* RESPONSIVE */
+    @media (max-width: 768px) {
+        .admin-header {
+            padding: 30px 0;
+        }
+        
+        .page-title h1 {
+            font-size: 1.6rem;
+        }
+        
+        .stat-value {
+            font-size: 1.8rem;
+        }
+        
+        .card-analytics-header {
+            padding: 20px;
+        }
+        
+        .card-analytics-body {
+            padding: 20px;
+        }
+    }
 </style>
 
 <div class="admin-header">
-    <div class="page-title">
-        <h1>Rapports & statistiques</h1>
-        <p>Vue synthétique des performances (données de démonstration)</p>
+    <div class="container-fluid px-4">
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div class="page-title">
+                <h1>Rapports & Statistiques</h1>
+                <p>Vue synthétique des performances de la plateforme</p>
+            </div>
+            <span class="badge-modern">
+                <i class="fas fa-flask"></i> Mode démonstration
+            </span>
+        </div>
     </div>
-    <span class="badge-modern badge-info-soft">
-        <i class="fas fa-flask"></i> Mode démo
-    </span>
 </div>
 
 <div class="container-fluid px-4 pb-5">
 
-    <div class="alert alert-info mb-4">
-        <i class="fas fa-info-circle me-2"></i>
-        Toutes les données financières sont actuellement affichées en mode démonstration.
+    <div class="alert-info mb-4">
+        <i class="fas fa-info-circle"></i>
+        <span>Toutes les données financières sont actuellement affichées en mode démonstration.</span>
     </div>
 
     <!-- KPIs -->
-    <div class="row g-3 mb-4">
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+    <div class="row g-4 mb-4">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <div class="stat-label">Total événements</div>
                             <div class="stat-value">{{ revenue_by_period|length }}</div>
@@ -127,10 +320,10 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <div class="stat-label">Billets vendus</div>
                             <div class="stat-value">{{ total_billets_vendus }}</div>
@@ -146,31 +339,31 @@
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <div class="stat-label">Revenus total</div>
                             <div class="stat-value">
-                                {{ revenus_total|number_format(0, ',', ' ') }} MAD
+                                {{ revenus_total|number_format(0, ',', ' ') }}
                             </div>
                         </div>
                         <div class="stat-icon stat-icon-warning">
-                            <i class="fas fa-dollar-sign"></i>
+                            <i class="fas fa-coins"></i>
                         </div>
                     </div>
                     <div class="stat-helper">
-                        Montants fictifs (données de démonstration)
+                        Montant total en MAD (données fictives)
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-md-3">
-            <div class="stat-card h-100">
+        <div class="col-md-6 col-lg-3">
+            <div class="stat-card">
                 <div class="stat-card-body">
-                    <div class="d-flex justify-content-between align-items-start mb-2">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
                         <div>
                             <div class="stat-label">Clients actifs</div>
                             <div class="stat-value">{{ total_clients }}</div>
@@ -180,43 +373,51 @@
                         </div>
                     </div>
                     <div class="stat-helper">
-                        Basé sur les comptes clients enregistrés
+                        Comptes clients enregistrés
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Graphique + résumé -->
-    <div class="row mb-4">
+    <!-- Graphique + Résumé -->
+    <div class="row g-4 mb-4">
         <div class="col-lg-8">
             <div class="card-analytics h-100">
                 <div class="card-analytics-header">
-                    <h5><i class="fas fa-chart-line me-2"></i> Évolution des ventes (30 derniers jours)</h5>
-                    <span class="badge-modern badge-info-soft">
-                        <i class="fas fa-bolt"></i> Graphique interactif
+                    <h5>
+                        <i class="fas fa-chart-line"></i>
+                        Évolution des ventes (30 derniers jours)
+                    </h5>
+                    <span class="badge-modern">
+                        <i class="fas fa-bolt"></i> Interactif
                     </span>
                 </div>
                 <div class="card-analytics-body">
-                    <div style="height: 320px;">
+                    <div style="height: 340px;">
                         <canvas id="salesChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <div class="col-lg-4 mt-3 mt-lg-0">
-            <div class="stat-card h-100">
-                <div class="stat-card-body">
-                    <div class="stat-label">Résumé de la période</div>
-                    <div class="stat-helper">
-                        Meilleur jour :
-                        <strong>{{ best_day_label ?? '–' }}</strong><br>
-                        Revenu max :
-                        <strong>{{ best_day_amount|number_format(0, ',', ' ') }} MAD</strong><br>
-                        Revenu moyen / jour :
-                        <strong>{{ average_revenue|number_format(0, ',', ' ') }} MAD</strong>
-                    </div>
+        <div class="col-lg-4">
+            <div class="summary-card">
+                <div class="summary-title">Résumé de la période</div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Meilleur jour</div>
+                    <div class="summary-value">{{ best_day_label ?? '–' }}</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Revenu maximum</div>
+                    <div class="summary-value">{{ best_day_amount|number_format(0, ',', ' ') }} MAD</div>
+                </div>
+                
+                <div class="summary-item">
+                    <div class="summary-label">Revenu moyen / jour</div>
+                    <div class="summary-value">{{ average_revenue|number_format(0, ',', ' ') }} MAD</div>
                 </div>
             </div>
         </div>
@@ -226,11 +427,14 @@
     {% if stats_by_event is defined and stats_by_event is not empty %}
         <div class="card-analytics">
             <div class="card-analytics-header">
-                <h5><i class="fas fa-list-ul me-2"></i> Performances par événement</h5>
+                <h5>
+                    <i class="fas fa-list-ul"></i>
+                    Performances par événement
+                </h5>
             </div>
             <div class="card-analytics-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-striped align-middle">
+                    <table class="table table-hover align-middle">
                         <thead>
                             <tr>
                                 <th>Événement</th>
@@ -241,17 +445,20 @@
                         <tbody>
                             {% for row in stats_by_event %}
                                 <tr>
-                                    <td>{{ row.event_title }}</td>
+                                    <td><strong>{{ row.event_title }}</strong></td>
                                     <td class="text-end">{{ row.billets_vendus }}</td>
                                     <td class="text-end">
-                                        {{ row.revenus|number_format(2, ',', ' ') }}
+                                        <strong style="color: #10b981;">
+                                            {{ row.revenus|number_format(2, ',', ' ') }}
+                                        </strong>
                                     </td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
-                <p class="text-muted small mb-0">
+                <p class="text-muted small mb-0 mt-3">
+                    <i class="fas fa-info-circle me-1"></i>
                     Chiffres agrégés sur l'ensemble de l'historique des ventes.
                 </p>
             </div>
@@ -268,18 +475,62 @@
         data: {
             labels: {{ labels|json_encode|raw }},
             datasets: [{
-                label: 'Revenus par jour',
+                label: 'Revenus par jour (MAD)',
                 data: {{ data|json_encode|raw }},
-                borderColor: 'rgba(37, 99, 235, 1)',
-                backgroundColor: 'rgba(37, 99, 235, 0.15)',
-                tension: 0.35,
+                borderColor: '#3b82f6',
+                backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                tension: 0.4,
                 fill: true,
+                borderWidth: 3,
+                pointBackgroundColor: '#3b82f6',
+                pointBorderColor: '#fff',
+                pointBorderWidth: 2,
+                pointRadius: 5,
+                pointHoverRadius: 7,
             }]
         },
         options: {
             maintainAspectRatio: false,
+            responsive: true,
+            plugins: {
+                legend: {
+                    display: true,
+                    position: 'top',
+                    labels: {
+                        font: { size: 13, weight: '600' },
+                        padding: 15,
+                        usePointStyle: true,
+                    }
+                },
+                tooltip: {
+                    backgroundColor: 'rgba(15, 23, 42, 0.9)',
+                    titleFont: { size: 14, weight: 'bold' },
+                    bodyFont: { size: 13 },
+                    padding: 12,
+                    cornerRadius: 8,
+                    displayColors: false,
+                }
+            },
             scales: {
-                y: { beginAtZero: true }
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: 'rgba(0, 0, 0, 0.05)',
+                    },
+                    ticks: {
+                        font: { size: 12 },
+                        color: '#64748b',
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false,
+                    },
+                    ticks: {
+                        font: { size: 12 },
+                        color: '#64748b',
+                    }
+                }
             }
         }
     });

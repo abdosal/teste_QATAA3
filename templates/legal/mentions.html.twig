@@ -1,0 +1,144 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mentions légales - Qataa3.ma{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .legal-container {
+        max-width: 900px;
+        margin: 50px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        padding: 50px;
+    }
+    
+    .legal-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+        border-bottom: 3px solid #667eea;
+    }
+    
+    .legal-header h1 {
+        color: #667eea;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+    
+    .legal-header p {
+        color: #666;
+        font-size: 1.1em;
+    }
+    
+    .legal-section {
+        margin-bottom: 35px;
+    }
+    
+    .legal-section h2 {
+        color: #764ba2;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        border-left: 5px solid #667eea;
+        padding-left: 15px;
+    }
+    
+    .legal-section h3 {
+        color: #667eea;
+        font-size: 1.3em;
+        margin-top: 20px;
+        margin-bottom: 10px;
+    }
+    
+    .legal-section p {
+        color: #444;
+        line-height: 1.8;
+        margin-bottom: 15px;
+        text-align: justify;
+    }
+    
+    .back-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        margin-top: 30px;
+        transition: transform 0.3s;
+    }
+    
+    .back-btn:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 10px 25px rgba(102, 126, 234, 0.4);
+    }
+    
+    .highlight-box {
+        background: #f0f4ff;
+        border-left: 4px solid #667eea;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 5px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="legal-container">
+    <div class="legal-header">
+        <h1>⚖️ Mentions légales</h1>
+        <p>Dernière mise à jour : 27 décembre 2025</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>1. Informations légales</h2>
+        <p>
+            Conformément aux dispositions des lois en vigueur, nous portons à la connaissance 
+            des utilisateurs et visiteurs du site les informations suivantes :
+        </p>
+        
+        <h3>Éditeur du site</h3>
+        <div class="highlight-box">
+            <strong>Nom :</strong> Qataa3.ma<br>
+            <strong>Adresse :</strong> Casablanca, Maroc<br>
+            <strong>Email :</strong> contact@qataa3.ma<br>
+            <strong>Téléphone :</strong> +212 XXX XXX XXX
+        </div>
+    </div>
+
+    <div class="legal-section">
+        <h2>2. Hébergement</h2>
+        <p>
+            Le site Qataa3.ma est hébergé par :<br>
+            <strong>[Nom de l'hébergeur]</strong><br>
+            Adresse : [Adresse complète]<br>
+            Téléphone : [Numéro]
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>3. Propriété intellectuelle</h2>
+        <p>
+            L'ensemble de ce site relève de la législation sur le droit d'auteur et la propriété intellectuelle. 
+            Tous les droits de reproduction sont réservés.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>4. Protection des données personnelles</h2>
+        <p>
+            Vous disposez d'un droit d'accès, de rectification et de suppression des données vous concernant.
+        </p>
+        <p>
+            Pour exercer ce droit, contactez-nous à : <strong>contact@qataa3.ma</strong>
+        </p>
+    </div>
+
+    <a href="{{ path('app_home') }}" class="back-btn">← Retour à l'accueil</a>
+</div>
+{% endblock %}

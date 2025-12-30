@@ -3,6 +3,8 @@
 namespace App\Controller;
 
 use App\Repository\EvenementRepository;
+use App\Repository\TicketRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,13 +13,37 @@ use Symfony\Component\Routing\Annotation\Route;
 class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(EvenementRepository $evenementRepository): Response
-    {
-        // Récupérer les événements actifs
+    public function index(
+        EvenementRepository $evenementRepository,
+        TicketRepository $ticketRepository,
+        EntityManagerInterface $em
+    ): Response {
+        // Événements actifs pour le slider
         $evenements = $evenementRepository->findActiveEvents();
 
+        // 1) Nombre total d’événements
+        $totalEvenements = $evenementRepository->count([]);
+
+        // 2) Nombre total de tickets
+        $totalTickets = $ticketRepository->count([]);
+
+        // 3) Nombre de villes uniques (champ "lieu" sur Evenement)
+        try {
+            $villesQuery = $em->createQueryBuilder()
+                ->select('COUNT(DISTINCT e.lieu)')
+                ->from('App\Entity\Evenement', 'e')
+                ->where('e.lieu IS NOT NULL')
+                ->getQuery();
+            $totalVilles = (int) $villesQuery->getSingleScalarResult();
+        } catch (\Exception $e) {
+            $totalVilles = 0;
+        }
+
         return $this->render('home/index.html.twig', [
-            'evenements' => $evenements,
+            'evenements'       => $evenements,
+            'totalEvenements'  => $totalEvenements,
+            'totalTickets'     => $totalTickets,
+            'totalVilles'      => $totalVilles,
         ]);
     }
 

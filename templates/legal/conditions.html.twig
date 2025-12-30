@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Conditions générales - Qataa3.ma{% endblock %}
+
+{% block stylesheets %}
+<style>
+    body {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+    }
+    
+    .legal-container {
+        max-width: 900px;
+        margin: 50px auto;
+        background: white;
+        border-radius: 15px;
+        box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        padding: 50px;
+    }
+    
+    .legal-header {
+        text-align: center;
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+        border-bottom: 3px solid #667eea;
+    }
+    
+    .legal-header h1 {
+        color: #667eea;
+        font-size: 2.5em;
+        margin-bottom: 10px;
+    }
+    
+    .legal-section {
+        margin-bottom: 35px;
+    }
+    
+    .legal-section h2 {
+        color: #764ba2;
+        font-size: 1.8em;
+        margin-bottom: 15px;
+        border-left: 5px solid #667eea;
+        padding-left: 15px;
+    }
+    
+    .legal-section p {
+        color: #444;
+        line-height: 1.8;
+        margin-bottom: 15px;
+    }
+    
+    .legal-section ul {
+        margin-left: 30px;
+        color: #444;
+        line-height: 1.8;
+    }
+    
+    .back-btn {
+        display: inline-block;
+        padding: 12px 30px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        text-decoration: none;
+        border-radius: 25px;
+        margin-top: 30px;
+    }
+    
+    .back-btn:hover {
+        transform: translateY(-3px);
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="legal-container">
+    <div class="legal-header">
+        <h1>📋 Conditions générales d'utilisation</h1>
+        <p>Dernière mise à jour : 27 décembre 2025</p>
+    </div>
+
+    <div class="legal-section">
+        <h2>1. Objet</h2>
+        <p>
+            Les présentes Conditions Générales d'Utilisation définissent les modalités d'accès 
+            et d'utilisation des services de Qataa3.ma.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>2. Services proposés</h2>
+        <ul>
+            <li>🎫 Réservation de billets pour événements</li>
+            <li>🎬 Cinéma</li>
+            <li>🎭 Spectacles</li>
+            <li>✈️ Voyages</li>
+        </ul>
+    </div>
+
+    <div class="legal-section">
+        <h2>3. Inscription</h2>
+        <p>
+            Pour accéder aux services, vous devez créer un compte avec des informations exactes.
+        </p>
+    </div>
+
+    <div class="legal-section">
+        <h2>4. Paiement</h2>
+        <p>
+            Toutes les transactions sont sécurisées. Modes de paiement : carte bancaire, virement.
+        </p>
+    </div>
+
+    <a href="{{ path('app_home') }}" class="back-btn">← Retour à l'accueil</a>
+</div>
+{% endblock %}

@@ -1,292 +1,491 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Accueil - Qataa3.ma{% endblock %}
+{% block title %}Accueil - Qataa3.ma | Billetterie d'événements au Maroc{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* HERO PROFESSIONNEL */
+        html { scroll-behavior: smooth; }
+
+        /* HERO PROFESSIONNEL AVEC PARALLAX */
         .hero-section {
             position: relative;
-            height: 85vh;
-            min-height: 650px;
-            background: linear-gradient(135deg, #1a1f36 0%, #2d3561 100%);
+            height: 90vh;
+            min-height: 700px;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
             overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
         }
+
         .hero-bg {
             position: absolute;
             inset: 0;
             background: url('{{ asset('images/concert-hero.jpg') }}') center/cover no-repeat;
-            opacity: 0.12;
+            opacity: 0.35;
+            transform: scale(1.1);
+            transition: transform 8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            filter: brightness(1.1) saturate(1.1);
         }
+
+        .hero-section:hover .hero-bg { transform: scale(1.15); }
+
         .hero-overlay {
             position: absolute;
             inset: 0;
-            background: radial-gradient(ellipse at 30% 50%, rgba(59,130,246,0.15), transparent 70%);
+            background:
+                radial-gradient(ellipse at 30% 40%, rgba(59,130,246,0.22), transparent 65%),
+                radial-gradient(ellipse at 70% 60%, rgba(139,92,246,0.18), transparent 65%),
+                linear-gradient(180deg, rgba(15,23,42,0.5), rgba(15,23,42,0.75));
         }
-        
+
+        .hero-particles {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            background: rgba(255,255,255,0.4);
+            border-radius: 50%;
+            animation: float linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100vh) scale(1); opacity: 0; }
+        }
+
         .hero-content {
             position: relative;
             z-index: 10;
             text-align: center;
-            max-width: 850px;
-            padding: 40px;
-            animation: fadeIn 1.2s ease;
+            max-width: 900px;
+            padding: 50px 30px;
+            animation: heroFadeIn 1.4s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
+
+        @keyframes heroFadeIn {
+            from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .hero-content h1 {
-            font-size: 4rem;
-            font-weight: 700;
+
+        .hero-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
             color: #fff;
-            margin-bottom: 20px;
-            letter-spacing: -0.02em;
-            line-height: 1.1;
+            padding: 10px 24px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+            letter-spacing: 0.5px;
+            animation: pulse 2s ease-in-out infinite;
         }
-        .hero-content p {
-            font-size: 1.25rem;
-            color: rgba(255,255,255,0.85);
-            margin-bottom: 40px;
-            font-weight: 400;
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
         }
-        
-        /* BARRE RECHERCHE MINIMALISTE */
-        .search-container {
-            max-width: 680px;
-            margin: 0 auto;
+
+        .hero-content h1 {
+            font-size: 4.5rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #e0e7ff 50%, #c7d2fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 55px;
+            letter-spacing: -0.03em;
+            line-height: 1.08;
+            text-shadow: 0 0 60px rgba(255,255,255,0.3);
         }
+
+        .search-container { max-width: 720px; margin: 0 auto; }
+
         .search-box {
-            background: #fff;
-            padding: 8px;
-            border-radius: 12px;
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(20px);
+            padding: 10px;
+            border-radius: 16px;
             display: flex;
             align-items: center;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-            transition: all .3s;
+            box-shadow:
+                0 30px 60px rgba(15,23,42,0.4),
+                0 0 0 1px rgba(255,255,255,0.1) inset;
+            transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
+            border: 1px solid rgba(148,163,184,0.2);
         }
-        .search-box:hover {
-            box-shadow: 0 25px 70px rgba(0,0,0,0.3);
-            transform: translateY(-2px);
+
+        .search-box:hover,
+        .search-box:focus-within {
+            box-shadow:
+                0 40px 80px rgba(15,23,42,0.5),
+                0 0 0 1px rgba(59,130,246,0.3) inset;
+            transform: translateY(-4px);
         }
+
         .search-box input {
             border: none;
             flex: 1;
-            padding: 16px 24px;
-            border-radius: 8px;
+            padding: 18px 26px;
+            border-radius: 12px;
             outline: none;
-            font-size: 1rem;
+            font-size: 1.05rem;
             background: transparent;
-            color: #1a1f36;
+            color: #0f172a;
+            font-weight: 500;
         }
-        .search-box input::placeholder {
-            color: #64748b;
-        }
+
+        .search-box input::placeholder { color: #64748b; font-weight: 400; }
+
         .search-box button {
-            width: 50px;
-            height: 50px;
-            border-radius: 8px;
+            width: 56px;
+            height: 56px;
+            border-radius: 14px;
             border: none;
-            background: #3b82f6;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: all .3s;
-        }
-        .search-box button:hover {
-            background: #2563eb;
-            transform: scale(1.05);
+            transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 8px 20px rgba(59,130,246,0.35);
         }
 
-        /* SECTION ÉVÉNEMENTS */
+        .search-box button:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            transform: scale(1.08) rotate(3deg);
+            box-shadow: 0 12px 28px rgba(59,130,246,0.5);
+        }
+
+        .search-box button:active { transform: scale(0.95); }
+
         .events-section {
-            padding: 100px 0 120px;
-            background: #f8fafc;
+            padding: 120px 0 140px;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
             position: relative;
         }
-        
+
         .section-header-modern {
             text-align: center;
-            margin-bottom: 70px;
-        }
-        .section-header-modern h2 {
-            font-size: 2.8rem;
-            font-weight: 700;
-            color: #1a1f36;
-            margin-bottom: 16px;
-            letter-spacing: -0.02em;
-        }
-        .separator-line {
-            width: 80px;
-            height: 4px;
-            background: #3b82f6;
-            border-radius: 4px;
-            margin: 24px auto 0;
-        }
-        .section-header-modern p {
-            margin-top: 24px;
-            color: #64748b;
-            font-size: 1.1rem;
+            margin-bottom: 80px;
         }
 
-        /* CARDS PROFESSIONNELLES */
+        .section-header-modern h2 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 28px;
+            letter-spacing: -0.03em;
+            position: relative;
+            display: inline-block;
+        }
+
+        .separator-line {
+            width: 100px;
+            height: 5px;
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+            border-radius: 999px;
+            margin: 0 auto;
+            box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+        }
+
         .event-card-pro {
             background: #fff;
-            border-radius: 16px;
+            border-radius: 20px;
             overflow: hidden;
             border: 1px solid #e2e8f0;
-            box-shadow: 0 2px 8px rgba(15,23,42,0.06);
-            transition: all .3s ease;
+            box-shadow:
+                0 4px 12px rgba(15,23,42,0.05),
+                0 0 0 1px rgba(148,163,184,0.1);
+            transition: all .4s cubic-bezier(0.16, 1, 0.3, 1);
             display: flex;
             flex-direction: column;
             height: 100%;
+            position: relative;
         }
+
+        .event-card-pro::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
+            opacity: 0;
+            transition: opacity .3s;
+        }
+
+        .event-card-pro:hover::before { opacity: 1; }
+
         .event-card-pro:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 12px 32px rgba(15,23,42,0.12);
+            transform: translateY(-12px);
+            box-shadow:
+                0 20px 40px rgba(15,23,42,0.15),
+                0 0 0 1px rgba(59,130,246,0.2);
             border-color: #cbd5e1;
         }
-        
+
         .card-img-wrapper {
             position: relative;
-            height: 240px;
+            height: 260px;
             overflow: hidden;
-            background: #e2e8f0;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
         }
+
         .card-img-top {
             width: 100%;
             height: 100%;
             object-fit: cover;
-            transition: transform .5s ease;
+            transition: transform .6s cubic-bezier(0.16, 1, 0.3, 1);
+            filter: brightness(0.95);
         }
+
         .event-card-pro:hover .card-img-top {
-            transform: scale(1.08);
+            transform: scale(1.12) rotate(1deg);
+            filter: brightness(1);
         }
+
         .card-badge {
             position: absolute;
-            top: 16px;
-            right: 16px;
-            background: #fff;
+            top: 18px;
+            right: 18px;
+            background: rgba(255,255,255,0.95);
+            backdrop-filter: blur(10px);
             color: #3b82f6;
             text-transform: uppercase;
-            font-size: .7rem;
-            font-weight: 700;
-            padding: 6px 14px;
-            border-radius: 6px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            letter-spacing: .08em;
+            font-size: .72rem;
+            font-weight: 800;
+            padding: 8px 16px;
+            border-radius: 999px;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.18);
+            letter-spacing: .1em;
             z-index: 3;
+            border: 1px solid rgba(255,255,255,0.5);
         }
-        
+
         .card-body-premium {
-            padding: 24px;
+            padding: 28px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
+
         .event-date {
-            font-size: .85rem;
-            font-weight: 600;
+            font-size: .88rem;
+            font-weight: 700;
             color: #3b82f6;
             text-transform: uppercase;
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-bottom: 10px;
-            letter-spacing: 0.05em;
+            gap: 10px;
+            margin-bottom: 12px;
+            letter-spacing: 0.06em;
         }
+
+        .event-date i { font-size: 1rem; }
+
         .event-title {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #1a1f36;
-            margin-bottom: 10px;
-            line-height: 1.3;
+            font-size: 1.35rem;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 12px;
+            line-height: 1.35;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
+            transition: color .3s;
         }
+
+        .event-card-pro:hover .event-title { color: #3b82f6; }
+
         .event-location {
-            font-size: .9rem;
+            font-size: .95rem;
             color: #64748b;
             display: flex;
             align-items: center;
-            gap: 6px;
-            margin-bottom: 20px;
+            gap: 8px;
+            margin-bottom: 24px;
             font-weight: 500;
         }
-        
+
+        .event-location i { color: #94a3b8; }
+
         .btn-reserver {
             margin-top: auto;
             width: 100%;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 12px;
             border: none;
             text-align: center;
-            font-weight: 600;
-            font-size: .95rem;
+            font-weight: 700;
+            font-size: .98rem;
             color: #fff;
-            background: #1a1f36;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
             text-decoration: none;
-            transition: all .3s;
+            transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
+            box-shadow: 0 4px 12px rgba(15,23,42,0.2);
+            position: relative;
+            overflow: hidden;
         }
+
+        .btn-reserver::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left .5s;
+        }
+
+        .btn-reserver:hover::before { left: 100%; }
+
         .btn-reserver:hover {
-            background: #3b82f6;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(59,130,246,0.3);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 24px rgba(59,130,246,0.4);
             color: #fff;
         }
 
-        /* SWIPER */
-        .swiper {
-            padding: 30px 15px 70px !important;
+        /* STATISTIQUES MINIMALISTES */
+        .stats-section {
+            background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 80px 0;
+            position: relative;
         }
-        .swiper-button-next,.swiper-button-prev {
-            width: 48px;
-            height: 48px;
+
+        .stat-item {
+            background: #ffffff;
+            border-radius: 20px;
+            padding: 50px 30px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 16px rgba(15,23,42,0.06);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(59,130,246,0.15);
+            border-color: rgba(59,130,246,0.3);
+        }
+
+        .stat-item i {
+            font-size: 3rem;
+            color: #3b82f6;
+            margin-bottom: 20px;
+            display: block;
+            transition: transform 0.3s;
+        }
+
+        .stat-item:hover i {
+            transform: scale(1.1);
+        }
+
+        .stat-number {
+            font-size: 4.5rem;
+            font-weight: 800;
+            color: #3b82f6;
+            margin-bottom: 12px;
+            display: block;
+            line-height: 1;
+            letter-spacing: -0.02em;
+        }
+
+        .stat-label {
+            font-size: 1rem;
+            color: #64748b;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .swiper { padding: 35px 20px 80px !important; }
+
+        .swiper-button-next,
+        .swiper-button-prev {
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
             background: #fff;
             border: 1px solid #e2e8f0;
-            color: #1a1f36;
-            box-shadow: 0 4px 12px rgba(15,23,42,0.08);
-            transition: all .3s;
+            color: #0f172a;
+            box-shadow: 0 6px 16px rgba(15,23,42,0.1);
+            transition: all .3s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .swiper-button-next:after,.swiper-button-prev:after {
-            font-size: 1.1rem;
+
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+            font-size: 1.15rem;
             font-weight: 900;
         }
-        .swiper-button-next:hover,.swiper-button-prev:hover {
-            background: #3b82f6;
+
+        .swiper-button-next:hover,
+        .swiper-button-prev:hover {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
             color: #fff;
             border-color: #3b82f6;
-            box-shadow: 0 8px 20px rgba(59,130,246,0.25);
+            box-shadow: 0 12px 28px rgba(59,130,246,0.35);
+            transform: scale(1.08);
         }
+
         .swiper-pagination-bullet {
-            width: 8px;
-            height: 8px;
+            width: 10px;
+            height: 10px;
             background: #cbd5e1;
             opacity: 1;
             transition: all .3s;
         }
+
         .swiper-pagination-bullet-active {
-            background: #3b82f6;
-            width: 28px;
+            background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
+            width: 32px;
             border-radius: 999px;
         }
-        
+
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all .8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .fade-in.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
         @media (max-width: 768px) {
-            .hero-section { min-height: 550px; }
-            .hero-content h1 { font-size: 2.5rem; }
-            .section-header-modern h2 { font-size: 2rem; }
+            .hero-section { min-height: 600px; height: auto; }
+            .hero-content { padding: 40px 20px; }
+            .hero-content h1 { font-size: 2.8rem; margin-bottom: 40px; }
+            .section-header-modern h2 { font-size: 2.2rem; }
+            .stat-number { font-size: 3.5rem; }
+            .stat-item i { font-size: 2.5rem; }
+            .stat-item { padding: 40px 25px; }
+            .search-box { padding: 6px; }
+            .search-box input { padding: 14px 18px; font-size: 0.95rem; }
+            .search-box button { width: 48px; height: 48px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero-content h1 { font-size: 2.2rem; }
+            .section-header-modern h2 { font-size: 1.8rem; }
+            .stat-number { font-size: 2.8rem; }
         }
     </style>
 {% endblock %}
@@ -295,15 +494,33 @@
     <section class="hero-section">
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
-        
+
+        <div class="hero-particles">
+            <div class="particle" style="left: 10%; width: 4px; height: 4px; animation-duration: 15s; animation-delay: 0s;"></div>
+            <div class="particle" style="left: 25%; width: 3px; height: 3px; animation-duration: 12s; animation-delay: 2s;"></div>
+            <div class="particle" style="left: 40%; width: 5px; height: 5px; animation-duration: 18s; animation-delay: 4s;"></div>
+            <div class="particle" style="left: 60%; width: 3px; height: 3px; animation-duration: 14s; animation-delay: 1s;"></div>
+            <div class="particle" style="left: 75%; width: 4px; height: 4px; animation-duration: 16s; animation-delay: 3s;"></div>
+            <div class="particle" style="left: 90%; width: 3px; height: 3px; animation-duration: 13s; animation-delay: 5s;"></div>
+        </div>
+
         <div class="hero-content">
+            <span class="hero-badge">
+                <i class="fas fa-ticket-alt"></i> Plateforme N°1 au Maroc
+            </span>
             <h1>Vivez l'expérience live</h1>
-            <p>Découvrez les événements les plus captivants du Maroc</p>
+
             <div class="search-container">
                 <form action="{{ path('app_events') }}" method="get">
                     <div class="search-box">
-                        <input type="text" name="search" placeholder="Rechercher un événement, artiste, ville..." autocomplete="off">
-                        <button type="submit">
+                        <input
+                            type="text"
+                            name="search"
+                            placeholder="Rechercher un événement, artiste, ville..."
+                            autocomplete="off"
+                            aria-label="Rechercher un événement"
+                        >
+                        <button type="submit" aria-label="Rechercher">
                             <i class="fas fa-search"></i>
                         </button>
                     </div>
@@ -314,13 +531,12 @@
 
     <section class="events-section">
         <div class="container-fluid px-lg-5">
-            <div class="section-header-modern">
-                <h2>Événements à la une</h2>
+            <div class="section-header-modern fade-in">
+                <h2>Nos événements</h2>
                 <div class="separator-line"></div>
-                <p>Les expériences inoubliables vous attendent</p>
             </div>
 
-            <div class="position-relative">
+            <div class="position-relative fade-in" style="transition-delay: .2s;">
                 <div class="swiper mySwiper">
                     <div class="swiper-wrapper">
                         {% for evenement in evenements %}
@@ -328,11 +544,11 @@
                                 <div class="event-card-pro">
                                     <div class="card-img-wrapper">
                                         {% if evenement.imageName is defined and evenement.imageName %}
-                                            <img src="{{ asset('uploads/evenements/' ~ evenement.imageName) }}" class="card-img-top" alt="{{ evenement.titre }}">
+                                            <img src="{{ asset('uploads/evenements/' ~ evenement.imageName) }}" class="card-img-top" alt="{{ evenement.titre }}" loading="lazy">
                                         {% elseif evenement.image is defined and evenement.image %}
-                                            <img src="{{ asset('images/events/' ~ evenement.image) }}" class="card-img-top" alt="{{ evenement.titre }}">
+                                            <img src="{{ asset('images/events/' ~ evenement.image) }}" class="card-img-top" alt="{{ evenement.titre }}" loading="lazy">
                                         {% else %}
-                                            <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=800&auto=format&fit=crop" class="card-img-top" alt="Image par défaut">
+                                            <img src="https://images.unsplash.com/photo-1540039155733-5bb30b53aa14?w=800&auto=format&fit=crop" class="card-img-top" alt="Image par défaut" loading="lazy">
                                         {% endif %}
                                         <span class="card-badge">
                                             {% if evenement.categorie is defined and evenement.categorie %}
@@ -384,6 +600,34 @@
         </div>
     </section>
 
+    <section class="stats-section">
+        <div class="container">
+            <div class="row justify-content-center g-4">
+                <div class="col-md-4 col-sm-6">
+                    <div class="stat-item fade-in">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span class="stat-number" data-count="{{ totalEvenements }}">0</span>
+                        <div class="stat-label">Événements</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="stat-item fade-in" style="transition-delay: .1s;">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span class="stat-number" data-count="{{ totalTickets }}">0</span>
+                        <div class="stat-label">Tickets vendus</div>
+                    </div>
+                </div>
+                <div class="col-md-4 col-sm-6">
+                    <div class="stat-item fade-in" style="transition-delay: .2s;">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span class="stat-number" data-count="{{ totalVilles }}">0</span>
+                        <div class="stat-label">Villes</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -413,6 +657,43 @@
                 },
                 speed: 600
             });
+
+            const observerOptions = { threshold: 0.1, rootMargin: '0px 0px -100px 0px' };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) entry.target.classList.add('visible');
+                });
+            }, observerOptions);
+            document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+            const animateCounter = (element) => {
+                const target = parseInt(element.dataset.count);
+                const duration = 2000;
+                const increment = target / (duration / 16);
+                let current = 0;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        element.textContent = target.toLocaleString();
+                        clearInterval(timer);
+                    } else {
+                        element.textContent = Math.floor(current).toLocaleString();
+                    }
+                }, 16);
+            };
+
+            const statsObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counters = entry.target.querySelectorAll('.stat-number');
+                        counters.forEach(counter => animateCounter(counter));
+                        statsObserver.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.5 });
+
+            const statsSection = document.querySelector('.stats-section');
+            if (statsSection) statsObserver.observe(statsSection);
         });
     </script>
 {% endblock %}

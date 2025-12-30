@@ -4,170 +4,435 @@
 
 {% block body %}
 <style>
-    /* Fond de page gris ardoise léger */
-    body { background-color: #f1f5f9; }
+    body { 
+        background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+        min-height: 100vh;
+    }
 
-    /* Carte Profil - Bleu Royal Intense */
     .profile-card-royal {
-        background-color: #2563eb; /* Bleu Royal exact */
-        background-image: radial-gradient(circle at top right, rgba(255,255,255,0.1) 0%, transparent 40%);
+        background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #334155 100%);
         border-radius: 24px;
         color: white;
         padding: 40px 30px;
         text-align: center;
-        box-shadow: 0 20px 40px -10px rgba(37, 99, 235, 0.4);
+        box-shadow: 0 20px 60px rgba(15,23,42,0.35);
         height: 100%;
         position: relative;
         overflow: hidden;
+        transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Cercles déco subtils */
+    .profile-card-royal:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 30px 80px rgba(15,23,42,0.45);
+    }
+
     .profile-card-royal::before {
-        content: ''; position: absolute; bottom: -50px; left: -50px;
-        width: 150px; height: 150px; background: rgba(255,255,255,0.05);
+        content: '';
+        position: absolute;
+        top: -50%;
+        right: -50%;
+        width: 200%;
+        height: 200%;
+        background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, transparent 70%);
+        animation: rotate 20s linear infinite;
+    }
+
+    @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+
+    .profile-card-royal::after {
+        content: '';
+        position: absolute;
+        bottom: -100px;
+        left: -100px;
+        width: 250px;
+        height: 250px;
+        background: rgba(59,130,246,0.08);
         border-radius: 50%;
+        filter: blur(60px);
     }
 
     .avatar-royal {
-        width: 110px; height: 110px;
+        width: 120px;
+        height: 120px;
         background: white;
         border-radius: 50%;
-        margin: 0 auto 20px;
-        display: flex; align-items: center; justify-content: center;
-        font-size: 3rem; color: #2563eb;
-        box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        margin: 0 auto 24px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 3.2rem;
+        color: #3b82f6;
+        box-shadow: 
+            0 20px 40px rgba(0,0,0,0.2),
+            0 0 0 6px rgba(59,130,246,0.1);
+        position: relative;
+        z-index: 2;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Badge Vérifié */
+    .avatar-royal:hover {
+        transform: scale(1.08) rotate(5deg);
+        box-shadow: 
+            0 25px 50px rgba(0,0,0,0.25),
+            0 0 0 8px rgba(59,130,246,0.15);
+    }
+
     .badge-verified {
-        background: rgba(255, 255, 255, 0.2);
+        background: rgba(59,130,246,0.2);
+        backdrop-filter: blur(10px);
         color: white;
-        padding: 8px 20px; border-radius: 30px; font-size: 0.9rem; font-weight: 600;
-        display: inline-flex; align-items: center; gap: 8px;
-        backdrop-filter: blur(5px);
-        margin-bottom: 25px;
+        padding: 10px 24px;
+        border-radius: 50px;
+        font-size: 0.9rem;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        border: 1px solid rgba(59,130,246,0.3);
+        margin-bottom: 28px;
+        position: relative;
+        z-index: 2;
+        transition: all 0.3s;
     }
 
-    /* Bouton Blanc Premium */
+    .badge-verified:hover {
+        background: rgba(59,130,246,0.3);
+        transform: scale(1.05);
+    }
+
+    .badge-verified i {
+        color: #10b981;
+        font-size: 1.1rem;
+        filter: drop-shadow(0 2px 4px rgba(16,185,129,0.5));
+    }
+
+    /* BOUTON CORRIGÉ */
     .btn-white-royal {
         background: white;
-        color: #2563eb; border: none;
-        padding: 14px 25px; border-radius: 12px;
-        font-weight: 700; width: 100%;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        transition: transform 0.2s;
-        text-transform: uppercase; font-size: 0.85rem; letter-spacing: 0.5px;
-    }
-    .btn-white-royal:hover {
-        transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,0.15); color: #1e40af;
+        color: #0f172a;
+        border: none;
+        padding: 14px 32px;
+        border-radius: 12px;
+        font-weight: 700;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+        transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        position: relative;
+        z-index: 2;
+        overflow: hidden;
+        text-decoration: none;
     }
 
-    /* Carte Infos Droite */
+    .btn-white-royal::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(59,130,246,0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .btn-white-royal:hover::before {
+        left: 100%;
+    }
+
+    .btn-white-royal:hover {
+        background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        transform: translateY(-3px);
+        box-shadow: 0 12px 28px rgba(59,130,246,0.4);
+        color: white;
+    }
+
     .details-card-clean {
         background: white;
         border-radius: 24px;
         padding: 40px;
-        box-shadow: 0 10px 30px -10px rgba(0,0,0,0.05);
+        box-shadow: 
+            0 10px 40px rgba(15,23,42,0.08),
+            0 0 0 1px #e2e8f0;
         height: 100%;
-        border: 1px solid #e2e8f0;
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .details-card-clean:hover {
+        box-shadow: 
+            0 20px 60px rgba(15,23,42,0.12),
+            0 0 0 1px #cbd5e1;
     }
 
     .section-title {
-        color: #2563eb; font-weight: 800; text-transform: uppercase; 
-        font-size: 0.85rem; letter-spacing: 1px; margin-bottom: 25px;
+        color: #3b82f6;
+        font-weight: 800;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 1.2px;
+        margin-bottom: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
     }
 
-    .info-group-clean { margin-bottom: 25px; }
-    .info-label-clean { 
-        color: #94a3b8; font-size: 0.75rem; font-weight: 700; 
-        text-transform: uppercase; margin-bottom: 5px; 
+    .section-title i {
+        font-size: 1.1rem;
     }
-    .info-value-clean { 
-        color: #1e293b; font-size: 1.1rem; font-weight: 600; 
-        border-bottom: 2px solid #f1f5f9; padding-bottom: 8px; width: 100%;
+
+    .info-group-clean {
+        margin-bottom: 28px;
+        transition: all 0.3s;
+    }
+
+    .info-label-clean {
+        color: #94a3b8;
+        font-size: 0.75rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-bottom: 8px;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+    .info-label-clean i {
+        color: #3b82f6;
+        font-size: 0.85rem;
+    }
+
+    .info-value-clean {
+        color: #0f172a;
+        font-size: 1.1rem;
+        font-weight: 600;
+        border-bottom: 2px solid #f1f5f9;
+        padding-bottom: 12px;
+        width: 100%;
+        transition: all 0.3s;
+    }
+
+    .info-group-clean:hover .info-value-clean {
+        border-bottom-color: #3b82f6;
+        color: #3b82f6;
     }
 
     .btn-back-clean {
-        color: #64748b; font-weight: 600; text-decoration: none;
-        display: inline-flex; align-items: center; gap: 8px;
-        transition: color 0.2s;
+        color: #64748b;
+        font-weight: 600;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 10px;
+        background: transparent;
+        border: 2px solid #e2e8f0;
+        transition: all 0.3s;
     }
-    .btn-back-clean:hover { color: #2563eb; }
+
+    .btn-back-clean:hover {
+        color: #3b82f6;
+        background: #f8fafc;
+        border-color: #3b82f6;
+    }
+
+    .security-footer {
+        margin-top: 35px;
+        padding-top: 25px;
+        border-top: 2px solid #f1f5f9;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .security-icon {
+        width: 50px;
+        height: 50px;
+        background: linear-gradient(135deg, #ecfdf5 0%, #d1fae5 100%);
+        border-radius: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-shrink: 0;
+    }
+
+    .security-icon i {
+        color: #10b981;
+        font-size: 1.3rem;
+    }
+
+    .security-text {
+        flex: 1;
+    }
+
+    .security-text strong {
+        display: block;
+        color: #0f172a;
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+        font-weight: 700;
+    }
+
+    .security-text small {
+        color: #64748b;
+        font-size: 0.85rem;
+        line-height: 1.5;
+    }
+
+    .profile-container {
+        animation: fadeInUp 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes fadeInUp {
+        from {
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @media (max-width: 991px) {
+        .profile-card-royal,
+        .details-card-clean {
+            padding: 35px 25px;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .avatar-royal {
+            width: 100px;
+            height: 100px;
+            font-size: 2.8rem;
+        }
+
+        .details-card-clean {
+            padding: 30px 20px;
+        }
+
+        .info-value-clean {
+            font-size: 1rem;
+        }
+        
+        .btn-white-royal {
+            font-size: 0.8rem;
+            padding: 12px 28px;
+        }
+    }
 </style>
 
-<div class="container py-5">
+<div class="container py-5 profile-container">
     <div class="row justify-content-center align-items-stretch g-4">
         
-        <!-- Carte Profil (Bleu Royal) -->
         <div class="col-lg-4">
             <div class="profile-card-royal">
                 <div class="avatar-royal">
                     <i class="fas fa-user"></i>
                 </div>
                 
-                <h3 class="fw-bold mb-1">{{ user.prenom }} {{ user.nom }}</h3>
-                <p class="opacity-75 mb-4">{{ user.email }}</p>
+                <h3 class="fw-bold mb-2" style="position: relative; z-index: 2;">
+                    {{ user.prenom }} {{ user.nom }}
+                </h3>
+                <p class="opacity-85 mb-4" style="position: relative; z-index: 2; font-size: 0.95rem;">
+                    {{ user.email }}
+                </p>
 
-                <div class="mb-2">
-                    {% if user.statutCompte == 'actif' %}
-                        <div class="badge-verified">
-                            <i class="fas fa-check-circle"></i> Compte Vérifié
-                        </div>
-                    {% else %}
-                        <div class="badge bg-warning text-dark mb-4">
-                            {{ user.statutCompte|capitalize }}
-                        </div>
-                    {% endif %}
-                </div>
+                {% if user.statutCompte == 'actif' %}
+                    <div class="badge-verified">
+                        <i class="fas fa-check-circle"></i>
+                        Compte Vérifié
+                    </div>
+                {% else %}
+                    <div class="badge-verified" style="background: rgba(251,191,36,0.2); border-color: rgba(251,191,36,0.4);">
+                        <i class="fas fa-exclamation-circle" style="color: #f59e0b;"></i>
+                        {{ user.statutCompte|capitalize }}
+                    </div>
+                {% endif %}
 
                 <a href="{{ path('app_client_dashboard') }}" class="btn-white-royal">
-                    <i class="fas fa-columns me-2"></i> Mon Dashboard
+                    <i class="fas fa-columns"></i>
+                    Mon Dashboard
                 </a>
             </div>
         </div>
 
-        <!-- Carte Infos (Blanche & Clean) -->
         <div class="col-lg-7">
             <div class="details-card-clean">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <div class="section-title">Informations Personnelles</div>
+                <div class="d-flex justify-content-between align-items-center mb-4 pb-3" style="border-bottom: 2px solid #f1f5f9;">
+                    <div class="section-title">
+                        <i class="fas fa-id-card"></i>
+                        Informations Personnelles
+                    </div>
                     <a href="{{ path('app_home') }}" class="btn-back-clean">
-                        <i class="fas fa-arrow-left"></i> Retour
+                        <i class="fas fa-arrow-left"></i>
+                        Retour
                     </a>
                 </div>
                 
                 <div class="row">
                     <div class="col-md-6">
                         <div class="info-group-clean">
-                            <div class="info-label-clean">Nom Complet</div>
+                            <div class="info-label-clean">
+                                <i class="fas fa-user"></i>
+                                Nom Complet
+                            </div>
                             <div class="info-value-clean">{{ user.prenom }} {{ user.nom }}</div>
                         </div>
                     </div>
+                    
                     <div class="col-md-6">
                         <div class="info-group-clean">
-                            <div class="info-label-clean">Email</div>
+                            <div class="info-label-clean">
+                                <i class="fas fa-envelope"></i>
+                                Email
+                            </div>
                             <div class="info-value-clean">{{ user.email }}</div>
                         </div>
                     </div>
+                    
                     <div class="col-md-6">
                         <div class="info-group-clean">
-                            <div class="info-label-clean">Téléphone</div>
-                            <div class="info-value-clean">{{ user.telephone ?? 'Non renseigné' }}</div>
+                            <div class="info-label-clean">
+                                <i class="fas fa-phone"></i>
+                                Téléphone
+                            </div>
+                            <div class="info-value-clean">
+                                {{ user.telephone ?? 'Non renseigné' }}
+                            </div>
                         </div>
                     </div>
+                    
                     <div class="col-md-6">
                         <div class="info-group-clean">
-                            <div class="info-label-clean">Membre depuis</div>
-                            <div class="info-value-clean">{{ user.dateInscription|date('d F Y') }}</div>
+                            <div class="info-label-clean">
+                                <i class="fas fa-calendar-alt"></i>
+                                Membre depuis
+                            </div>
+                            <div class="info-value-clean">
+                                {{ user.dateInscription|date('d F Y') }}
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Footer Securité -->
-                <div class="mt-4 pt-4 border-top border-light">
-                    <div class="d-flex align-items-center text-muted">
-                        <i class="fas fa-lock text-success me-3 fs-5"></i>
-                        <small>Connexion sécurisée SSL. Vos données personnelles sont cryptées.</small>
+                <div class="security-footer">
+                    <div class="security-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="security-text">
+                        <strong>Connexion sécurisée SSL</strong>
+                        <small>Vos données personnelles sont cryptées et protégées.</small>
                     </div>
                 </div>
             </div>

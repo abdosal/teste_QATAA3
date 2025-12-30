@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Client;
 use App\Repository\TicketRepository;
 use App\Repository\RecuRepository;
+use App\Repository\CommandeRepository;
 use App\Service\QRCodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,13 +17,65 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class ClientController extends AbstractController
 {
     #[Route('/dashboard', name: 'app_client_dashboard')]
-    public function dashboard(): Response
-    {
+    public function dashboard(
+        TicketRepository $ticketRepository,
+        RecuRepository $recuRepository,
+        CommandeRepository $commandeRepository
+    ): Response {
         /** @var Client $user */
         $user = $this->getUser();
 
+        // Tickets et reçus du client
+        $tickets = $ticketRepository->findByClient($user->getId());
+        $recus   = $recuRepository->findByClient($user->getId());
+
+        // 1) TICKETS ACTIFS
+        $ticketsActifs = count($tickets);
+
+        // 2) ÉVÈNEMENTS ASSISTÉS (événements uniques liés aux billets)
+        $evenementsIds = [];
+        foreach ($tickets as $ticket) {
+            $ligneCommande = $ticket->getLigneCommande();
+            if (!$ligneCommande) {
+                continue;
+            }
+
+            $typeBillet = $ligneCommande->getTypeBillet();
+            if (!$typeBillet || !method_exists($typeBillet, 'getEvenement')) {
+                continue;
+            }
+
+            $evenement = $typeBillet->getEvenement();
+            if ($evenement) {
+                $evenementsIds[$evenement->getId()] = true;
+            }
+        }
+        $evenementsAssistes = count($evenementsIds);
+
+        // 3) TOTAL DÉPENSÉ
+        $depenseTotal = 0;
+        foreach ($recus as $recu) {
+            $commande = $recu->getCommande();
+            if ($commande && method_exists($commande, 'getMontantTotal')) {
+                $depenseTotal += (float) $commande->getMontantTotal();
+            }
+        }
+
+        // ACTIVITÉ RÉCENTE : 4 dernières commandes du client
+        $activites = $commandeRepository->findBy(
+            ['client' => $user],
+            ['dateCommande' => 'DESC'],
+            4
+        );
+
         return $this->render('client/dashboard.html.twig', [
             'user' => $user,
+            'stats' => [
+                'ticketsActifs'      => $ticketsActifs,
+                'evenementsAssistes' => $evenementsAssistes,
+                'depenseTotal'       => $depenseTotal,
+            ],
+            'activites' => $activites,
         ]);
     }
 
@@ -94,7 +147,7 @@ class ClientController extends AbstractController
             $tickets = $ticketRepository->findBy(['ligneCommande' => $ligne]);
 
             foreach ($tickets as $ticket) {
-                $data           = $ticket->getCodeTicket();
+                $data            = $ticket->getCodeTicket();
                 $ticketsWithQR[] = [
                     'ticket' => $ticket,
                     'qrCode' => $qrCodeService->generateTicketQRCode($data),
